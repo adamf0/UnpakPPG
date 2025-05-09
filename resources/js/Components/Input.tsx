@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { HiEye, HiEyeOff } from "react-icons/hi";
+import { useMask, format } from '@react-input/mask'; // Import the necessary functions
 
 const Input = ({
+  inputRef = null,
   label,
   type = "text",
   placeholder,
@@ -9,15 +11,24 @@ const Input = ({
   onChange,
   className = "",
   required = false,
-  showLabel=true,
-  errorMessage="",
-  children=null
+  disabled = false,
+  showLabel = true,
+  errorMessage = "",
+  children = null,
+  accept=null,
+  mask = null, // '____-____-________'
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [error, setError] = useState(errorMessage);
   const [isFocused, setIsFocused] = useState(false);
 
   const inputType = type === "password" && isPasswordVisible ? "text" : type;
+
+  // Masking logic: Apply mask only if type is 'tel'
+  const options = {
+    mask: mask,
+    replacement: { _: /\d/ },
+  };
 
   const handleBlur = () => {
     setIsFocused(false);
@@ -33,12 +44,15 @@ const Input = ({
       {(label && showLabel) && <label className="block text-sm font-medium text-gray-900 mb-2">{label}</label>}
       <div className="relative">
         <input
+          ref={inputRef}
           type={inputType}
           placeholder={placeholder}
-          value={value}
+          value={mask !== null ? format(value, options) : value} // Apply the mask only for phone type
           onChange={onChange}
+          disabled={disabled}
           onFocus={() => setIsFocused(true)}
           onBlur={handleBlur}
+          {...(type === "file" ? { accept } : {})}
           className={`w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-gray-100 ${
             isFocused || value ? "bg-white" : "bg-gray-100"
           } ${className}`}

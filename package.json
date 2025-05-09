@@ -17,6 +17,7 @@
         "@headlessui/react": "^2.2.2",
         "@heroicons/react": "^2.2.0",
         "@inertiajs/react": "^2.0.8",
+        "@react-input/mask": "^2.0.4",
         "@vitejs/plugin-react": "^4.4.1",
         "autoprefixer": "^10.4.21",
         "postcss": "^8.5.3",
