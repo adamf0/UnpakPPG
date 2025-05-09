@@ -22,7 +22,7 @@ const Textarea = ({
 
   return (
     <div className="w-full relative">
-      {label && <label className="block text-gray-700 mb-2">{label}</label>}
+      {label && <label className="block text-sm font-medium text-gray-900 mb-2">{label} {required && <span className="text-red-500">*</span>}</label>}
       <textarea
         placeholder={placeholder}
         value={value}

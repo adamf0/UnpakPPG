@@ -41,7 +41,7 @@ const Input = ({
 
   return (
     <div className="w-full relative">
-      {(label && showLabel) && <label className="block text-sm font-medium text-gray-900 mb-2">{label}</label>}
+      {(label && showLabel) && <label className="block text-sm font-medium text-gray-900 mb-2">{label} {required && <span className="text-red-500">*</span>} </label>}
       <div className="relative">
         <input
           ref={inputRef}

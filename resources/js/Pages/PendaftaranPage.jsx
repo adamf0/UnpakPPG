@@ -16,7 +16,7 @@ const StepEnum = {
   
 function PendaftaranPage({ activeMenu }) {
     const steps = Object.values(StepEnum);
-    const [frame, setFrame] = useState(StepEnum.KETENTUAN_LAPOR_DIRI);
+    const [frame, setFrame] = useState(StepEnum.BIODATA_PDDIKTI);
     
     const [nomorUKG,setNomorUKG] = useState("");
     const [nim,setNim] = useState("");
@@ -127,6 +127,9 @@ function PendaftaranPage({ activeMenu }) {
     const [sekolahMengajar,setSekolahMengajar ] = useState("");
     const [alamatSekolah,setAlamatSekolah ] = useState("");
     const [telpSekolah,setTelpSekolah ] = useState("");
+
+    const [paktaIntegritas,setPaktaIntegritas] = useState("");
+    const [biodataMahasiswa,setBiodataMahasiswa] = useState("");
 
     const ijazahRef = useRef(null);
     const [ijazah, setIjazah] = useState(null);
@@ -459,6 +462,7 @@ function PendaftaranPage({ activeMenu }) {
                             type="text"
                             value={namaIbu}
                             onChange={(e) => setNamaIbu(e.target.value)}
+                            required
                         />
                     </div>
                     <div className="flex-2">
@@ -467,6 +471,7 @@ function PendaftaranPage({ activeMenu }) {
                             type="text"
                             value={namaAyah}
                             onChange={(e) => setNamaAyah(e.target.value)}
+                            required
                         />
                     </div>
                 </div>
@@ -476,6 +481,7 @@ function PendaftaranPage({ activeMenu }) {
                     type="text"
                     value={alamatAyahIbu}
                     onChange={(e) => setAlamatAyahIbu(e.target.value)}
+                    required
                 />
 
                 <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -487,6 +493,7 @@ function PendaftaranPage({ activeMenu }) {
                             mask="____-____-______"
                             placeholder="0812-3456-7890"
                             onChange={(e) => setHpAyahIbu(e.target.value)}
+                            required
                         />
                     </div>
                     <div className="flex-2">
@@ -497,6 +504,7 @@ function PendaftaranPage({ activeMenu }) {
                             mask="____-____-______"
                             placeholder="0812-3456-7890"
                             onChange={(e) => setHpKerabat(e.target.value)}
+                            required
                         />  
                     </div>
                 </div>
@@ -506,6 +514,7 @@ function PendaftaranPage({ activeMenu }) {
                     type="text"
                     value={sekolahMengajar}
                     onChange={(e) => setSekolahMengajar(e.target.value)}
+                    required
                 />
 
                 <Textarea
@@ -513,6 +522,7 @@ function PendaftaranPage({ activeMenu }) {
                     type="text"
                     value={alamatSekolah}
                     onChange={(e) => setAlamatSekolah(e.target.value)}
+                    required
                 />
 
                 <Input
@@ -522,6 +532,7 @@ function PendaftaranPage({ activeMenu }) {
                     mask="____-____-______"
                     placeholder="0812-3456-7890"
                     onChange={(e) => setTelpSekolah(e.target.value)}
+                    required
                 />
             </div>
 
@@ -543,17 +554,17 @@ function PendaftaranPage({ activeMenu }) {
                 <Input
                     label="A1 Pakta Integritas"
                     type="url"
-                    value={nomorUKG}
+                    value={paktaIntegritas}
                     placeholder="misal: http://drive.google.com/drive/folders/example"
-                    onChange={(e) => {}}
+                    onChange={(e) => setPaktaIntegritas(e.target.value)}
                 />
 
                 <Input
                     label="Biodata Mahasiswa"
                     type="url"
-                    value={nomorUKG}
+                    value={biodataMahasiswa}
                     placeholder="misal: http://drive.google.com/drive/folders/example"
-                    onChange={(e) => {}}
+                    onChange={(e) => setBiodataMahasiswa(e.target.value)}
                 />
 
                 <Input
