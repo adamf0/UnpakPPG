@@ -9,13 +9,19 @@ use Illuminate\Support\Facades\Validator;
 class PencarianControllerApi extends Controller
 {
     public function GetDataPendaftaran(Request $request){
-        $validator = Validator::make($request->all(), [
-            'nomorUKG' => ['required'],
-        ]);
+        $validator = Validator::make(
+            $request->all(), 
+            [
+                'nomorUKG' => ['required'],
+            ],
+            [
+                'nomorUKG.required' => ['The nomor ukg field is required.'],
+            ],
+        );
 
         if ($validator->fails()) {
             return response()->json([
-                "Title" => "pendaftaran.invalidValidation",
+                "Title" => "pencarian.invalidValidation",
                 "Detail" => $validator->errors(),
             ], 500);
         }
@@ -24,7 +30,7 @@ class PencarianControllerApi extends Controller
             $cek = pengajuan::where('nomorUKG',$request->nomorUKG)->exists();
             if(!$cek){
                 return response()->json([
-                    "Title" => "pendaftaran.NotFound",
+                    "Title" => "pencarian.NotFound",
                     "Detail" => "data belum terdaftar di sistem"
                 ],400);
             } else{
@@ -32,7 +38,7 @@ class PencarianControllerApi extends Controller
             }
         } catch (\Throwable $th) {
             return response()->json([
-                "Title" => "pendaftaran.commonError",
+                "Title" => "pencarian.commonError",
                 "Detail" => "ada yg salah pada aplikasi"
             ],400);
         }

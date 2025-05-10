@@ -7,6 +7,7 @@ const RadioGroup = ({
   required = false,
   disabled = false,
   errorMessage = "",
+  errorMessageList = [],
   options = [],
   showLabel = true,
   className = ""
@@ -23,8 +24,6 @@ const RadioGroup = ({
       {showLabel && <label className="block text-sm font-medium text-gray-900 mb-2">{label}</label>}
       <div className="inline-flex">
         {options.map((option, index) => {
-          console.log(value === option.value,value,option.value)
-          
           return (
             <React.Fragment key={option.id}>
               <input
@@ -50,6 +49,7 @@ const RadioGroup = ({
         })}
       </div>
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {errorMessageList.map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
     </div>
   );
 };

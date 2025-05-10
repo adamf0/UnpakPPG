@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 Route::post('/check-data', [PencarianControllerApi::class, 'GetDataPendaftaran'])->name('getPencarian');
-Route::get('/info-pendaftaran/{uuid}/{type}', [PendaftaranControllerApi::class, 'GetDataPendaftaran'])->name('getPendaftaran');
+Route::get('/info-pendaftaran/{uuid}/{type}', [PendaftaranControllerApi::class, 'GetData'])->name('getPendaftaran');
 Route::post('/create', [PendaftaranControllerApi::class, 'CreateForm'])->name('createPendaftaran');
 Route::post('/save-biodata', [PendaftaranControllerApi::class, 'SaveBiodata'])->name('savePendaftaran');
 Route::post('/save-berkas', [PendaftaranControllerApi::class, 'SaveBerkasTambahan'])->name('saveBerkasPendaftaran');

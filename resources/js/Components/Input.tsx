@@ -14,6 +14,7 @@ const Input = ({
   disabled = false,
   showLabel = true,
   errorMessage = "",
+  errorMessageList = [],
   children = null,
   accept=null,
   mask = null, // '____-____-________'
@@ -68,6 +69,7 @@ const Input = ({
         )}
       </div>
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {errorMessageList.map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
       {children}
     </div>
   );

@@ -6,6 +6,7 @@ const Select = ({
   value,
   onChange,
   className = "",
+  errorMessageList = [],
   required = false,
   multiple = false,
   placeholder = "Pilih opsi",
@@ -162,12 +163,13 @@ const Select = ({
                 )}
               </li>
             );
-          })}
+          })} 
         </ul>
       )}
 
       {/* Error Message */}
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {errorMessageList.map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
     </div>
   );
 };

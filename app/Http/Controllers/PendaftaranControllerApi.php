@@ -26,8 +26,14 @@ class PendaftaranControllerApi extends Controller
         }
 
         try {
-            $mahasiswa = mahasiswa::where('nomorUKG',$request->nomorUKG)->findOrFail();
-            $pengajuan = pengajuan::where('nomorUKG',$request->nomorUKG)->orWhere('nim',$mahasiswa->nim)->get();
+            $mahasiswa = mahasiswa::where('nomorUKG',$request->nomorUKG)->first();
+            // if($mahasiswa==null){
+            //     return response()->json([
+            //         "Title" => "pendaftaran.dataNotFound",
+            //         "Detail" => "nomor ukg tidak terdaftar"
+            //     ],400);
+            // }
+            $pengajuan = pengajuan::where('nomorUKG',$request->nomorUKG)->orWhere('nim',$mahasiswa?->nim)->get();
             if($pengajuan->count()>1){
                 return response()->json([
                     "Title" => "pendaftaran.tooMuchDataFound",
@@ -45,7 +51,7 @@ class PendaftaranControllerApi extends Controller
                 $new = new Pengajuan();
                 $new->uuid = $uuid;
                 $new->nomorUKG = $request->nomorUKG;
-                $new->nim = $mahasiswa->nim;
+                $new->nim = $mahasiswa?->nim;
                 $new->save();
 
                 return response()->json($uuid,200);
@@ -53,7 +59,8 @@ class PendaftaranControllerApi extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 "Title" => "pendaftaran.commonError",
-                "Detail" => "ada yg salah pada aplikasi"
+                "Detail" => "ada yg salah pada aplikasi",
+                "Error" => $th->getMessage()
             ],400);
         }
     }
@@ -72,7 +79,13 @@ class PendaftaranControllerApi extends Controller
                 ], 500);
             }
 
-            $pendaftaran = pengajuan::where('uuid',$uuid)->findOrFail();
+            $pendaftaran = pengajuan::where('uuid',$uuid)->firstOrFail();
+            if($pendaftaran==null){
+                return response()->json([
+                    "Title" => "pendaftaran.dataNotfound",
+                    "Detail" => "data tidak ditemukan",
+                ], 400);
+            }
 
             if($type=="biodata_diri"){
                 return response()->json([
@@ -105,14 +118,13 @@ class PendaftaranControllerApi extends Controller
                     "telpSekolah"       => $pendaftaran->telpSekolah, //number
                 ],200);
             } else{
-                $berkasTambahan = berkasTambahan::where('id_pendaftaran',$pendaftaran->id)->findOrFail();
                 return response()->json([
-                    "paktaIntegritas"   => empty($berkasTambahan->paktaIntegritas)? null : urlencode($berkasTambahan->paktaIntegritas),
-                    "biodataMahasiswa"  => empty($berkasTambahan->biodataMahasiswa)? null : urlencode($berkasTambahan->biodataMahasiswa),
-                    "ijazah"            => empty($berkasTambahan->ijazah)? null : urlencode($berkasTambahan->ijazah),
-                    "transkripS1"       => empty($berkasTambahan->transkripS1)? null : urlencode($berkasTambahan->transkripS1),
-                    "ktp"               => empty($berkasTambahan->ktp)? null : urlencode($berkasTambahan->ktp),
-                    "foto"              => empty($berkasTambahan->foto)? null : urlencode($berkasTambahan->foto),
+                    "paktaIntegritas"   => empty($pendaftaran->paktaIntegritas)? null : urlencode($pendaftaran->paktaIntegritas),
+                    "biodataMahasiswa"  => empty($pendaftaran->biodataMahasiswa)? null : urlencode($pendaftaran->biodataMahasiswa),
+                    "ijazah"            => empty($pendaftaran->ijazah)? null : urlencode($pendaftaran->ijazah),
+                    "transkripS1"       => empty($pendaftaran->transkripS1)? null : urlencode($pendaftaran->transkripS1),
+                    "ktp"               => empty($pendaftaran->ktp)? null : urlencode($pendaftaran->ktp),
+                    "foto"              => empty($pendaftaran->foto)? null : urlencode($pendaftaran->foto),
                 ]);
             }
         } catch (\Throwable $th) {
@@ -123,44 +135,44 @@ class PendaftaranControllerApi extends Controller
         }        
     }
     public function SaveBiodata(Request $request){
-        $validator = Validator::make($request->all(), [
-            'uuidPendaftaran' => 'required',
-            'nik'             => 'required|digits:16',
-            'namaPeserta'     => 'required|string|max:255',
-            'jenisKelamin'    => 'required|string|in:L,P',
-            'tempatLahir'     => 'required|string|max:255',
-            'tanggalLahir'    => 'required|date_format:Y-m-d',
-            'agama'           => 'required|string|in:I,K,P,B,G,L',
-            'wargaNegara'     => 'required|string|in:I,A',
-            'statusSipil'     => 'required|string|in:B,K,J,D',
-            'noHp'            => 'required|digits_between:10,13',
-            'alamatEmail'     => 'required|email|max:255',
-            'alamatTinggal'   => 'required|string|max:500',
-            'rt'              => 'required|digits:3',
-            'rw'              => 'required|digits:3',
-            'kelurahan'       => 'required|string|max:255',
-            'kecamatan'       => 'required|string|max:255',
-            'kodePos'         => 'required|digits:5',
-            'jenisTinggal'    => 'required|in:1,2,3,4,5,99',
-            'namaIbu'         => 'required|string|max:255',
-            'namaAyah'        => 'required|string|max:255',
-            'alamatAyahIbu'   => 'required|string|max:500',
-            'hpAyahIbu'       => 'required|digits_between:10,13',
-            'hpKerabat'       => 'required|digits_between:10,13',
-            'sekolahMengajar' => 'required|string|max:255',
-            'alamatSekolah'   => 'required|string|max:500',
-            'telpSekolah'     => 'nullable|numeric',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'uuidPendaftaran' => 'required',
+        //     'nik'             => 'required|digits:16',
+        //     'namaPeserta'     => 'required|string|max:255',
+        //     'jenisKelamin'    => 'required|string|in:L,P',
+        //     'tempatLahir'     => 'required|string|max:255',
+        //     'tanggalLahir'    => 'required|date_format:Y-m-d',
+        //     'agama'           => 'required|string|in:I,K,P,B,G,L',
+        //     'wargaNegara'     => 'required|string|in:I,A',
+        //     'statusSipil'     => 'required|string|in:B,K,J,D',
+        //     'noHp'            => 'required|digits_between:10,13',
+        //     'alamatEmail'     => 'required|email|max:255',
+        //     'alamatTinggal'   => 'required|string|max:500',
+        //     'rt'              => 'required|digits:3',
+        //     'rw'              => 'required|digits:3',
+        //     'kelurahan'       => 'required|string|max:255',
+        //     'kecamatan'       => 'required|string|max:255',
+        //     'kodePos'         => 'required|digits:5',
+        //     'jenisTinggal'    => 'required|in:1,2,3,4,5,99',
+        //     'namaIbu'         => 'required|string|max:255',
+        //     'namaAyah'        => 'required|string|max:255',
+        //     'alamatAyahIbu'   => 'required|string|max:500',
+        //     'hpAyahIbu'       => 'required|digits_between:10,13',
+        //     'hpKerabat'       => 'required|digits_between:10,13',
+        //     'sekolahMengajar' => 'required|string|max:255',
+        //     'alamatSekolah'   => 'required|string|max:500',
+        //     'telpSekolah'     => 'nullable|numeric',
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                "Title" => "pendaftaran.invalidValidation",
-                "Detail" => $validator->errors(),
-            ], 500);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         "Title" => "pendaftaran.invalidValidation",
+        //         "Detail" => $validator->errors(),
+        //     ], 500);
+        // }
         
         try {
-            $pendaftaran                     = pengajuan::where('uuid',$request->uuidPendaftaran)->findOrFail();
+            $pendaftaran                     = pengajuan::where('uuid',$request->uuidPendaftaran)->firstOrFail();
             $pendaftaran->nik                = $request->nik;
             $pendaftaran->namaPeserta        = $request->namaPeserta;
             $pendaftaran->jenisKelamin       = $request->jenisKelamin;
@@ -192,7 +204,8 @@ class PendaftaranControllerApi extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 "Title" => "pendaftaran.commonError",
-                "Detail" => "ada yg salah pada aplikasi"
+                "Detail" => "ada yg salah pada aplikasi",
+                "Erorr" => $th->getMessage()
             ],400);
         }
 
@@ -217,7 +230,7 @@ class PendaftaranControllerApi extends Controller
         }
         
         try {
-            $berkasTambahan                    = pengajuan::where('uuid',$request->uuidPendaftaran)->findOrFail();
+            $berkasTambahan                    = pengajuan::where('uuid',$request->uuidPendaftaran)->firstOrFail();
             $berkasTambahan->paktaIntegritas   = $request->paktaIntegritas;
             $berkasTambahan->biodataMahasiswa  = $request->biodataMahasiswa;
 

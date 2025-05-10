@@ -7,6 +7,7 @@ import RadioGroup from "@src/components/RadioGroup";
 import Textarea from "@src/components/Textarea";
 import { useEffect, useState, useRef } from "react";
 import Stepper from '@src/Components/Stepper';
+import { apiProduction } from "@src/Persistance/API";
 
 const StepEnum = {
     PENGAJUAN: "Pengajuan",
@@ -16,7 +17,14 @@ const StepEnum = {
   
 function PendaftaranPage({ activeMenu }) {
     const steps = Object.values(StepEnum);
-    const [frame, setFrame] = useState(StepEnum.BIODATA_PDDIKTI);
+    const [frame, setFrame] = useState(StepEnum.PENGAJUAN);
+    const [loading, setLoading] = useState(false);
+    const [loadingFrame, setLoadingFrame] = useState(false);
+    const [errListBiodata, setErrListBiodata] = useState({});
+
+    const [errNomorUKG, setErrNomorUKG] = useState([]);
+    const [uuidPendaftaran, setUuidPendaftaran] = useState(null);
+    const [biodata, setBiodata] = useState(null);
     
     const [nomorUKG,setNomorUKG] = useState("");
     const [nim,setNim] = useState("");
@@ -147,10 +155,6 @@ function PendaftaranPage({ activeMenu }) {
     const [foto, setFoto] = useState(null);
     const [fotoPreview, setFotoPreview] = useState(null);
     
-    function CreateDataHandler(){
-        
-    }
-
     const handleIjazahChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -196,6 +200,164 @@ function PendaftaranPage({ activeMenu }) {
         }
     }
 
+    useEffect(()=>{
+        if(uuidPendaftaran!=null){
+            setFrame(StepEnum.BIODATA_PDDIKTI);
+            loadBiodata();
+        }
+    },[uuidPendaftaran])
+
+    async function loadBiodata(){
+        setLoadingFrame(true)
+        try {
+            console.log(`execute call /api/info-pendaftaran/${uuidPendaftaran}/biodata_diri`)
+            const response = await apiProduction.get(`/api/info-pendaftaran/${uuidPendaftaran}/biodata_diri`);
+
+            if (response.status === 200 || response.status === 204) {
+                setBiodata(response?.data);
+
+                setNomorUKG(response?.data?.nomorUKG ?? "");
+                setNim(response?.data?.nim ?? "");
+                setNik(response?.data?.nik ?? "");
+                setNamaPeserta(response?.data?.namaPeserta ?? "");
+                setTempatLahir(response?.data?.tempatLahir ?? "");
+                setTanggalLahir(response?.data?.tanggalLahir ?? "");
+                setJenisKelamin(response?.data?.jenisKelamin ?? "");
+                setAgama(response?.data?.agama ?? "");
+                setWargaNegara(response?.data?.wargaNegara ?? "");
+                setStatusSipil(response?.data?.statusSipil ?? "");
+                setNomorHp(response?.data?.noHp ?? "");
+                setAlamatEmail(response?.data?.alamatEmail ?? "");
+                setAlamatTinggal(response?.data?.alamatTinggal ?? "");
+                setRT(response?.data?.rt ?? "");
+                setRW(response?.data?.rw ?? "");
+                setKelurahan(response?.data?.kelurahan ?? "");
+                setKecamatan(response?.data?.kecamatan ?? "");
+                setKodePos(response?.data?.kodePos ?? "");
+                setJenisTinggal(response?.data?.jenisTinggal ?? "");
+                setNamaIbu(response?.data?.namaIbu ?? "");
+                setNamaAyah(response?.data?.namaAyah ?? "");
+                setAlamatAyahIbu(response?.data?.alamatAyahIbu ?? "");
+                setHpAyahIbu(response?.data?.hpAyahIbu ?? "");
+                setHpKerabat(response?.data?.hpKerabat ?? "");
+                setSekolahMengajar(response?.data?.sekolahMengajar ?? "");
+                setAlamatSekolah(response?.data?.alamatSekolah ?? "");
+                setTelpSekolah(response?.data?.telpSekolah ?? "");
+            }
+        } catch (error) {
+            // console.error(error.response?.data)
+
+            const status = error.response?.status;
+            const detail = error.response?.data?.Detail ?? "ada masalah pada aplikasi";
+
+            if (status === 400) {
+                alert(detail)
+            } else if(status === 500){
+                if(error.response?.data?.Title=="pendaftaran.invalidValidation"){
+                    
+                } else{
+                    alert(detail)
+                }
+            } else{
+                console.error(detail)
+            }
+            setFrame(StepEnum.PENGAJUAN)
+        } finally {
+            setLoadingFrame(false)
+        }
+    }
+
+    async function CreateDataHandler(){
+        setLoading(true)
+        try {
+            console.log(`execute CreateDataHandler to call /api/create`)
+            const response = await apiProduction.post("/api/create", {
+                nomorUKG: nomorUKG??""
+            });
+
+            if (response.status === 200 || response.status === 204) {
+                setUuidPendaftaran(response?.data);
+            }
+        } catch (error) {
+            // console.error(error.response?.data)
+
+            const status = error.response?.status;
+            const detail = error.response?.data?.Detail ?? "ada masalah pada aplikasi";
+
+            if (status === 400) {
+                alert(detail)
+            } else if(status === 500){
+                if(error.response?.data?.Title=="pendaftaran.invalidValidation"){
+                    setErrNomorUKG(detail.nomorUKG)
+                } else{
+                    alert(detail)
+                }
+            } else{
+                console.error(detail)
+            }
+        } finally {
+            setLoading(false)
+        }
+    }
+    async function SaveBiodataHandler(){
+        setLoading(true)
+        try {
+            console.log(`execute SaveBiodataHandler to call /api/save-biodata`)
+            const response = await apiProduction.post("/api/save-biodata", {
+                nomorUKG: nomorUKG ?? "",
+                uuidPendaftaran: uuidPendaftaran ?? "",
+                nik: nik ?? "",
+                namaPeserta: namaPeserta ?? "",
+                jenisKelamin: jenisKelamin ?? "",
+                tempatLahir: tempatLahir ?? "",
+                tanggalLahir: tanggalLahir ?? "",
+                agama: agama ?? "",
+                wargaNegara: wargaNegara ?? "",
+                statusSipil: statusSipil ?? "",
+                noHp: noHp.replaceAll("-","") ?? "",
+                alamatEmail: alamatEmail ?? "",
+                alamatTinggal: alamatTinggal ?? "",
+                rt: rt ?? "",
+                rw: rw ?? "",
+                kelurahan: kelurahan ?? "",
+                kecamatan: kecamatan ?? "",
+                kodePos: kodePos ?? "",
+                jenisTinggal: jenisTinggal ?? "",
+                namaIbu: namaIbu ?? "",
+                namaAyah: namaAyah ?? "",
+                alamatAyahIbu: alamatAyahIbu ?? "",
+                hpAyahIbu: hpAyahIbu.replaceAll("-","") ?? "",
+                hpKerabat: hpKerabat.replaceAll("-","") ?? "",
+                sekolahMengajar: sekolahMengajar ?? "",
+                alamatSekolah: alamatSekolah ?? "",
+                telpSekolah: telpSekolah.replaceAll("-","") ?? "",
+            });
+
+            if (response.status === 200 || response.status === 204) {
+                setFrame(StepEnum.KETENTUAN_LAPOR_DIRI)
+            }
+        } catch (error) {
+            // console.error(error.response?.data)
+
+            const status = error.response?.status;
+            const detail = error.response?.data?.Detail ?? "ada masalah pada aplikasi";
+
+            if (status === 400) {
+                alert(detail)
+            } else if(status === 500){
+                if(error.response?.data?.Title=="pendaftaran.invalidValidation"){
+                    setErrListBiodata(detail)
+                } else{
+                    alert(detail)
+                }
+            } else{
+                console.error(detail)
+            }
+        } finally {
+            setLoading(false)
+        }
+    }
+
     const handleFotoChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -225,29 +387,32 @@ function PendaftaranPage({ activeMenu }) {
         return <>
             <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3">Masukkan Nomor UKG</h2>
 
-            <div className="flex flex-row mb-6 p-4 rounded-lg">
+            <div className="flex flex-row rounded-lg">
                 <Input
                     label="Nomor UKG"
                     showLabel={false}
                     type="text"
                     value={nomorUKG}
                     onChange={(e) => setNomorUKG(e.target.value)}
-                    required
                 >
                     {/* <p className="text-green-500 text-sm mt-1">Data pengajuan sudah terdaftar</p>
                     <p className="text-red-500 text-sm mt-1">Data pengajuan belum terdaftar</p> */}
                 </Input>
                 <Button 
-                    onClick = {()=> CreateDataHandler()()}
+                    onClick = {()=> CreateDataHandler()}
                     className = ""
-                    loading={false}> 
+                    loading={loading}> 
                     Lanjut
                 </Button>
             </div>
+            {errNomorUKG.map(err => <p className="text-red-500 text-sm">{err}</p>)}
+
         </>
     }
     function BiodataPage(){
-        return <div className="p-4">
+        return loadingFrame? 
+        <p>Sedang memuat data...</p>:
+        <div className="p-4">
             <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3">Biodata Data Pribadi</h2>
 
             <div className="flex flex-col rounded-lg">
@@ -263,10 +428,10 @@ function PendaftaranPage({ activeMenu }) {
                     <Input
                         label="NIM"
                         type="text"
-                        value={nim}
+                        value={biodata?.nim ?? " "}
                         placeholder="065110201"
-                        onChange={(e) => setNim(e.target.value)}
-                        required
+                        onChange={(e) => {}}
+                        disabled
                     />
                     
                     <Input
@@ -274,7 +439,14 @@ function PendaftaranPage({ activeMenu }) {
                         type="text"
                         value={nik}
                         placeholder="3271222222220001"
-                        onChange={(e) => setNik(e.target.value)}
+                        onChange={(e) => {
+                            setNik(e.target.value)
+                            setErrListBiodata(prev => {
+                                const { nik, ...rest } = prev;
+                                return rest;
+                            });
+                        }}
+                        errorMessageList={errListBiodata?.nik ?? []}
                         required
                     />
                 </div>
@@ -286,7 +458,14 @@ function PendaftaranPage({ activeMenu }) {
                             type="text"
                             placeholder="masukkan nama"
                             value={namaPeserta}
-                            onChange={(e) => setNamaPeserta(e.target.value)}
+                            onChange={(e) => {
+                                setNamaPeserta(e.target.value)
+                                setErrListBiodata(prev => {
+                                    const { namaPeserta, ...rest } = prev;
+                                    return rest;
+                                });
+                            }}
+                            errorMessageList={errListBiodata?.namaPeserta ?? []}
                             required
                         />
                     </div>
@@ -298,12 +477,17 @@ function PendaftaranPage({ activeMenu }) {
                             onChange={(val) => {
                                 console.log(val)
                                 setJenisKelamin(val)
+                                setErrListBiodata(prev => {
+                                    const { jenisKelamin, ...rest } = prev;
+                                    return rest;
+                                });
                             }}
                             options={[
                                 { label: "Laki-laki", value: "L", id: "male" },
                                 { label: "Perempuan", value: "P", id: "female" }
                             ]}
                             errorMessage=""
+                            errorMessageList={errListBiodata?.jenisKelamin ?? []}
                             required
                         />
                     </div>
@@ -316,7 +500,14 @@ function PendaftaranPage({ activeMenu }) {
                         type="text"
                         value={tempatLahir}
                         placeholder="misal: bogor"
-                        onChange={(e) => setTempatLahir(e.target.value)}
+                        onChange={(e) => {
+                            setTempatLahir(e.target.value)
+                            setErrListBiodata(prev => {
+                                const { tempatLahir, ...rest } = prev;
+                                return rest;
+                            });
+                        }}
+                        errorMessageList={errListBiodata?.tempatLahir ?? []}
                         required
                     />
 
@@ -325,7 +516,14 @@ function PendaftaranPage({ activeMenu }) {
                         type="date"
                         value={tanggalLahir}
                         placeholder="01/12/1999"
-                        onChange={(e) => setTanggalLahir(e.target.value)}
+                        onChange={(e) => {
+                            setTanggalLahir(e.target.value)
+                            setErrListBiodata(prev => {
+                                const { tanggalLahir, ...rest } = prev;
+                                return rest;
+                            });
+                        }}
+                        errorMessageList={errListBiodata?.tanggalLahir ?? []}
                         required
                     />
                 </div>
@@ -334,7 +532,14 @@ function PendaftaranPage({ activeMenu }) {
                     label="Agama"
                     options={agamaOptions}
                     value={agama}
-                    onChange={setAgama}
+                    onChange={(value)=>{
+                        setAgama(value)
+                        setErrListBiodata(prev => {
+                            const { agama, ...rest } = prev;
+                            return rest;
+                        });
+                    }}
+                    errorMessageList={errListBiodata?.agama ?? []}
                     required
                 />
 
@@ -343,7 +548,14 @@ function PendaftaranPage({ activeMenu }) {
                         label="Warga Negara"
                         options={wargaNegaraOptions}
                         value={wargaNegara}
-                        onChange={setWargaNegara}
+                        onChange={(value)=>{
+                            setWargaNegara(value)
+                            setErrListBiodata(prev => {
+                                const { wargaNegara, ...rest } = prev;
+                                return rest;
+                            });
+                        }}
+                        errorMessageList={errListBiodata?.wargaNegara ?? []}
                         required
                     />
 
@@ -351,7 +563,14 @@ function PendaftaranPage({ activeMenu }) {
                         label="Status Sipil"
                         options={statusSipilOptions}
                         value={statusSipil}
-                        onChange={setStatusSipil}
+                        onChange={(value)=>{
+                            setStatusSipil(value)
+                            setErrListBiodata(prev => {
+                                const { statusSipil, ...rest } = prev;
+                                return rest;
+                            });
+                        }}
+                        errorMessageList={errListBiodata?.statusSipil ?? []}
                         required
                     />
                 </div>
@@ -363,7 +582,14 @@ function PendaftaranPage({ activeMenu }) {
                         value={noHp}
                         mask="____-____-______"
                         placeholder="0812-3456-7890"
-                        onChange={(e) => setNomorHp(e.target.value)}
+                        onChange={(e) => {
+                            setNomorHp(e.target.value)
+                            setErrListBiodata(prev => {
+                                const { noHp, ...rest } = prev;
+                                return rest;
+                            });
+                        }}
+                        errorMessageList={errListBiodata?.noHp ?? []}
                         required
                     />
 
@@ -372,7 +598,14 @@ function PendaftaranPage({ activeMenu }) {
                         type="email"
                         value={alamatEmail}
                         placeholder="example@gmail.com"
-                        onChange={(e) => setAlamatEmail(e.target.value)}
+                        onChange={(e) => {
+                            setAlamatEmail(e.target.value)
+                            setErrListBiodata(prev => {
+                                const { alamatEmail, ...rest } = prev;
+                                return rest;
+                            });
+                        }}
+                        errorMessageList={errListBiodata?.alamatEmail ?? []}
                         required
                     />
                 </div>
@@ -384,7 +617,14 @@ function PendaftaranPage({ activeMenu }) {
                             type="text"
                             value={alamatTinggal}
                             placeholder="misal: Ciheuleut No.10"
-                            onChange={(e) => setAlamatTinggal(e.target.value)}
+                            onChange={(e) => {
+                                setAlamatTinggal(e.target.value)
+                                setErrListBiodata(prev => {
+                                    const { alamatTinggal, ...rest } = prev;
+                                    return rest;
+                                });
+                            }}
+                            errorMessageList={errListBiodata?.alamatTinggal ?? []}
                             required
                         />
                     </div>
@@ -395,7 +635,16 @@ function PendaftaranPage({ activeMenu }) {
                             value={rt}
                             mask="___"
                             placeholder="001"
-                            onChange={(e) => setRT(e.target.value)}
+                            onChange={(e) => {
+                                if (e.target.value !="" && /^[0-9]+$/.test(e.target.value)) {
+                                    setRT(e.target.value)
+                                    setErrListBiodata(prev => {
+                                        const { rt, ...rest } = prev;
+                                        return rest;
+                                    });
+                                }
+                            }}
+                            errorMessageList={errListBiodata?.rt ?? []}
                             required
                         />
                     </div>
@@ -406,7 +655,16 @@ function PendaftaranPage({ activeMenu }) {
                             value={rw}
                             mask="___"
                             placeholder="001"
-                            onChange={(e) => setRW(e.target.value)}
+                            onChange={(e) => {
+                                if (e.target.value !="" && /^[0-9]+$/.test(e.target.value)) {
+                                    setRW(e.target.value)
+                                    setErrListBiodata(prev => {
+                                        const { rw, ...rest } = prev;
+                                        return rest;
+                                    });
+                                }
+                            }}
+                            errorMessageList={errListBiodata?.rw ?? []}
                             required
                         />
                     </div>
@@ -418,7 +676,14 @@ function PendaftaranPage({ activeMenu }) {
                         type="text"
                         value={kelurahan}
                         placeholder="misal: Baranangsiang"
-                        onChange={(e) => setKelurahan(e.target.value)}
+                        onChange={(e) => {
+                            setKelurahan(e.target.value)
+                            setErrListBiodata(prev => {
+                                const { kelurahan, ...rest } = prev;
+                                return rest;
+                            });
+                        }}
+                        errorMessageList={errListBiodata?.kelurahan ?? []}
                         required
                     />
 
@@ -427,7 +692,14 @@ function PendaftaranPage({ activeMenu }) {
                         type="text"
                         value={kecamatan}
                         placeholder="misal: Bogor Tengah"
-                        onChange={(e) => setKecamatan(e.target.value)}
+                        onChange={(e) => {
+                            setKecamatan(e.target.value)
+                            setErrListBiodata(prev => {
+                                const { kecamatan, ...rest } = prev;
+                                return rest;
+                            });
+                        }}
+                        errorMessageList={errListBiodata?.kecamatan ?? []}
                         required
                     />
 
@@ -437,7 +709,16 @@ function PendaftaranPage({ activeMenu }) {
                         value={kodePos}
                         mask="_____"
                         placeholder="16100"
-                        onChange={(e) => setKodePos(e.target.value)}
+                        onChange={(e) => {
+                            if (e.target.value !="" && /^[0-9]+$/.test(e.target.value)) {
+                                setKodePos(e.target.value)
+                                setErrListBiodata(prev => {
+                                    const { kodePos, ...rest } = prev;
+                                    return rest;
+                                });
+                            }
+                        }}
+                        errorMessageList={errListBiodata?.kodePos ?? []}
                         required
                     />
                 </div>
@@ -451,7 +732,14 @@ function PendaftaranPage({ activeMenu }) {
                     label="Jenis Tinggal"
                     options={jenisTinggalOptions}
                     value={jenisTinggal}
-                    onChange={setJenisTinggal}
+                    onChange={(value)=>{
+                        setJenisTinggal(value)
+                        setErrListBiodata(prev => {
+                            const { jenisTinggal, ...rest } = prev;
+                            return rest;
+                        });
+                    }}
+                    errorMessageList={errListBiodata?.jenisTinggal ?? []}
                     required
                 />
 
@@ -461,7 +749,14 @@ function PendaftaranPage({ activeMenu }) {
                             label="Nama Ibu"
                             type="text"
                             value={namaIbu}
-                            onChange={(e) => setNamaIbu(e.target.value)}
+                            onChange={(e) => {
+                                setNamaIbu(e.target.value)
+                                setErrListBiodata(prev => {
+                                    const { namaIbu, ...rest } = prev;
+                                    return rest;
+                                });
+                            }}
+                            errorMessageList={errListBiodata?.namaIbu ?? []}
                             required
                         />
                     </div>
@@ -470,7 +765,14 @@ function PendaftaranPage({ activeMenu }) {
                             label="Nama Ayah"
                             type="text"
                             value={namaAyah}
-                            onChange={(e) => setNamaAyah(e.target.value)}
+                            onChange={(e) => {
+                                setNamaAyah(e.target.value)
+                                setErrListBiodata(prev => {
+                                    const { namaAyah, ...rest } = prev;
+                                    return rest;
+                                });
+                            }}
+                            errorMessageList={errListBiodata?.namaAyah ?? []}
                             required
                         />
                     </div>
@@ -480,7 +782,14 @@ function PendaftaranPage({ activeMenu }) {
                     label="Alamat Ayah dan Ibu"
                     type="text"
                     value={alamatAyahIbu}
-                    onChange={(e) => setAlamatAyahIbu(e.target.value)}
+                    onChange={(e) => {
+                        setAlamatAyahIbu(e.target.value)
+                        setErrListBiodata(prev => {
+                            const { alamatAyahIbu, ...rest } = prev;
+                            return rest;
+                        });
+                    }}
+                    errorMessageList={errListBiodata?.alamatAyahIbu ?? []}
                     required
                 />
 
@@ -492,7 +801,14 @@ function PendaftaranPage({ activeMenu }) {
                             value={hpAyahIbu}
                             mask="____-____-______"
                             placeholder="0812-3456-7890"
-                            onChange={(e) => setHpAyahIbu(e.target.value)}
+                            onChange={(e) => {
+                                    setHpAyahIbu(e.target.value)
+                                    setErrListBiodata(prev => {
+                                        const { hpAyahIbu, ...rest } = prev;
+                                        return rest;
+                                    });
+                            }}
+                            errorMessageList={errListBiodata?.hpAyahIbu ?? []}
                             required
                         />
                     </div>
@@ -503,7 +819,14 @@ function PendaftaranPage({ activeMenu }) {
                             value={hpKerabat}
                             mask="____-____-______"
                             placeholder="0812-3456-7890"
-                            onChange={(e) => setHpKerabat(e.target.value)}
+                            onChange={(e) => {
+                                    setHpKerabat(e.target.value)
+                                    setErrListBiodata(prev => {
+                                        const { hpKerabat, ...rest } = prev;
+                                        return rest;
+                                    });
+                            }}
+                            errorMessageList={errListBiodata?.hpKerabat ?? []}
                             required
                         />  
                     </div>
@@ -513,7 +836,14 @@ function PendaftaranPage({ activeMenu }) {
                     label="Asal Sekolah Tempat Mengajar Sekarang"
                     type="text"
                     value={sekolahMengajar}
-                    onChange={(e) => setSekolahMengajar(e.target.value)}
+                    onChange={(e) => {
+                        setSekolahMengajar(e.target.value)
+                        setErrListBiodata(prev => {
+                            const { sekolahMengajar, ...rest } = prev;
+                            return rest;
+                        });
+                    }}
+                    errorMessageList={errListBiodata?.sekolahMengajar ?? []}
                     required
                 />
 
@@ -521,7 +851,14 @@ function PendaftaranPage({ activeMenu }) {
                     label="Alamat Lengkap (Sekolah/Tempat Mengajar)"
                     type="text"
                     value={alamatSekolah}
-                    onChange={(e) => setAlamatSekolah(e.target.value)}
+                    onChange={(e) => {
+                        setAlamatSekolah(e.target.value)
+                        setErrListBiodata(prev => {
+                            const { alamatSekolah, ...rest } = prev;
+                            return rest;
+                        });
+                    }}
+                    errorMessageList={errListBiodata?.alamatSekolah ?? []}
                     required
                 />
 
@@ -531,16 +868,23 @@ function PendaftaranPage({ activeMenu }) {
                     value={telpSekolah}
                     mask="____-____-______"
                     placeholder="0812-3456-7890"
-                    onChange={(e) => setTelpSekolah(e.target.value)}
+                    onChange={(e) => {
+                            setTelpSekolah(e.target.value)
+                            setErrListBiodata(prev => {
+                                const { telpSekolah, ...rest } = prev;
+                                return rest;
+                            });
+                    }}
+                    errorMessageList={errListBiodata?.telpSekolah ?? []}
                     required
                 />
             </div>
 
             <div className="flex flex-col rounded-lg">
                 <Button 
-                    onClick = {()=> CreateDataHandler()}
+                    onClick = {()=> SaveBiodataHandler()}
                     className = ""
-                    loading={false}> 
+                    loading={loading}> 
                     Simpan dan Lanjut Pengajuan
                 </Button>
             </div>

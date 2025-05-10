@@ -6,6 +6,7 @@ const Textarea = ({
   value,
   onChange,
   className = "",
+  errorMessageList = [],
   required = false,
 }) => {
   const [error, setError] = useState("");
@@ -35,6 +36,7 @@ const Textarea = ({
         rows="4"
       />
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {errorMessageList.map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
     </div>
   );
 };
