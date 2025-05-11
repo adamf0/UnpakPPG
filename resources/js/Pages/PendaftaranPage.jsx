@@ -1233,7 +1233,7 @@ function PendaftaranPage({ activeMenu }) {
                     onClick = {()=> SaveBerkasHandler()}
                     className = ""
                     loading={loading}> 
-                    Simpan dan Lanjut Pengajuan
+                    Kirim Pengajuan
                 </Button>
             </div>
         </div>
