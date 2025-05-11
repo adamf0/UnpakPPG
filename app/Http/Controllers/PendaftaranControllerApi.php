@@ -27,12 +27,13 @@ class PendaftaranControllerApi extends Controller
 
         try {
             $mahasiswa = mahasiswa::where('nomorUKG',$request->nomorUKG)->first();
-            // if($mahasiswa==null){
-            //     return response()->json([
-            //         "Title" => "pendaftaran.dataNotFound",
-            //         "Detail" => "nomor ukg tidak terdaftar"
-            //     ],400);
-            // }
+            if($mahasiswa==null){
+                return response()->json([
+                    "Title" => "pendaftaran.dataNotFound",
+                    "Detail" => "nomor ukg tidak terdaftar"
+                ],400);
+            }
+            
             $pengajuan = pengajuan::where('nomorUKG',$request->nomorUKG)->orWhere('nim',$mahasiswa?->nim)->get();
             if($pengajuan->count()>1){
                 return response()->json([
