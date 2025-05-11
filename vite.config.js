@@ -14,6 +14,10 @@ export default defineConfig({
         tailwindcss(),
     ],
     resolve: {
+        name: (name) => {
+            const pages = import.meta.glob('./Pages/**/*.jsx', { eager: true });
+            return pages[`./Pages/${name}.jsx`];
+        },
         alias: {
           "@assets": path.resolve(__dirname, "public"),
           "@src": path.resolve(__dirname, "resources/js"),
