@@ -22,14 +22,14 @@ Object.prototype.isEmpty = function() {
   
 function PendaftaranPage({ activeMenu }) {
     const steps = Object.values(StepEnum);
-    const [frame, setFrame] = useState(StepEnum.BIODATA_PDDIKTI);
+    const [frame, setFrame] = useState(StepEnum.PENGAJUAN);
     const [loading, setLoading] = useState(false);
     const [loadingFrame, setLoadingFrame] = useState(false);
     const [errListBiodata, setErrListBiodata] = useState({});
     const [errListBerkasTambahan, setErrListBerkasTambahan] = useState({});
 
     const [errNomorUKG, setErrNomorUKG] = useState([]);
-    const [uuidPendaftaran, setUuidPendaftaran] = useState("9bd81aef-cd94-4fba-9e7b-2180e18c06d1");
+    const [uuidPendaftaran, setUuidPendaftaran] = useState(null);
     const [biodata, setBiodata] = useState(null);
     const [berkasTambahan, setBerkasTambahan] = useState(null);
     
