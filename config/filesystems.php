@@ -41,7 +41,6 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => true,
             'report' => false,
@@ -49,8 +48,7 @@ return [
 
         'ijazah' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/ijazah'),
-            'url' => env('APP_URL').'/storage',
+            'root' => public_path('ijazah'),
             'visibility' => 'public',
             'serve' => true,
             'throw' => true,
@@ -58,8 +56,7 @@ return [
         ],
         'transkripS1' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/transkripS1'),
-            'url' => env('APP_URL').'/storage',
+            'root' => public_path('transkripS1'),
             'visibility' => 'public',
             'serve' => true,
             'throw' => true,
@@ -67,8 +64,7 @@ return [
         ],
         'ktp' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/ktp'),
-            'url' => env('APP_URL').'/storage',
+            'root' => public_path('ktp'),
             'visibility' => 'public',
             'serve' => true,
             'throw' => true,
@@ -76,8 +72,7 @@ return [
         ],
         'foto' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/foto'),
-            'url' => env('APP_URL').'/storage',
+            'root' => public_path('foto'),
             'visibility' => 'public',
             'serve' => true,
             'throw' => true,

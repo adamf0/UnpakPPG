@@ -119,8 +119,8 @@ class PendaftaranControllerApi extends Controller
                 ],200);
             } else{
                 return response()->json([
-                    "paktaIntegritas"   => empty($pendaftaran->paktaIntegritas)? null : urlencode($pendaftaran->paktaIntegritas),
-                    "biodataMahasiswa"  => empty($pendaftaran->biodataMahasiswa)? null : urlencode($pendaftaran->biodataMahasiswa),
+                    "paktaIntegritas"   => empty($pendaftaran->paktaIntegritas)? null : $pendaftaran->paktaIntegritas,
+                    "biodataMahasiswa"  => empty($pendaftaran->biodataMahasiswa)? null : $pendaftaran->biodataMahasiswa,
                     "ijazah"            => empty($pendaftaran->ijazah)? null : urlencode($pendaftaran->ijazah),
                     "transkripS1"       => empty($pendaftaran->transkripS1)? null : urlencode($pendaftaran->transkripS1),
                     "ktp"               => empty($pendaftaran->ktp)? null : urlencode($pendaftaran->ktp),
@@ -135,41 +135,41 @@ class PendaftaranControllerApi extends Controller
         }        
     }
     public function SaveBiodata(Request $request){
-        // $validator = Validator::make($request->all(), [
-        //     'uuidPendaftaran' => 'required',
-        //     'nik'             => 'required|digits:16',
-        //     'namaPeserta'     => 'required|string|max:255',
-        //     'jenisKelamin'    => 'required|string|in:L,P',
-        //     'tempatLahir'     => 'required|string|max:255',
-        //     'tanggalLahir'    => 'required|date_format:Y-m-d',
-        //     'agama'           => 'required|string|in:I,K,P,B,G,L',
-        //     'wargaNegara'     => 'required|string|in:I,A',
-        //     'statusSipil'     => 'required|string|in:B,K,J,D',
-        //     'noHp'            => 'required|digits_between:10,13',
-        //     'alamatEmail'     => 'required|email|max:255',
-        //     'alamatTinggal'   => 'required|string|max:500',
-        //     'rt'              => 'required|digits:3',
-        //     'rw'              => 'required|digits:3',
-        //     'kelurahan'       => 'required|string|max:255',
-        //     'kecamatan'       => 'required|string|max:255',
-        //     'kodePos'         => 'required|digits:5',
-        //     'jenisTinggal'    => 'required|in:1,2,3,4,5,99',
-        //     'namaIbu'         => 'required|string|max:255',
-        //     'namaAyah'        => 'required|string|max:255',
-        //     'alamatAyahIbu'   => 'required|string|max:500',
-        //     'hpAyahIbu'       => 'required|digits_between:10,13',
-        //     'hpKerabat'       => 'required|digits_between:10,13',
-        //     'sekolahMengajar' => 'required|string|max:255',
-        //     'alamatSekolah'   => 'required|string|max:500',
-        //     'telpSekolah'     => 'nullable|numeric',
-        // ]);
+        $validator = Validator::make($request->all(), [
+            'uuidPendaftaran' => 'required',
+            'nik'             => 'required|digits:16',
+            'namaPeserta'     => 'required|string|max:255',
+            'jenisKelamin'    => 'required|string|in:L,P',
+            'tempatLahir'     => 'required|string|max:255',
+            'tanggalLahir'    => 'required|date_format:Y-m-d',
+            'agama'           => 'required|string|in:I,K,P,B,G,L',
+            'wargaNegara'     => 'required|string|in:I,A',
+            'statusSipil'     => 'required|string|in:B,K,J,D',
+            'noHp'            => 'required|digits_between:10,13',
+            'alamatEmail'     => 'required|email|max:255',
+            'alamatTinggal'   => 'required|string|max:500',
+            'rt'              => 'required|digits:3',
+            'rw'              => 'required|digits:3',
+            'kelurahan'       => 'required|string|max:255',
+            'kecamatan'       => 'required|string|max:255',
+            'kodePos'         => 'required|digits:5',
+            'jenisTinggal'    => 'required|in:1,2,3,4,5,99',
+            'namaIbu'         => 'required|string|max:255',
+            'namaAyah'        => 'required|string|max:255',
+            'alamatAyahIbu'   => 'required|string|max:500',
+            'hpAyahIbu'       => 'required|digits_between:10,13',
+            'hpKerabat'       => 'required|digits_between:10,13',
+            'sekolahMengajar' => 'required|string|max:255',
+            'alamatSekolah'   => 'required|string|max:500',
+            'telpSekolah'     => 'nullable|numeric',
+        ]);
 
-        // if ($validator->fails()) {
-        //     return response()->json([
-        //         "Title" => "pendaftaran.invalidValidation",
-        //         "Detail" => $validator->errors(),
-        //     ], 500);
-        // }
+        if ($validator->fails()) {
+            return response()->json([
+                "Title" => "pendaftaran.invalidValidation",
+                "Detail" => $validator->errors(),
+            ], 500);
+        }
         
         try {
             $pendaftaran                     = pengajuan::where('uuid',$request->uuidPendaftaran)->firstOrFail();
@@ -213,9 +213,8 @@ class PendaftaranControllerApi extends Controller
     public function SaveBerkasTambahan(Request $request){
         $validator = Validator::make($request->all(), [
             'uuidPendaftaran' => ['required'],
-            'paktaIntegritas' => ['required', 'url', 'regex:/^https:\/\/drive\.google\.com\//'],
-            'paktaIntegritas' => ['required', 'url', 'regex:/^https:\/\/drive\.google\.com\//'],
-            'biodataMahasiswa' => ['required', 'url', 'regex:/^https:\/\/drive\.google\.com\//'],
+            'paktaIntegritas' => ['required', 'url', 'regex:/^https?:\/\/drive\.google\.com\//'],
+            'biodataMahasiswa' => ['required', 'url', 'regex:/^https?:\/\/drive\.google\.com\//'],
             'foto' => ['nullable', 'file', 'max:5120', new SafeFile(['image/jpeg', 'image/png'])],
             'ktp' => ['nullable', 'file', 'max:5120', new SafeFile(['image/jpeg', 'image/png'])],
             'transkripS1' => ['nullable', 'file', 'max:5120', new SafeFile(['application/pdf'])],
@@ -224,7 +223,7 @@ class PendaftaranControllerApi extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                "Title" => "berkasTamabahn.invalidValidation",
+                "Title" => "berkasTamabahan.invalidValidation",
                 "Detail" => $validator->errors(),
             ], 500);
         }
@@ -239,24 +238,32 @@ class PendaftaranControllerApi extends Controller
                 $fileFoto = $uuid.".".strtolower($request->file("foto")->getClientOriginalExtension());
                 $request->file("foto")->storeAs('/', $fileFoto, ['disk' => "foto"]);
                 $berkasTambahan->foto              = $fileFoto;
+
+                chmod(public_path('foto/' . $fileFoto), 0644);
             }
             if($request->has("ktp")){
                 $uuid = Uuid::uuid4()->toString();
                 $fileKtp = $uuid.".".strtolower($request->file("ktp")->getClientOriginalExtension());
                 $request->file("ktp")->storeAs('/', $fileKtp, ['disk' => "ktp"]);
                 $berkasTambahan->ktp              = $fileKtp;
+
+                chmod(public_path('ktp/' . $fileKtp), 0644);
             }
             if($request->has("transkripS1")){
                 $uuid = Uuid::uuid4()->toString();
                 $fileTranskripS1 = $uuid.".".strtolower($request->file("transkripS1")->getClientOriginalExtension());
                 $request->file("transkripS1")->storeAs('/', $fileTranskripS1, ['disk' => "transkripS1"]);
                 $berkasTambahan->transkripS1              = $fileTranskripS1;
+
+                chmod(public_path('transkripS1/' . $fileTranskripS1), 0644);
             }
             if($request->has("ijazah")){
                 $uuid = Uuid::uuid4()->toString();
                 $fileIjazah = $uuid.".".strtolower($request->file("ijazah")->getClientOriginalExtension());
                 $request->file("ijazah")->storeAs('/', $fileIjazah, ['disk' => "ijazah"]);
                 $berkasTambahan->ijazah              = $fileIjazah;
+
+                chmod(public_path('ijazah/' . $fileIjazah), 0644);
             }
             if($berkasTambahan->isDirty())
             $berkasTambahan->save();
@@ -264,8 +271,9 @@ class PendaftaranControllerApi extends Controller
             return response()->noContent();
         } catch (\Throwable $th) {
             return response()->json([
-                "Title" => "berkasTamabahn.commonError",
-                "Detail" => "ada yg salah pada aplikasi"
+                "Title" => "berkasTamabahan.commonError",
+                "Detail" => "ada yg salah pada aplikasi",
+                "Error" => $th->getMessage()
             ],400);
         }
 

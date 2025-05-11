@@ -14,6 +14,11 @@ const StepEnum = {
     BIODATA_PDDIKTI: "Biodata PDDIKTI",
     KETENTUAN_LAPOR_DIRI: "Ketentuan Lapor Diri"
 };
+Object.prototype.isEmpty = function() {
+    return this === null || this === undefined || this === '' || 
+           (Array.isArray(this) && this.length === 0) || 
+           (typeof this === 'object' && Object.keys(this).length === 0);
+};
   
 function PendaftaranPage({ activeMenu }) {
     const steps = Object.values(StepEnum);
@@ -21,10 +26,12 @@ function PendaftaranPage({ activeMenu }) {
     const [loading, setLoading] = useState(false);
     const [loadingFrame, setLoadingFrame] = useState(false);
     const [errListBiodata, setErrListBiodata] = useState({});
+    const [errListBerkasTambahan, setErrListBerkasTambahan] = useState({});
 
     const [errNomorUKG, setErrNomorUKG] = useState([]);
     const [uuidPendaftaran, setUuidPendaftaran] = useState(null);
     const [biodata, setBiodata] = useState(null);
+    const [berkasTambahan, setBerkasTambahan] = useState(null);
     
     const [nomorUKG,setNomorUKG] = useState("");
     const [nim,setNim] = useState("");
@@ -158,8 +165,12 @@ function PendaftaranPage({ activeMenu }) {
     const handleIjazahChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-          setIjazah(file);
-          setIjazahPreview(URL.createObjectURL(file));
+            setIjazah(file);
+            setIjazahPreview(URL.createObjectURL(file));
+            setErrListBerkasTambahan(prev => {
+                const { ijazah, ...rest } = prev;
+                return rest;
+            });
         }
     };
     const handlerResetIjazah = () => {
@@ -173,8 +184,12 @@ function PendaftaranPage({ activeMenu }) {
     const handleTranskripS1Change = (e) => {
         const file = e.target.files[0];
         if (file) {
-          setTranskripS1(file);
-          setTranskripS1Preview(file?.name ?? "");
+            setTranskripS1(file);
+            setTranskripS1Preview(file?.name ?? "");
+            setErrListBerkasTambahan(prev => {
+                const { transkripS1, ...rest } = prev;
+                return rest;
+            });
         }
     };
     const handlerResetTranskripS1 = () => {
@@ -188,8 +203,12 @@ function PendaftaranPage({ activeMenu }) {
     const handleKtpChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-          setKtp(file);
-          setKtpPreview(URL.createObjectURL(file));
+            setKtp(file);
+            setKtpPreview(URL.createObjectURL(file));
+            setErrListBerkasTambahan(prev => {
+                const { ktp, ...rest } = prev;
+                return rest;
+            });
         }
     };
     const handlerResetKtp = () => {
@@ -200,12 +219,37 @@ function PendaftaranPage({ activeMenu }) {
         }
     }
 
+    const handleFotoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setFoto(file);
+            setFotoPreview(URL.createObjectURL(file));
+            setErrListBerkasTambahan(prev => {
+                const { foto, ...rest } = prev;
+                return rest;
+            });
+        }
+    };
+    const handlerResetFoto = () => {
+        setFoto(null);
+        setFotoPreview(null);
+        if (fotoRef.current) {
+            fotoRef.current.value = "";
+        }
+    }
+
     useEffect(()=>{
         if(uuidPendaftaran!=null){
             setFrame(StepEnum.BIODATA_PDDIKTI);
             loadBiodata();
         }
     },[uuidPendaftaran])
+
+    useEffect(()=>{
+        if(frame===StepEnum.KETENTUAN_LAPOR_DIRI){
+            loadBerkasTambahan();
+        }
+    },[frame])
 
     async function loadBiodata(){
         setLoadingFrame(true)
@@ -262,6 +306,43 @@ function PendaftaranPage({ activeMenu }) {
                 console.error(detail)
             }
             setFrame(StepEnum.PENGAJUAN)
+        } finally {
+            setLoadingFrame(false)
+        }
+    }
+    async function loadBerkasTambahan(){
+        setLoadingFrame(true)
+        try {
+            console.log(`execute call /api/info-pendaftaran/${uuidPendaftaran}/berkas_tambahan`)
+            const response = await apiProduction.get(`/api/info-pendaftaran/${uuidPendaftaran}/berkas_tambahan`);
+
+            if (response.status === 200 || response.status === 204) {
+                setBerkasTambahan(response?.data);
+                setPaktaIntegritas(response?.data?.paktaIntegritas ?? "")
+                setBiodataMahasiswa(response?.data?.biodataMahasiswa ?? "")
+                setIjazahPreview(response?.data?.ijazah.isEmpty()? "":`/ijazah/${response?.data?.ijazah}`)
+                setTranskripS1Preview(response?.data?.transkripS1.isEmpty()? "":`/transkripS1/${response?.data?.transkripS1}`)
+                setKtpPreview(response?.data?.ktp.isEmpty()? "":`/ktp/${response?.data?.ktp}`)
+                setFotoPreview(response?.data?.foto.isEmpty()? "":`/foto/${response?.data?.foto}`)
+            }
+        } catch (error) {
+            // console.error(error.response?.data)
+
+            const status = error.response?.status;
+            const detail = error.response?.data?.Detail ?? "ada masalah pada aplikasi";
+
+            if (status === 400) {
+                alert(detail)
+            } else if(status === 500){
+                if(error.response?.data?.Title=="berkasTamabahan.invalidValidation"){
+                    
+                } else{
+                    alert(detail)
+                }
+            } else{
+                console.error(error)
+            }
+            // setFrame(StepEnum.PENGAJUAN)
         } finally {
             setLoadingFrame(false)
         }
@@ -357,19 +438,53 @@ function PendaftaranPage({ activeMenu }) {
             setLoading(false)
         }
     }
+    async function SaveBerkasHandler(){
+        setLoading(true)
+        try {
+            console.log(`execute SaveBerkasHandler to call /api/save-berkas`)
+            const formData = new FormData();
+            const input = {
+                uuidPendaftaran,
+                paktaIntegritas,
+                biodataMahasiswa,
+                foto,
+                ktp,
+                transkripS1,
+                ijazah,
+            };
 
-    const handleFotoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          setFoto(file);
-          setFotoPreview(URL.createObjectURL(file));
-        }
-    };
-    const handlerResetFoto = () => {
-        setFoto(null);
-        setFotoPreview(null);
-        if (fotoRef.current) {
-            fotoRef.current.value = "";
+            Object.entries(input).forEach(([key, value]) => {
+                if (value) formData.append(key, value);
+            });
+
+            const response = await apiProduction.post("/api/save-berkas", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+
+            if (response.status === 200 || response.status === 204) {
+                alert("berhasil simpan data")
+            }
+        } catch (error) {
+            // console.error(error.response?.data)
+
+            const status = error.response?.status;
+            const detail = error.response?.data?.Detail ?? "ada masalah pada aplikasi";
+
+            if (status === 400) {
+                alert(detail)
+            } else if(status === 500){
+                if(error.response?.data?.Title=="berkasTamabahan.invalidValidation"){
+                    setErrListBerkasTambahan(detail)
+                } else{
+                    alert(detail)
+                }
+            } else{
+                console.error(detail)
+            }
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -891,7 +1006,9 @@ function PendaftaranPage({ activeMenu }) {
         </div>
     }
     function KetentuanLaporPage(){
-        return <div className="flex flex-col gap-3">
+        return loadingFrame? 
+        <p>Sedang memuat data...</p>:
+        <div className="flex flex-col gap-3">
             <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3">Berkas Tambahan</h2>
 
             <div className="flex flex-col rounded-lg">
@@ -900,7 +1017,15 @@ function PendaftaranPage({ activeMenu }) {
                     type="url"
                     value={paktaIntegritas}
                     placeholder="misal: http://drive.google.com/drive/folders/example"
-                    onChange={(e) => setPaktaIntegritas(e.target.value)}
+                    onChange={(e) => {
+                        setPaktaIntegritas(e.target.value)
+                        setErrListBerkasTambahan(prev => {
+                            const { paktaIntegritas, ...rest } = prev;
+                            return rest;
+                        });
+                    }}
+                    errorMessageList={errListBerkasTambahan?.paktaIntegritas ?? []}
+                    required
                 />
 
                 <Input
@@ -908,7 +1033,15 @@ function PendaftaranPage({ activeMenu }) {
                     type="url"
                     value={biodataMahasiswa}
                     placeholder="misal: http://drive.google.com/drive/folders/example"
-                    onChange={(e) => setBiodataMahasiswa(e.target.value)}
+                    onChange={(e) => {
+                        setBiodataMahasiswa(e.target.value)
+                        setErrListBerkasTambahan(prev => {
+                            const { biodataMahasiswa, ...rest } = prev;
+                            return rest;
+                        });
+                    }}
+                    errorMessageList={errListBerkasTambahan?.biodataMahasiswa ?? []}
+                    required
                 />
 
                 <Input
@@ -920,6 +1053,7 @@ function PendaftaranPage({ activeMenu }) {
                     accept="image/jpeg,image/png"
                     className="mb-3"
                 >
+                    {(errListBerkasTambahan?.ijazah??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
                     <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
                     <ol className="list-decimal pl-10">
                         <li>ektensi file yang diterima <b>.JPG, .JPEG & .PNG</b></li>  
@@ -963,6 +1097,7 @@ function PendaftaranPage({ activeMenu }) {
                     accept="application/pdf"
                     className="mb-3"
                 >
+                    {(errListBerkasTambahan?.transkripS1??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
                     <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
                     <ol className="list-decimal pl-10">
                         <li>ektensi file yang diterima <b>.PDF</b></li>  
@@ -1006,6 +1141,7 @@ function PendaftaranPage({ activeMenu }) {
                     accept="image/jpeg,image/png"
                     className="mb-3"
                 >
+                    {(errListBerkasTambahan?.ktp??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
                     <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
                     <ol className="list-decimal pl-10">
                         <li>ektensi file yang diterima <b>.JPG, .JPEG & .PNG</b></li>  
@@ -1050,6 +1186,7 @@ function PendaftaranPage({ activeMenu }) {
                     accept="image/jpeg,image/png"
                     className="mb-3"
                 >
+                    {(errListBerkasTambahan?.foto??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
                     <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
                     <ol className="list-decimal pl-10">
                         <li>dengan background berlatar merah</li>  
@@ -1093,7 +1230,7 @@ function PendaftaranPage({ activeMenu }) {
 
             <div className="flex flex-col rounded-lg">
                 <Button 
-                    onClick = {()=> CreateDataHandler()}
+                    onClick = {()=> SaveBerkasHandler()}
                     className = ""
                     loading={false}> 
                     Simpan dan Lanjut Pengajuan
