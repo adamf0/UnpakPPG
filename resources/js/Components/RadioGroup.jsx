@@ -34,11 +34,11 @@ const RadioGroup = ({
                 disabled={disabled}
                 checked={value === option.value}
                 onChange={() => handleChange(option.value)}
-                className={`hidden peer/${option.id}`}
+                className={`hidden`}
               />
               <label
                 htmlFor={option.id}
-                className={`bg-gray-300 text-gray-800 hover:bg-purple-400 hover:text-white peer-checked/${option.id}:bg-purple-500 peer-checked/${option.id}:text-white font-semibold py-2 px-4 cursor-pointer ${
+                className={`${value === option.value? 'bg-purple-500 text-white':'bg-gray-300 text-gray-800'} hover:bg-purple-400 hover:text-white font-semibold py-2 px-4 cursor-pointer ${
                   index === 0 ? "rounded-l" : index === options.length - 1 ? "rounded-r" : ""
                 }`}
               >
