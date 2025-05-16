@@ -120,12 +120,16 @@ class PendaftaranControllerApi extends Controller
                 ],200);
             } else{
                 return response()->json([
-                    "paktaIntegritas"   => empty($pendaftaran->paktaIntegritas)? null : $pendaftaran->paktaIntegritas,
-                    "biodataMahasiswa"  => empty($pendaftaran->biodataMahasiswa)? null : $pendaftaran->biodataMahasiswa,
+                    "paktaIntegritas"   => empty($pendaftaran->paktaIntegritas)? null : urlencode($pendaftaran->paktaIntegritas),
+                    "biodataMahasiswa"  => empty($pendaftaran->biodataMahasiswa)? null : urlencode($pendaftaran->biodataMahasiswa),
                     "ijazah"            => empty($pendaftaran->ijazah)? null : urlencode($pendaftaran->ijazah),
                     "transkripS1"       => empty($pendaftaran->transkripS1)? null : urlencode($pendaftaran->transkripS1),
                     "ktp"               => empty($pendaftaran->ktp)? null : urlencode($pendaftaran->ktp),
                     "foto"              => empty($pendaftaran->foto)? null : urlencode($pendaftaran->foto),
+                    "suratKeteranganSehat" => empty($pendaftaran->suratKeteranganSehat)? null: urlencode($pendaftaran->suratKeteranganSehat),
+                    "suratKeteranganBerkelakuanBaik" => empty($pendaftaran->suratKeteranganBerkelakuanBaik)? null: urlencode($pendaftaran->suratKeteranganBerkelakuanBaik),
+                    "suratBebasNarkoba" => empty($pendaftaran->suratBebasNarkoba)? null: urlencode($pendaftaran->suratBebasNarkoba),
+                    "npwp" => empty($pendaftaran->npwp)? null: urlencode($pendaftaran->npwp),
                 ]);
             }
         } catch (\Throwable $th) {
@@ -214,65 +218,186 @@ class PendaftaranControllerApi extends Controller
     public function SaveBerkasTambahan(Request $request){
         $validator = Validator::make($request->all(), [
             'uuidPendaftaran' => ['required'],
-            'paktaIntegritas' => ['required', 'url', 'regex:/^https?:\/\/drive\.google\.com\//'],
-            'biodataMahasiswa' => ['required', 'url', 'regex:/^https?:\/\/drive\.google\.com\//'],
-            'foto' => ['nullable', 'file', 'max:5120', new SafeFile(['image/jpeg', 'image/png'])],
-            'ktp' => ['nullable', 'file', 'max:5120', new SafeFile(['image/jpeg', 'image/png'])],
-            'transkripS1' => ['nullable', 'file', 'max:5120', new SafeFile(['application/pdf'])],
-            'ijazah' => ['nullable', 'file', 'max:5120', new SafeFile(['image/jpeg', 'image/png'])],
+            'paktaIntegritas' => ['required'],
+            'biodataMahasiswa' => ['required'],
+            'foto' => ['required'],
+            'ktp' => ['required'],
+            'transkripS1' => ['required'],
+            'ijazah' => ['required'],
+            'suratKeteranganSehat' => ['required'],
+            'suratKeteranganBerkelakuanBaik' => ['required'],
+            'suratBebasNarkoba' => ['required']
         ]);
-
+        
         if ($validator->fails()) {
             return response()->json([
-                "Title" => "berkasTamabahan.invalidValidation",
+                "Title" => "berkasTambahan.invalidValidation",
                 "Detail" => $validator->errors(),
             ], 500);
         }
         
+        $fileRules = [];        
+        if ($request->hasFile('paktaIntegritas')) {
+            $fileRules['paktaIntegritas'] = ['file', 'max:5120', new SafeFile(['application/pdf'])];
+        }
+        if ($request->hasFile('biodataMahasiswa')) {
+            $fileRules['biodataMahasiswa'] = ['file', 'max:5120', new SafeFile(['application/pdf'])];
+        }
+        if ($request->hasFile('foto')) {
+            $fileRules['foto'] = ['file', 'max:5120', new SafeFile(['image/jpeg', 'image/png'])];
+        }
+        if ($request->hasFile('ktp')) {
+            $fileRules['ktp'] = ['file', 'max:5120', new SafeFile(['image/jpeg', 'image/png'])];
+        }
+        if ($request->hasFile('transkripS1')) {
+            $fileRules['transkripS1'] = ['file', 'max:5120', new SafeFile(['application/pdf'])];
+        }
+        if ($request->hasFile('ijazah')) {
+            $fileRules['ijazah'] = ['file', 'max:5120', new SafeFile(['application/pdf'])];
+        }
+        if ($request->hasFile('suratKeteranganSehat')){
+            $fileRules['suratKeteranganSehat'] = ['file', 'max:5120', new SafeFile(['application/pdf'])];;
+        }
+        if ($request->hasFile('suratKeteranganBerkelakuanBaik')){
+            $fileRules['suratKeteranganBerkelakuanBaik'] = ['file', 'max:5120', new SafeFile(['application/pdf'])];;
+        }
+        if ($request->hasFile('suratBebasNarkoba')){
+            $fileRules['suratBebasNarkoba'] = ['file', 'max:5120', new SafeFile(['application/pdf'])];;
+        }
+        if ($request->hasFile('npwp')){
+            $fileRules['npwp'] = ['file', 'max:5120', new SafeFile(['application/pdf'])];;
+        }
+        
+        if (!empty($fileRules)) {
+            $validator = Validator::make($request->all(), $fileRules);
+        
+            if ($validator->fails()) {
+                return response()->json([
+                    "Title" => "berkasTambahan.invalidValidation",
+                    "Detail" => $validator->errors(),
+                ], 500);
+            }
+        }
+        
         try {
             $berkasTambahan                    = pengajuan::where('uuid',$request->uuidPendaftaran)->firstOrFail();
-            $berkasTambahan->paktaIntegritas   = $request->paktaIntegritas;
-            $berkasTambahan->biodataMahasiswa  = $request->biodataMahasiswa;
+            if($request->has("paktaIntegritas") && $request->hasFile("paktaIntegritas")){
+                $uuid = Uuid::uuid4()->toString();
+                $filePaktaIntegritas = $uuid.".".strtolower($request->file("paktaIntegritas")->getClientOriginalExtension());
+                $request->file("paktaIntegritas")->storeAs('/', $filePaktaIntegritas, ['disk' => "paktaIntegritas"]);
+                $berkasTambahan->paktaIntegritas              = $filePaktaIntegritas;
 
-            if($request->has("foto")){
+                chmod(public_path('paktaIntegritas/' . $filePaktaIntegritas), 0644);
+            } else{
+                $berkasTambahan->paktaIntegritas = $request->paktaIntegritas;
+            }
+
+            if($request->has("biodataMahasiswa") && $request->hasFile("biodataMahasiswa")){
+                $uuid = Uuid::uuid4()->toString();
+                $fileBiodataMahasiswa = $uuid.".".strtolower($request->file("biodataMahasiswa")->getClientOriginalExtension());
+                $request->file("biodataMahasiswa")->storeAs('/', $fileBiodataMahasiswa, ['disk' => "biodataMahasiswa"]);
+                $berkasTambahan->biodataMahasiswa              = $fileBiodataMahasiswa;
+
+                chmod(public_path('biodataMahasiswa/' . $fileBiodataMahasiswa), 0644);
+            } else{
+                $berkasTambahan->biodataMahasiswa = $request->biodataMahasiswa;
+            }
+
+            if($request->has("foto") && $request->hasFile("foto")){
                 $uuid = Uuid::uuid4()->toString();
                 $fileFoto = $uuid.".".strtolower($request->file("foto")->getClientOriginalExtension());
                 $request->file("foto")->storeAs('/', $fileFoto, ['disk' => "foto"]);
                 $berkasTambahan->foto              = $fileFoto;
 
                 chmod(public_path('foto/' . $fileFoto), 0644);
+            } else{
+                $berkasTambahan->foto = $request->foto;
             }
-            if($request->has("ktp")){
+
+            if($request->has("ktp") && $request->hasFile("ktp")){
                 $uuid = Uuid::uuid4()->toString();
                 $fileKtp = $uuid.".".strtolower($request->file("ktp")->getClientOriginalExtension());
                 $request->file("ktp")->storeAs('/', $fileKtp, ['disk' => "ktp"]);
                 $berkasTambahan->ktp              = $fileKtp;
 
                 chmod(public_path('ktp/' . $fileKtp), 0644);
+            } else{
+                $berkasTambahan->ktp = $request->ktp;
             }
-            if($request->has("transkripS1")){
+
+            if($request->has("transkripS1") && $request->hasFile("transkripS1")){
                 $uuid = Uuid::uuid4()->toString();
                 $fileTranskripS1 = $uuid.".".strtolower($request->file("transkripS1")->getClientOriginalExtension());
                 $request->file("transkripS1")->storeAs('/', $fileTranskripS1, ['disk' => "transkripS1"]);
                 $berkasTambahan->transkripS1              = $fileTranskripS1;
 
                 chmod(public_path('transkripS1/' . $fileTranskripS1), 0644);
+            } else{
+                $berkasTambahan->transkripS1 = $request->transkripS1;
             }
-            if($request->has("ijazah")){
+
+            if($request->has("ijazah") && $request->hasFile("ijazah")){
                 $uuid = Uuid::uuid4()->toString();
                 $fileIjazah = $uuid.".".strtolower($request->file("ijazah")->getClientOriginalExtension());
                 $request->file("ijazah")->storeAs('/', $fileIjazah, ['disk' => "ijazah"]);
                 $berkasTambahan->ijazah              = $fileIjazah;
 
                 chmod(public_path('ijazah/' . $fileIjazah), 0644);
+            } else{
+                $berkasTambahan->ijazah = $request->ijazah;
             }
+
+            if($request->has("suratKeteranganSehat") && $request->hasFile("suratKeteranganSehat")){
+                $uuid = Uuid::uuid4()->toString();
+                $fileSuratKeteranganSehat = $uuid.".".strtolower($request->file("suratKeteranganSehat")->getClientOriginalExtension());
+                $request->file("suratKeteranganSehat")->storeAs('/', $fileSuratKeteranganSehat, ['disk' => "suratKeteranganSehat"]);
+                $berkasTambahan->suratKeteranganSehat              = $fileSuratKeteranganSehat;
+
+                chmod(public_path('suratKeteranganSehat/' . $fileSuratKeteranganSehat), 0644);
+            } else{
+                $berkasTambahan->ijazah = $request->ijazah;
+            }
+
+            if($request->has("suratKeteranganBerkelakuanBaik") && $request->hasFile("suratKeteranganBerkelakuanBaik")){
+                $uuid = Uuid::uuid4()->toString();
+                $fileSuratKeteranganBerkelakuanBaik = $uuid.".".strtolower($request->file("suratKeteranganBerkelakuanBaik")->getClientOriginalExtension());
+                $request->file("suratKeteranganBerkelakuanBaik")->storeAs('/', $fileSuratKeteranganBerkelakuanBaik, ['disk' => "suratKeteranganBerkelakuanBaik"]);
+                $berkasTambahan->suratKeteranganBerkelakuanBaik              = $fileSuratKeteranganBerkelakuanBaik;
+
+                chmod(public_path('suratKeteranganBerkelakuanBaik/' . $fileSuratKeteranganBerkelakuanBaik), 0644);
+            } else{
+                $berkasTambahan->suratKeteranganBerkelakuanBaik = $request->suratKeteranganBerkelakuanBaik;
+            }
+
+            if($request->has("suratBebasNarkoba") && $request->hasFile("suratBebasNarkoba")){
+                $uuid = Uuid::uuid4()->toString();
+                $fileSuratBebasNarkoba = $uuid.".".strtolower($request->file("suratBebasNarkoba")->getClientOriginalExtension());
+                $request->file("suratBebasNarkoba")->storeAs('/', $fileSuratBebasNarkoba, ['disk' => "suratBebasNarkoba"]);
+                $berkasTambahan->suratBebasNarkoba              = $fileSuratBebasNarkoba;
+
+                chmod(public_path('suratBebasNarkoba/' . $fileSuratBebasNarkoba), 0644);
+            } else{
+                $berkasTambahan->ijazah = $request->ijazah;
+            }
+
+            if($request->has("npwp") && $request->hasFile("npwp")){
+                $uuid = Uuid::uuid4()->toString();
+                $fileNpwp = $uuid.".".strtolower($request->file("npwp")->getClientOriginalExtension());
+                $request->file("npwp")->storeAs('/', $fileNpwp, ['disk' => "npwp"]);
+                $berkasTambahan->npwp              = $fileNpwp;
+
+                chmod(public_path('npwp/' . $fileNpwp), 0644);
+            } else{
+                $berkasTambahan->npwp = $request->npwp;
+            }
+            
             if($berkasTambahan->isDirty())
             $berkasTambahan->save();
 
             return response()->noContent();
         } catch (\Throwable $th) {
             return response()->json([
-                "Title" => "berkasTamabahan.commonError",
+                "Title" => "berkasTambahan.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
                 "Error" => $th->getMessage()
             ],400);

@@ -9,6 +9,7 @@ import { useEffect, useState, useRef } from "react";
 import Stepper from '@src/Components/Stepper';
 import { apiProduction } from "@src/Persistance/API";
 
+//[PR] tambah alert pada step 3, pastikan dia mau simpan permanen
 const StepEnum = {
     PENGAJUAN: "Pengajuan",
     BIODATA_PDDIKTI: "Biodata PDDIKTI",
@@ -143,8 +144,13 @@ function PendaftaranPage({ activeMenu }) {
     const [alamatSekolah,setAlamatSekolah ] = useState("");
     const [telpSekolah,setTelpSekolah ] = useState("");
 
-    const [paktaIntegritas,setPaktaIntegritas] = useState("");
-    const [biodataMahasiswa,setBiodataMahasiswa] = useState("");
+    const paktaIntegritasRef = useRef(null);
+    const [paktaIntegritas, setPaktaIntegritas] = useState(null);
+    const [paktaIntegritasPreview, setPaktaIntegritasPreview] = useState(null);
+
+    const biodataMahasiswaRef = useRef(null);
+    const [biodataMahasiswa, setBiodataMahasiswa] = useState(null);
+    const [biodataMahasiswaPreview, setBiodataMahasiswaPreview] = useState(null);
 
     const ijazahRef = useRef(null);
     const [ijazah, setIjazah] = useState(null);
@@ -161,12 +167,66 @@ function PendaftaranPage({ activeMenu }) {
     const fotoRef = useRef(null);
     const [foto, setFoto] = useState(null);
     const [fotoPreview, setFotoPreview] = useState(null);
+
+    const suratKeteranganSehatRef = useRef(null);
+    const [suratKeteranganSehat, setSuratKeteranganSehat] = useState(null);
+    const [suratKeteranganSehatPreview, setSuratKeteranganSehatPreview] = useState(null);
     
+    const suratKeteranganBerkelakuanBaikRef = useRef(null);
+    const [suratKeteranganBerkelakuanBaik, setSuratKeteranganBerkelakuanBaik] = useState(null);
+    const [suratKeteranganBerkelakuanBaikPreview, setSuratKeteranganBerkelakuanBaikPreview] = useState(null);
+
+    const suratBebasNarkobaRef = useRef(null);
+    const [suratBebasNarkoba, setSuratBebasNarkoba] = useState(null);
+    const [suratBebasNarkobaPreview, setSuratBebasNarkobaPreview] = useState(null);
+
+    const npwpRef = useRef(null);
+    const [npwp, setNpwp] = useState(null);
+    const [npwpPreview, setNpwpPreview] = useState(null);
+
+    const handlePaktaIntegritasChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setPaktaIntegritas(file);
+            setPaktaIntegritasPreview(file?.name ?? "");
+            setErrListBerkasTambahan(prev => {
+                const { paktaIntegritas, ...rest } = prev;
+                return rest;
+            });
+        }
+    };
+    const handlerResetPaktaIntegritas = () => {
+        setPaktaIntegritas(null);
+        setPaktaIntegritasPreview(null);
+        if (paktaIntegritasRef.current) {
+            paktaIntegritasRef.current.value = "";
+        }
+    }
+
+    const handleBiodataMahasiswaChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setBiodataMahasiswa(file);
+            setBiodataMahasiswaPreview(file?.name ?? "");
+            setErrListBerkasTambahan(prev => {
+                const { biodataMahasiswa, ...rest } = prev;
+                return rest;
+            });
+        }
+    };
+    const handlerResetBiodataMahasiswa = () => {
+        setBiodataMahasiswa(null);
+        setBiodataMahasiswaPreview(null);
+        if (biodataMahasiswaRef.current) {
+            biodataMahasiswaRef.current.value = "";
+        }
+    }
+
     const handleIjazahChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setIjazah(file);
-            setIjazahPreview(URL.createObjectURL(file));
+            setIjazahPreview(file?.name ?? "");
             setErrListBerkasTambahan(prev => {
                 const { ijazah, ...rest } = prev;
                 return rest;
@@ -235,6 +295,82 @@ function PendaftaranPage({ activeMenu }) {
         setFotoPreview(null);
         if (fotoRef.current) {
             fotoRef.current.value = "";
+        }
+    }
+
+    const handleSuratKeteranganSehatChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSuratKeteranganSehat(file);
+            setSuratKeteranganSehatPreview(file?.name ?? "");
+            setErrListBerkasTambahan(prev => {
+                const { suratKeteranganSehat, ...rest } = prev;
+                return rest;
+            });
+        }
+    };
+    const handlerResetSuratKeteranganSehat = () => {
+        setSuratKeteranganSehat(null);
+        setSuratKeteranganSehatPreview(null);
+        if (suratKeteranganSehatRef.current) {
+            suratKeteranganSehatRef.current.value = "";
+        }
+    }
+
+    const handleSuratKeteranganBerkelakuanBaikChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSuratKeteranganBerkelakuanBaik(file);
+            setSuratKeteranganBerkelakuanBaikPreview(file?.name ?? "");
+            setErrListBerkasTambahan(prev => {
+                const { suratKeteranganBerkelakuanBaik, ...rest } = prev;
+                return rest;
+            });
+        }
+    };
+    const handlerResetSuratKeteranganBerkelakuanBaik = () => {
+        setSuratKeteranganBerkelakuanBaik(null);
+        setSuratKeteranganBerkelakuanBaikPreview(null);
+        if (suratKeteranganBerkelakuanBaikRef.current) {
+            suratKeteranganBerkelakuanBaikRef.current.value = "";
+        }
+    }
+
+    const handleSuratBebasNarkobaChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSuratBebasNarkoba(file);
+            setSuratBebasNarkobaPreview(file?.name ?? "");
+            setErrListBerkasTambahan(prev => {
+                const { suratBebasNarkoba, ...rest } = prev;
+                return rest;
+            });
+        }
+    };
+    const handlerResetSuratBebasNarkoba = () => {
+        setSuratBebasNarkoba(null);
+        setSuratBebasNarkobaPreview(null);
+        if (suratBebasNarkobaRef.current) {
+            suratBebasNarkobaRef.current.value = "";
+        }
+    }
+
+    const handleNpwpChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setNpwp(file);
+            setNpwpPreview(file?.name ?? "");
+            setErrListBerkasTambahan(prev => {
+                const { npwp, ...rest } = prev;
+                return rest;
+            });
+        }
+    };
+    const handlerResetNpwp = () => {
+        setNpwp(null);
+        setNpwpPreview(null);
+        if (npwpRef.current) {
+            npwpRef.current.value = "";
         }
     }
 
@@ -320,10 +456,19 @@ function PendaftaranPage({ activeMenu }) {
                 setBerkasTambahan(response?.data);
                 setPaktaIntegritas(response?.data?.paktaIntegritas ?? "")
                 setBiodataMahasiswa(response?.data?.biodataMahasiswa ?? "")
-                setIjazahPreview(response?.data?.ijazah.isEmpty()? "":`/ijazah/${response?.data?.ijazah}`)
-                setTranskripS1Preview(response?.data?.transkripS1.isEmpty()? "":`/transkripS1/${response?.data?.transkripS1}`)
-                setKtpPreview(response?.data?.ktp.isEmpty()? "":`/ktp/${response?.data?.ktp}`)
-                setFotoPreview(response?.data?.foto.isEmpty()? "":`/foto/${response?.data?.foto}`)
+                setIjazah(response?.data?.ijazah ?? "")
+                setTranskripS1(response?.data?.transkripS1 ?? response?.data?.transkripS1)
+
+                setKtp(response?.data?.ktp)
+                setKtpPreview(response?.data?.ktp?.isEmpty()? "":`/ktp/${response?.data?.ktp}`)
+
+                setFoto(response?.data?.foto)
+                setFotoPreview(response?.data?.foto?.isEmpty()? "":`/foto/${response?.data?.foto}`)
+                
+                setSuratKeteranganSehat(response?.data?.suratKeteranganSehat ?? "")
+                setSuratKeteranganBerkelakuanBaik(response?.data?.suratKeteranganBerkelakuanBaik ?? "")
+                setSuratBebasNarkoba(response?.data?.suratBebasNarkoba ?? "")
+                setNpwp(response?.data?.npwp ?? "")
             }
         } catch (error) {
             // console.error(error.response?.data)
@@ -334,7 +479,7 @@ function PendaftaranPage({ activeMenu }) {
             if (status === 400) {
                 alert(detail)
             } else if(status === 500){
-                if(error.response?.data?.Title=="berkasTamabahan.invalidValidation"){
+                if(error.response?.data?.Title!="berkasTambahan.invalidValidation"){
                     
                 } else{
                     alert(detail)
@@ -451,6 +596,10 @@ function PendaftaranPage({ activeMenu }) {
                 ktp,
                 transkripS1,
                 ijazah,
+                suratKeteranganSehat,
+                suratKeteranganBerkelakuanBaik,
+                suratBebasNarkoba,
+                npwp
             };
 
             Object.entries(input).forEach(([key, value]) => {
@@ -475,7 +624,7 @@ function PendaftaranPage({ activeMenu }) {
             if (status === 400) {
                 alert(detail)
             } else if(status === 500){
-                if(error.response?.data?.Title=="berkasTamabahan.invalidValidation"){
+                if(error.response?.data?.Title=="berkasTambahan.invalidValidation"){
                     setErrListBerkasTambahan(detail)
                 } else{
                     alert(detail)
@@ -1013,73 +1162,130 @@ function PendaftaranPage({ activeMenu }) {
 
             <div className="flex flex-col rounded-lg">
                 <Input
-                    label="A1 Pakta Integritas"
-                    type="url"
-                    value={paktaIntegritas}
-                    placeholder="misal: http://drive.google.com/drive/folders/example"
-                    onChange={(e) => {
-                        setPaktaIntegritas(e.target.value)
-                        setErrListBerkasTambahan(prev => {
-                            const { paktaIntegritas, ...rest } = prev;
-                            return rest;
-                        });
-                    }}
-                    errorMessageList={errListBerkasTambahan?.paktaIntegritas ?? []}
-                    required
-                />
-
-                <Input
-                    label="Biodata Mahasiswa"
-                    type="url"
-                    value={biodataMahasiswa}
-                    placeholder="misal: http://drive.google.com/drive/folders/example"
-                    onChange={(e) => {
-                        setBiodataMahasiswa(e.target.value)
-                        setErrListBerkasTambahan(prev => {
-                            const { biodataMahasiswa, ...rest } = prev;
-                            return rest;
-                        });
-                    }}
-                    errorMessageList={errListBerkasTambahan?.biodataMahasiswa ?? []}
-                    required
-                />
-
-                <Input
-                    inputRef={ijazahRef}
-                    label="Scan Ijazah S1/DIV yang dilegalisir"
+                    inputRef={paktaIntegritasRef}
+                    label="1. Pakta Integritas"
                     type="file"
                     placeholder="Upload file"
-                    onChange={handleIjazahChange}
-                    accept="image/jpeg,image/png"
+                    onChange={handlePaktaIntegritasChange}
+                    accept="application/pdf"
                     className="mb-3"
+                    required
                 >
-                    {(errListBerkasTambahan?.ijazah??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
+                    {(errListBerkasTambahan?.paktaIntegritas??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
                     <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
                     <ol className="list-decimal pl-10">
-                        <li>ektensi file yang diterima <b>.JPG, .JPEG & .PNG</b></li>  
+                        <li>Unduh template upload (Di prind tulis tangan lalu di Scan) <a href="https://drive.google.com/file/d/1--Jqg0JlbAf72K7epXWCNc65yEN04Fry/view?usp=sharing" class="hover:bg-gray-700 hover:text-white text-purple-600 rounded-md px-3 py-2 text-sm font-medium">Klik Disini</a></li>
+                        <li>ektensi file yang diterima <b>.PDF</b></li>  
                         <li>ukuran file yang di upload maksimal <b>5MB</b></li> 
                     </ol>
-                    {ijazahPreview && (
-                        <div className="relative max-w-min">
-                            <img
-                                src={ijazahPreview}
-                                alt="Preview"
-                                className="aspect-square max-w-[300px] rounded-md mb-3"
-                            />
-                            <button onClick={handlerResetIjazah} className="absolute top-0 right-0">
+                    {paktaIntegritas && (
+                        <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
+                            <div>
+                                <div className="flex items-center">
+                                    <p>{paktaIntegritasPreview??paktaIntegritas}</p>
+                                </div>
+                            </div>
+                            <button onClick={handlerResetPaktaIntegritas}>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    className="h-6 w-6 text-red-500"
+                                    className="h-6 w-6"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
                                 >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                                </svg>
+                            </button>
+                        </div>
+                    )}
+                </Input>
+
+                <Input
+                    inputRef={biodataMahasiswaRef}
+                    label="2. Biodata Mahasiswa"
+                    type="file"
+                    placeholder="Upload file"
+                    onChange={handleBiodataMahasiswaChange}
+                    accept="application/pdf"
+                    className="mb-3"
+                    required
+                >
+                    {(errListBerkasTambahan?.biodataMahasiswa??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
+                    <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
+                    <ol className="list-decimal pl-10">
+                        <li>Unduh template upload (Di ketik lalu di Scan) <a href="https://drive.google.com/file/d/1HByTAte5Wq-Ml-zvsQ49IufEtNXkyfnl/view?usp=sharing" class="hover:bg-gray-700 hover:text-white text-purple-600 rounded-md px-3 py-2 text-sm font-medium">Klik Disini</a></li>
+                        <li>ektensi file yang diterima <b>.PDF</b></li>  
+                        <li>ukuran file yang di upload maksimal <b>5MB</b></li> 
+                    </ol>
+                    {biodataMahasiswa && (
+                        <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
+                            <div>
+                                <div className="flex items-center">
+                                    <p>{biodataMahasiswaPreview??biodataMahasiswa}</p>
+                                </div>
+                            </div>
+                            <button onClick={handlerResetBiodataMahasiswa}>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                                </svg>
+                            </button>
+                        </div>
+                    )}
+                </Input>
+
+                <Input
+                    inputRef={ijazahRef}
+                    label="3. Scan Ijazah S1/DIV yang dilegalisir"
+                    type="file"
+                    placeholder="Upload file"
+                    onChange={handleIjazahChange}
+                    accept="application/pdf"
+                    className="mb-3"
+                    required
+                >
+                    {(errListBerkasTambahan?.ijazah??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
+                    <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
+                    <ol className="list-decimal pl-10">
+                        <li>ektensi file yang diterima <b>.PDF</b></li>  
+                        <li>ukuran file yang di upload maksimal <b>5MB</b></li> 
+                    </ol>
+                    {ijazah && (
+                        <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
+                            <div>
+                                <div className="flex items-center">
+                                    <p>{ijazahPreview??ijazah}</p>
+                                </div>
+                            </div>
+                            <button onClick={handlerResetIjazah}>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
                                 </svg>
                             </button>
                         </div>
@@ -1090,12 +1296,13 @@ function PendaftaranPage({ activeMenu }) {
 
                 <Input
                     inputRef={transkripS1Ref}
-                    label="Scan Transkrip Nilai S1/DIV"
+                    label="4. Scan Transkrip Nilai S1/DIV"
                     type="file"
                     placeholder="Upload file"
                     onChange={handleTranskripS1Change}
                     accept="application/pdf"
                     className="mb-3"
+                    required
                 >
                     {(errListBerkasTambahan?.transkripS1??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
                     <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
@@ -1104,11 +1311,11 @@ function PendaftaranPage({ activeMenu }) {
                         <li>ukuran file yang di upload maksimal <b>5MB</b></li> 
                     </ol>
 
-                    {transkripS1Preview && 
+                    {transkripS1 && 
                     <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
                         <div>
                             <div className="flex items-center">
-                                <p>{transkripS1Preview}</p>
+                                <p>{transkripS1Preview??transkripS1}</p>
                             </div>
                         </div>
                         <button onClick={handlerResetTranskripS1}>
@@ -1134,12 +1341,13 @@ function PendaftaranPage({ activeMenu }) {
 
                 <Input
                     inputRef={ktpRef}
-                    label="Scan Kartu Identitas KTP/SIM"
+                    label="5. Scan Kartu Identitas KTP/SIM"
                     type="file"
                     placeholder="Upload file"
                     onChange={handleKtpChange}
                     accept="image/jpeg,image/png"
                     className="mb-3"
+                    required
                 >
                     {(errListBerkasTambahan?.ktp??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
                     <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
@@ -1148,7 +1356,7 @@ function PendaftaranPage({ activeMenu }) {
                         <li>ukuran file yang di upload maksimal <b>5MB</b></li> 
                     </ol>
 
-                    {ktpPreview && (
+                    {ktp!==null? 
                         <div className="relative max-w-min">
                             <img
                                 src={ktpPreview}
@@ -1171,35 +1379,44 @@ function PendaftaranPage({ activeMenu }) {
                                     />
                                 </svg>
                             </button>
-                        </div>
-                    )}
+                        </div>:<></>
+                    }
                 </Input>
 
                 <div className="mb-6"></div>
 
                 <Input
                     inputRef={fotoRef}
-                    label="Scan Pas Foto Berwarna dimensi 4 x 6"
+                    label="6. Scan Pas Foto Berwarna dimensi 4 x 6"
                     type="file"
                     placeholder="Upload file"
                     onChange={handleFotoChange}
                     accept="image/jpeg,image/png"
                     className="mb-3"
+                    required
                 >
                     {(errListBerkasTambahan?.foto??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
-                    <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
-                    <ol className="list-decimal pl-10">
-                        <li>dengan background berlatar merah</li>  
-                        <li>tidak mengenakan kacamata</li> 
-                        <li>tidak mengenakan kopyah/peci/topi</li> 
-                        <li>mengenakan jas hitam</li> 
-                        <li>kemeja putih berdasi (Perempuan tidak diwajibkan berdasi)</li> 
-                        <li>bagi yang berhijab mengenakan hijab berwarna hitam</li>
-                        <li>ektensi file yang diterima <b>.JPG, .JPEG & .PNG</b></li>  
-                        <li>ukuran file yang di upload maksimal <b>5MB</b></li> 
-                    </ol>
+                    <div className='flex flex-col md:flex-row flex-col-reverse'>
+                        <div className='flex-2'>
+                            <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
+                            <ol className="list-decimal pl-10">
+                                <li>dengan background berlatar merah</li>  
+                                <li>tidak mengenakan kacamata</li> 
+                                <li>tidak mengenakan kopyah/peci/topi</li> 
+                                <li>mengenakan jas hitam</li> 
+                                <li>kemeja putih berdasi (Perempuan tidak diwajibkan berdasi)</li> 
+                                <li>bagi yang berhijab mengenakan hijab berwarna hitam</li>
+                                <li>ektensi file yang diterima <b>.JPG, .JPEG & .PNG</b></li>  
+                                <li>ukuran file yang di upload maksimal <b>5MB</b></li> 
+                            </ol>
+                        </div>
+                        <div className='flex-1'>
+                            <label className="block text-sm font-medium text-red-500 mb-2">Contoh Format Foto:</label>
+                            <img src="contoh_pass_foto.jpeg" className='max-h-[200px]' alt="contoh_pass_foto"/>
+                        </div>
+                    </div>
 
-                    {fotoPreview && (
+                    {foto!==null? 
                         <div className="relative max-w-min">
                             <img
                                 src={fotoPreview}
@@ -1220,6 +1437,183 @@ function PendaftaranPage({ activeMenu }) {
                                         strokeWidth="2"
                                         d="M6 18L18 6M6 6l12 12"
                                     />
+                                </svg>
+                            </button>
+                        </div>:<></>
+                    }
+                </Input>
+
+                <div className="mb-6"></div>
+                
+                <Input
+                    inputRef={suratKeteranganSehatRef}
+                    label="7. Scan Surat Keterangan Sehat"
+                    type="file"
+                    placeholder="Upload file"
+                    onChange={handleSuratKeteranganSehatChange}
+                    accept="application/pdf"
+                    required
+                >
+                    {(errListBerkasTambahan?.suratKeteranganSehat??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
+                    <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
+                    <ol className="list-decimal pl-10">
+                        <li>dari fasilitas layanan kesehatan</li>
+                        <li>ektensi file yang diterima <b>.PDF</b></li>  
+                        <li>ukuran file yang di upload maksimal <b>5MB</b></li> 
+                    </ol>
+                    {suratKeteranganSehat && (
+                        <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
+                            <div>
+                                <div className="flex items-center">
+                                    <p>{suratKeteranganSehatPreview??suratKeteranganSehat}</p>
+                                </div>
+                            </div>
+                            <button onClick={handlerResetSuratKeteranganSehat}>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                                </svg>
+                            </button>
+                        </div>
+                    )}
+                </Input>
+
+                <div className="mb-6"></div>
+                
+                <Input
+                    inputRef={suratKeteranganBerkelakuanBaikRef}
+                    label="8. Scan Surat Keterangan Berkelakuan Baik dari Kepolisian"
+                    type="file"
+                    placeholder="Upload file"
+                    onChange={handleSuratKeteranganBerkelakuanBaikChange}
+                    accept="application/pdf"
+                    required
+                >
+                    {(errListBerkasTambahan?.suratKeteranganBerkelakuanBaik??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
+                    <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
+                    <ol className="list-decimal pl-10">
+                        <li>ektensi file yang diterima <b>.PDF</b></li>  
+                        <li>ukuran file yang di upload maksimal <b>5MB</b></li> 
+                    </ol>
+                    {suratKeteranganBerkelakuanBaik && (
+                        <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
+                            <div>
+                                <div className="flex items-center">
+                                    <p>{suratKeteranganBerkelakuanBaikPreview??suratKeteranganBerkelakuanBaik}</p>
+                                </div>
+                            </div>
+                            <button onClick={handlerResetSuratKeteranganBerkelakuanBaik}>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                                </svg>
+                            </button>
+                        </div>
+                    )}
+                </Input>
+
+                <div className="mb-6"></div>
+                
+                <Input
+                    inputRef={suratBebasNarkobaRef}
+                    label="9. Scan Surat Bebas Narkotika, Psikotropika, dan Zat adiktif lainnya/NAPZA"
+                    type="file"
+                    placeholder="Upload file"
+                    onChange={handleSuratBebasNarkobaChange}
+                    accept="application/pdf"
+                    required
+                >
+                    {(errListBerkasTambahan?.suratBebasNarkoba??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
+                    <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
+                    <ol className="list-decimal pl-10">
+                        <li>dari Puskesmas/RSUD setempat/Kepolisian/BNN</li>
+                        <li>ektensi file yang diterima <b>.PDF</b></li>  
+                        <li>ukuran file yang di upload maksimal <b>5MB</b></li> 
+                    </ol>
+                    {suratBebasNarkoba && (
+                        <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
+                            <div>
+                                <div className="flex items-center">
+                                    <p>{suratBebasNarkobaPreview??suratBebasNarkoba}</p>
+                                </div>
+                            </div>
+                            <button onClick={handlerResetSuratBebasNarkoba}>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                                </svg>
+                            </button>
+                        </div>
+                    )}
+                </Input>
+
+                <div className="mb-6"></div>
+                
+                <Input
+                    inputRef={npwpRef}
+                    label="10. NPWP"
+                    type="file"
+                    placeholder="Upload file"
+                    onChange={handleNpwpChange}
+                    accept="application/pdf"
+                >
+                    {(errListBerkasTambahan?.npwp??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
+                    <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
+                    <ol className="list-decimal pl-10">
+                        <li>ektensi file yang diterima <b>.PDF</b></li>  
+                        <li>ukuran file yang di upload maksimal <b>5MB</b></li> 
+                    </ol>
+                    {npwp && (
+                        <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
+                            <div>
+                                <div className="flex items-center">
+                                    <p>{npwpPreview??npwp}</p>
+                                </div>
+                            </div>
+                            <button onClick={handlerResetNpwp}>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
                                 </svg>
                             </button>
                         </div>
