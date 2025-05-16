@@ -43,19 +43,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isCollapsed }) => {
               onClick={toggleSidebar} // Tutup sidebar saat di mobile
             >
               <MdBook size={24} />
-              <span className={`${isCollapsed ? "hidden" : "block"}`}><span className="whitespace-nowrap">Bank Soal</span></span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className={`flex items-center gap-3 hover:bg-gray-200 hover:text-purple-600 p-3 rounded-lg transition ${
-                "" === "/admin/ujian" ? "bg-purple-600 text-white" : ""
-              }`}
-              onClick={toggleSidebar} // Tutup sidebar saat di mobile
-            >
-              <MdAssignmentInd size={24} />
-              <span className={`${isCollapsed ? "hidden" : "block"}`}>Ujian</span>
+              <span className={`${isCollapsed ? "hidden" : "block"}`}><span className="whitespace-nowrap">Lapor Diri</span></span>
             </a>
           </li>
         </ul>
