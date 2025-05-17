@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LaporDiriExport;
 use App\Models\LaporDiri;
+use App\Models\mahasiswa;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LaporDiriApiController extends Controller
 {
@@ -80,6 +83,17 @@ class LaporDiriApiController extends Controller
             }
 
             return response()->json($data, 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "Title" => "lapordiri.commonError",
+                "Detail" => "ada yg salah pada aplikasi",
+                "Error" => $th->getMessage()
+            ],400);
+        }
+    }
+    public function Export(Request $request){
+       try {
+            return Excel::download(new LaporDiriExport($request->get("filter_status")), 'Lapor Diri Export.xlsx', \Maatwebsite\Excel\Excel::XLSX);
         } catch (\Throwable $th) {
             return response()->json([
                 "Title" => "lapordiri.commonError",

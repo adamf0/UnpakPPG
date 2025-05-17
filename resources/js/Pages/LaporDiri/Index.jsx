@@ -19,6 +19,7 @@ const LaporDiri = () => {
     const [selectedUUID, setSelectedUUID] = useState(null);
 
     const [loadingStatus, setLoadingStatus] = useState(null);
+    const [loadingExport, setLoadingExport] = useState(null);
     const [dataSource, setDataSource] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -38,6 +39,10 @@ const LaporDiri = () => {
         {
             value: "draf",
             label: "Belum Selesai Input",
+        },
+        {
+            value: "not registered",
+            label: "Belum Terdaftar",
         },
     ]);
 
@@ -79,7 +84,7 @@ const LaporDiri = () => {
                 filter_nama: namaPeserta,
                 filter_npm: npm,
                 filter_ukg: nomorUKG,
-                filter_status: status == "draf" ? "" : status,
+                filter_status: status == "draf" || status == "not registered" ? "" : status,
                 page: page,
             });
 
@@ -96,6 +101,39 @@ const LaporDiri = () => {
             console.error(detail);
         } finally {
             setLoadingStatus(false);
+        }
+    }
+    async function ExportHandler() {
+        setLoadingExport(true);
+        try {
+            console.log(`execute ExportHandler to call /api/laporDiri/export`);
+            const response = await apiProduction.post("/api/laporDiri/export", {filter_status: status=="draf"? null:status},{responseType: 'blob'});
+
+            if (response.status === 200 || response.status === 204) {
+                // Check if the response is a valid file (check content type)
+                const contentDisposition = response.headers['content-disposition'];
+                const fileName = contentDisposition ? contentDisposition.split('filename=')[1] : 'laporDiriExport.xlsx';
+
+                const blob = response.data;
+
+                // Create a URL for the Blob and trigger the download
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName;  // Use the filename from the header or default
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link); // Clean up the DOM
+            }
+        } catch (error) {
+            // console.error(error.response?.data)
+            const status = error.response?.status;
+            const detail =
+                error.response?.data?.Detail ?? "ada masalah pada aplikasi";
+
+            alert(detail);
+            console.error(detail);
+        } finally {
+            setLoadingExport(false);
         }
     }
     async function DeleteHandler() {
@@ -182,13 +220,24 @@ const LaporDiri = () => {
                         />
                     </div>
 
-                    <Button
-                        onClick={() => LoadTableHandler()}
-                        className=""
-                        loading={loadingStatus}
-                    >
-                        Filter Data
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button
+                            onClick={() => LoadTableHandler()}
+                            className="flex-11"
+                            loading={loadingStatus}
+                        >
+                            Filter Data
+                        </Button>
+
+                        <Button
+                            onClick={ExportHandler}
+                            className="flex-1"
+                            variant="success"
+                            loading={loadingExport}
+                        >
+                            Export Excel
+                        </Button>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 my-6">

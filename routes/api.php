@@ -15,5 +15,6 @@ Route::post('/save-biodata', [PendaftaranControllerApi::class, 'SaveBiodata'])->
 Route::post('/save-berkas', [PendaftaranControllerApi::class, 'SaveBerkasTambahan'])->name('saveBerkasPendaftaran');
 
 Route::post('/laporDiri', [LaporDiriApiController::class, 'Index'])->name('getLaporDiri');
-Route::delete('/laporDiri/{uuid}', [LaporDiriApiController::class, 'Delete'])->name('getLaporDiri');
-Route::get('/laporDiri/{uuid}', [LaporDiriApiController::class, 'Detail'])->name('getLaporDiri');
+Route::delete('/laporDiri/{uuid}', [LaporDiriApiController::class, 'Delete']);
+Route::get('/laporDiri/{uuid}', [LaporDiriApiController::class, 'Detail']);
+Route::post('/laporDiri/export', [LaporDiriApiController::class, 'Export']);
