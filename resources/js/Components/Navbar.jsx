@@ -26,7 +26,7 @@ const Navbar = ({ toggleSidebar, toggleCollapse }) => {
 
       {/* Logout Link */}
       <Button
-        onClick={()=>{}}
+        onClick={()=> window.location.href = '/dologout'}
         className="px-3 py-1 text-xs flex items-center gap-1"
       >
         <FiLogOut className="text-sm" />

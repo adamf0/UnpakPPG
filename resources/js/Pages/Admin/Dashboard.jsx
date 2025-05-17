@@ -9,7 +9,7 @@ import AdminPage from "@src/AdminPage";
 
 const AdminDashboard = () => {
   return (
-    <AdminPage>
+    <AdminPage selected="dashboard">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Tipe Data (Hanya Muncul di Mobile) */}
         <div className="bg-white shadow-md rounded-lg p-6 block lg:hidden">

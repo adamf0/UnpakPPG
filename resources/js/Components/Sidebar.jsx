@@ -1,7 +1,7 @@
 import { MdDashboard, MdAssignmentInd, MdBook } from "react-icons/md";
 import logo from "@assets/images/logo-unpak.png"
 
-const Sidebar = ({ isOpen, toggleSidebar, isCollapsed }) => {
+const Sidebar = ({ isOpen, toggleSidebar, isCollapsed, selected }) => {
   // const location = useLocation();
 
   return (
@@ -24,9 +24,9 @@ const Sidebar = ({ isOpen, toggleSidebar, isCollapsed }) => {
         <ul className="flex flex-col gap-3 mt-4">
           <li>
             <a
-              href="#"
+              href="/dashboard"
               className={`flex items-center gap-3 hover:bg-gray-200 hover:text-purple-600 p-3 rounded-lg transition ${
-                "" === "/admin/dashboard" ? "bg-purple-600 text-white" : ""
+                selected === "dashboard" ? "bg-purple-600 text-white" : ""
               }`}
               onClick={toggleSidebar} // Tutup sidebar saat di mobile
             >
@@ -36,9 +36,9 @@ const Sidebar = ({ isOpen, toggleSidebar, isCollapsed }) => {
           </li>
           <li>
             <a
-              href="#"
+              href="/laporDiri"
               className={`flex items-center gap-3 hover:bg-gray-200 hover:text-purple-600 p-3 rounded-lg transition ${
-                "" === "/admin/bank-soal" ? "bg-purple-600 text-white" : ""
+                selected === "laporDiri" ? "bg-purple-600 text-white" : ""
               }`}
               onClick={toggleSidebar} // Tutup sidebar saat di mobile
             >

@@ -390,6 +390,7 @@ class PendaftaranControllerApi extends Controller
             } else{
                 $berkasTambahan->npwp = $request->npwp;
             }
+            $berkasTambahan->status = "done";
             
             if($berkasTambahan->isDirty())
             $berkasTambahan->save();

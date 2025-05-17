@@ -2,7 +2,7 @@ import { useState } from "react";
 import Sidebar from "@src/Components/Sidebar";
 import Navbar from "@src/Components/Navbar";
 
-const AdminPage = ({children}) => {
+const AdminPage = ({children,selected=""}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -21,6 +21,7 @@ const AdminPage = ({children}) => {
         isOpen={isSidebarOpen} 
         toggleSidebar={toggleSidebar} 
         isCollapsed={isCollapsed} 
+        selected={selected}
       />
 
       {/* Main Content */}

@@ -2,40 +2,38 @@ import React, { useState } from "react";
 import Button from "@src/components/Button";
 import Input from "@src/components/Input";
 import logo from "@assets/images/logo-unpak.png";
-// import { useAuth } from "@src/context/authContext";
+import { apiProduction } from "@src/Persistance/API";
 
 const Auth = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-//   const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
 
-    // setLoading(true);
-    // try {
-    //   const response = await apiProduction.post("/api/Authentication", {
-    //     username,
-    //     password,
-    //   });
+    setLoading(true);
+    try {
+      const response = await apiProduction.post("/dologin", {
+        username,
+        password,
+      });
 
-    //   const token = response.data;
-    //   // console.log("Token:", token);
+      const token = response.data;
 
-    //   if (token) {
-    //     setLoading(false);
-    //     login(token);
-    //   } else {
-    //     setLoading(false);
-    //     setError("Login gagal, silakan coba lagi.");
-    //   }
-    // } catch (err) {
-    //   setLoading(false);
-    //   setError(err.response?.data?.message || "Terjadi kesalahan saat login.");
-    // }
+      if (token) {
+        setLoading(false);
+        window.location.href = '/dashboard'
+      } else {
+        setLoading(false);
+        setError("Login gagal, silakan coba lagi.");
+      }
+    } catch (err) {
+      setLoading(false);
+      setError(err.response?.data?.Detail || "Terjadi kesalahan saat login.");
+    }
   };
 
   return (
@@ -91,14 +89,6 @@ const Auth = () => {
         <div className="text-sm text-center text-gray-400 mt-5">
           © {new Date().getFullYear()} Universitas Pakuan. All Rights Reserved.
         </div>
-
-        {/* Register Option */}
-        {/* <p className="text-sm text-center text-gray-600 mt-4">
-          Don't have an account?{" "}
-          <a href="#" className="text-purple-500 hover:underline">
-            Sign Up
-          </a>
-        </p> */}
       </div>
     </div>
   );

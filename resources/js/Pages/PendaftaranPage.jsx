@@ -8,6 +8,7 @@ import Textarea from "@src/components/Textarea";
 import { useEffect, useState, useRef } from "react";
 import Stepper from '@src/Components/Stepper';
 import { apiProduction } from "@src/Persistance/API";
+import contoh_pass_foto from "@assets/contoh_pass_foto.jpeg" //[PR] gagal load asset
 
 //[PR] tambah alert pada step 3, pastikan dia mau simpan permanen
 const StepEnum = {
@@ -1182,7 +1183,9 @@ function PendaftaranPage({ activeMenu }) {
                         <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
                             <div>
                                 <div className="flex items-center">
-                                    <p>{paktaIntegritasPreview??paktaIntegritas}</p>
+                                    <a target="_blank" href={paktaIntegritasPreview==null? `/paktaIntegritas/?`.replace("?",paktaIntegritas):"#"}>
+                                        {paktaIntegritasPreview==null? paktaIntegritas:paktaIntegritasPreview}
+                                    </a>
                                 </div>
                             </div>
                             <button onClick={handlerResetPaktaIntegritas}>
@@ -1226,7 +1229,9 @@ function PendaftaranPage({ activeMenu }) {
                         <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
                             <div>
                                 <div className="flex items-center">
-                                    <p>{biodataMahasiswaPreview??biodataMahasiswa}</p>
+                                    <a target="_blank" href={biodataMahasiswaPreview==null? `/biodataMahasiswa/?`.replace("?",biodataMahasiswa):"#"}>
+                                        {biodataMahasiswaPreview==null? biodataMahasiswa:biodataMahasiswaPreview}
+                                    </a>
                                 </div>
                             </div>
                             <button onClick={handlerResetBiodataMahasiswa}>
@@ -1269,7 +1274,9 @@ function PendaftaranPage({ activeMenu }) {
                         <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
                             <div>
                                 <div className="flex items-center">
-                                    <p>{ijazahPreview??ijazah}</p>
+                                    <a target="_blank" href={ijazahPreview==null? `/ijazah/?`.replace("?",ijazah):"#"}>
+                                        {ijazahPreview==null? ijazah:ijazahPreview}
+                                    </a>
                                 </div>
                             </div>
                             <button onClick={handlerResetIjazah}>
@@ -1315,7 +1322,9 @@ function PendaftaranPage({ activeMenu }) {
                     <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
                         <div>
                             <div className="flex items-center">
-                                <p>{transkripS1Preview??transkripS1}</p>
+                                <a target="_blank" href={transkripS1Preview==null? `/transkripS1/?`.replace("?",transkripS1):"#"}>
+                                    {transkripS1Preview==null? transkripS1:transkripS1Preview}
+                                </a>
                             </div>
                         </div>
                         <button onClick={handlerResetTranskripS1}>
@@ -1363,7 +1372,7 @@ function PendaftaranPage({ activeMenu }) {
                                 alt="Preview"
                                 className="aspect-square max-w-[300px] rounded-md mb-3"
                             />
-                            <button onClick={handlerResetKtp} className="absolute top-0 right-0">
+                            <button onClick={handlerResetKtp} className="bg-gray-500 absolute top-0 right-0">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-6 w-6 text-red-500"
@@ -1412,7 +1421,7 @@ function PendaftaranPage({ activeMenu }) {
                         </div>
                         <div className='flex-1'>
                             <label className="block text-sm font-medium text-red-500 mb-2">Contoh Format Foto:</label>
-                            <img src="contoh_pass_foto.jpeg" className='max-h-[200px]' alt="contoh_pass_foto"/>
+                            <img src={contoh_pass_foto} className='max-h-[200px]' alt="contoh_pass_foto"/>
                         </div>
                     </div>
 
@@ -1423,7 +1432,7 @@ function PendaftaranPage({ activeMenu }) {
                                 alt="Preview"
                                 className="aspect-square max-w-[300px] rounded-md mb-3"
                             />
-                            <button onClick={handlerResetFoto} className="absolute top-0 right-0">
+                            <button onClick={handlerResetFoto} className="bg-gray-500 absolute top-0 right-0">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-6 w-6 text-red-500"
@@ -1465,7 +1474,9 @@ function PendaftaranPage({ activeMenu }) {
                         <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
                             <div>
                                 <div className="flex items-center">
-                                    <p>{suratKeteranganSehatPreview??suratKeteranganSehat}</p>
+                                    <a target="_blank" href={suratKeteranganSehatPreview==null? `/suratKeteranganSehat/?`.replace("?",suratKeteranganSehat):"#"}>
+                                        {suratKeteranganSehatPreview==null? suratKeteranganSehat:suratKeteranganSehatPreview}
+                                    </a>
                                 </div>
                             </div>
                             <button onClick={handlerResetSuratKeteranganSehat}>
@@ -1509,7 +1520,9 @@ function PendaftaranPage({ activeMenu }) {
                         <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
                             <div>
                                 <div className="flex items-center">
-                                    <p>{suratKeteranganBerkelakuanBaikPreview??suratKeteranganBerkelakuanBaik}</p>
+                                    <a target="_blank" href={suratKeteranganBerkelakuanBaikPreview==null? `/suratKeteranganBerkelakuanBaik/?`.replace("?",suratKeteranganBerkelakuanBaik):"#"}>
+                                        {suratKeteranganBerkelakuanBaikPreview==null? suratKeteranganBerkelakuanBaik:suratKeteranganBerkelakuanBaikPreview}
+                                    </a>
                                 </div>
                             </div>
                             <button onClick={handlerResetSuratKeteranganBerkelakuanBaik}>
@@ -1554,7 +1567,9 @@ function PendaftaranPage({ activeMenu }) {
                         <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
                             <div>
                                 <div className="flex items-center">
-                                    <p>{suratBebasNarkobaPreview??suratBebasNarkoba}</p>
+                                    <a target="_blank" href={suratBebasNarkobaPreview==null? `/suratBebasNarkoba/?`.replace("?",suratBebasNarkoba):"#"}>
+                                        {suratBebasNarkobaPreview==null? suratBebasNarkoba:suratBebasNarkobaPreview}
+                                    </a>
                                 </div>
                             </div>
                             <button onClick={handlerResetSuratBebasNarkoba}>
@@ -1597,7 +1612,9 @@ function PendaftaranPage({ activeMenu }) {
                         <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
                             <div>
                                 <div className="flex items-center">
-                                    <p>{npwpPreview??npwp}</p>
+                                    <a target="_blank" href={npwpPreview==null? `/npwp/?`.replace("?",npwp):"#"}>
+                                        {npwpPreview==null? npwp:npwpPreview}
+                                    </a>
                                 </div>
                             </div>
                             <button onClick={handlerResetNpwp}>

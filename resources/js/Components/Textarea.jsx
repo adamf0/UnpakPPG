@@ -8,6 +8,7 @@ const Textarea = ({
   className = "",
   errorMessageList = [],
   required = false,
+  disabled = false,
 }) => {
   const [error, setError] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -34,6 +35,7 @@ const Textarea = ({
           isFocused || value.trim() ? "bg-white" : "bg-gray-100"
         } ${className}`}
         rows="4"
+        disabled={disabled}
       />
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
       {errorMessageList.map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
