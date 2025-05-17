@@ -10,23 +10,23 @@ class LaporDiriApiController extends Controller
     public function Index(Request $request){
        try {
             $page = empty($request->page) || $request->page < 1? 1:$request->page;
-            $limit = 1;
+            $limit = 2;
             $offset = ($page - 1) * $limit;
             
             $total = LaporDiri::count();
             $data = LaporDiri::skip($offset)->take($limit);
-            if($request->has("filter_nama")){
+            if($request->has("filter_nama") && !empty($request->get("filter_nama"))){
                 $data = $data->where("namaPeserta",$request->filter_nama);
             }
-            if($request->has("filter_npm")){
-                $data = $data->where("npm",$request->filter_npm);
+            if($request->has("filter_npm") && !empty($request->get("filter_npm"))){
+                $data = $data->where("nim",$request->filter_npm);
             }
-            if($request->has("filter_ukg")){
+            if($request->has("filter_ukg") && !empty($request->get("filter_ukg"))){
                 $data = $data->where("nomorUKG",$request->filter_ukg);
             }
-            // if($request->has("filter_status")){
-            //     $data = $data->where("status",$request->post("filter_status"));
-            // }
+            if($request->has("filter_status") && !empty($request->get("filter_status"))){
+                $data = $data->where("status",$request->post("filter_status"));
+            }
             $data = $data->get();
 
             $totalPages = ceil($total / $limit);
