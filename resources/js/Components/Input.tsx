@@ -33,7 +33,7 @@ const Input = ({
 
   const handleBlur = () => {
     setIsFocused(false);
-    if (required && !value) {
+    if (required && !value && type!="file") {
       setError(`${label || "Field"} tidak boleh kosong`);
     } else {
       setError("");
