@@ -34,7 +34,7 @@ class PendaftaranControllerApi extends Controller
                 ],400);
             }
             
-            $pengajuan = pengajuan::where('nomorUKG',$request->nomorUKG)->orWhere('nim',$mahasiswa?->nim)->get();
+            $pengajuan = pengajuan::where('nomorUKG',$request->nomorUKG)->get();
             if($pengajuan->count()>1){
                 return response()->json([
                     "Title" => "pendaftaran.tooMuchDataFound",

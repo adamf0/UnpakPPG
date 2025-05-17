@@ -245,7 +245,7 @@ const LaporDiri = () => {
                         ? "Loading..."
                         : (dataSource?.data ?? []).map((source, index) => (
                               <div
-                                  key={index}
+                                  key={source.id}
                                   className={`relative bg-white shadow-md rounded-lg p-4 border-l-4 ${
                                       source.status === "done"
                                           ? "border-green-500"
@@ -291,13 +291,13 @@ const LaporDiri = () => {
                                   <div
                                       className="absolute top-3 right-3"
                                       ref={(el) =>
-                                          (dropdownRefs.current[source?.uuid] =
+                                          (dropdownRefs.current[source.id] =
                                               el)
                                       }
                                   >
                                       <button
                                           onClick={() =>
-                                              toggleDropdown(source?.uuid)
+                                              toggleDropdown(source.id)
                                           }
                                           className="p-2 rounded-full hover:bg-gray-200"
                                       >
@@ -305,7 +305,7 @@ const LaporDiri = () => {
                                       </button>
 
                                       {/* Dropdown Menu */}
-                                      {dropdownOpen === source?.uuid && (
+                                      {dropdownOpen === source.id && (
                                           <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg border border-gray-200 rounded-md overflow-hidden z-50">
                                               <ul className="py-1">
                                                   <a

@@ -4,13 +4,13 @@ import Input from "@src/components/Input";
 import Select from "@src/components/Select";
 import Button from "@src/components/Button";
 import RadioGroup from "@src/components/RadioGroup";
+import Modal from "@src/components/Modal";
 import Textarea from "@src/components/Textarea";
 import { useEffect, useState, useRef } from "react";
 import Stepper from '@src/Components/Stepper';
 import { apiProduction } from "@src/Persistance/API";
-import contoh_pass_foto from "@assets/contoh_pass_foto.jpeg" //[PR] gagal load asset
+import contoh_pass_foto from "@assets/contoh_pass_foto.jpeg"
 
-//[PR] tambah alert pada step 3, pastikan dia mau simpan permanen
 const StepEnum = {
     PENGAJUAN: "Pengajuan",
     BIODATA_PDDIKTI: "Biodata PDDIKTI",
@@ -23,6 +23,8 @@ Object.prototype.isEmpty = function() {
 };
   
 function PendaftaranPage({ activeMenu }) {
+    const [showConfirm, setShowConfirm] = useState(false);
+
     const steps = Object.values(StepEnum);
     const [frame, setFrame] = useState(StepEnum.PENGAJUAN);
     const [loading, setLoading] = useState(false);
@@ -635,6 +637,7 @@ function PendaftaranPage({ activeMenu }) {
             }
         } finally {
             setLoading(false)
+            setShowConfirm(false);
         }
     }
 
@@ -736,7 +739,7 @@ function PendaftaranPage({ activeMenu }) {
                     </div>
 
                     <div className="flex-2">
-                        <RadioGroup //[pr] masil masalah state
+                        <RadioGroup
                             label="Jenis Kelamin"
                             value={jenisKelamin}
                             onChange={(val) => {
@@ -1641,7 +1644,7 @@ function PendaftaranPage({ activeMenu }) {
 
             <div className="flex flex-col rounded-lg">
                 <Button 
-                    onClick = {()=> SaveBerkasHandler()}
+                    onClick = {()=> setShowConfirm(true)}
                     className = ""
                     loading={loading}> 
                     Kirim Pengajuan
@@ -1659,6 +1662,16 @@ function PendaftaranPage({ activeMenu }) {
                     {RenderFrame()}
                 </div>
             </div>
+
+            <Modal
+                    isOpen={showConfirm}
+                    title="Konfirmasi Simpan Data"
+                    message={`Apakah anda yakin ingin simpan data secara permanen?`}
+                    onConfirm={() => SaveBerkasHandler()}
+                    onCancel={() => setShowConfirm(false)}
+                    confirmText="Ya"
+                    cancelText="Tidak"
+                />
         </MainPage>
     );
 }

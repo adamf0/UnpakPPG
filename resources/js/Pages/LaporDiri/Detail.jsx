@@ -560,7 +560,7 @@ const LaporDiriDetail = ({ uuid }) => {
                         </div>
 
                         <div className="flex-2">
-                            <RadioGroup //[pr] masil masalah state
+                            <RadioGroup
                                 label="Jenis Kelamin"
                                 value={jenisKelamin}
                                 onChange={(val) => {

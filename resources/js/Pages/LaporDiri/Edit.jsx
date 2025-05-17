@@ -7,6 +7,7 @@ import Textarea from "@src/components/Textarea";
 import Stepper from "@src/Components/Stepper";
 import AdminPage from "@src/AdminPage";
 import { apiProduction } from "@src/Persistance/API";
+import contoh_pass_foto from "@assets/contoh_pass_foto.jpeg"
 
 const StepEnum = {
     BIODATA_PDDIKTI: "Biodata PDDIKTI",
@@ -682,7 +683,7 @@ const LaporDiriEdit = ({ uuid }) => {
                         </div>
 
                         <div className="flex-2">
-                            <RadioGroup //[pr] masil masalah state
+                            <RadioGroup
                                 label="Jenis Kelamin"
                                 value={jenisKelamin}
                                 onChange={(val) => {
@@ -1494,7 +1495,7 @@ const LaporDiriEdit = ({ uuid }) => {
                                     Contoh Format Foto:
                                 </label>
                                 <img
-                                    src="contoh_pass_foto.jpeg"
+                                    src={contoh_pass_foto}
                                     className="max-h-[200px]"
                                     alt="contoh_pass_foto"
                                 />
