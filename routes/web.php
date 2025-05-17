@@ -22,10 +22,10 @@ Route::get('/login', [AuthController::class, 'authPage'])->name("authPage");
 Route::post('/dologin', [AuthController::class, 'doLogin']);
 Route::get('/dologout', [AuthController::class, 'doLogout']);
 
-// Route::middleware([CheckSession::class])->group(function () {
+Route::middleware([CheckSession::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboardPage']);
 
     Route::get('/laporDiri', [LaporDiriController::class, 'Index']);
     Route::get('/laporDiri/edit/{id}', [LaporDiriController::class, 'Edit']);
     Route::get('/laporDiri/detail/{id}', [LaporDiriController::class, 'Detail']);
-// });
+});
