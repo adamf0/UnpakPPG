@@ -362,7 +362,7 @@ const LaporDiri = () => {
 
                 <Pagination
                   currentPage={currentPage}
-                  perPage={2}
+                  perPage={10}
                   totalData={dataSource?.pagination?.total_data ?? 0}
                   totalPages={dataSource?.pagination?.total_pages ?? 1}
                   onNextChange={() => {

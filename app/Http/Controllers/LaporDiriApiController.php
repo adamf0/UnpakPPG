@@ -13,7 +13,7 @@ class LaporDiriApiController extends Controller
     public function Index(Request $request){
        try {
             $page = empty($request->page) || $request->page < 1? 1:$request->page;
-            $limit = 2;
+            $limit = 10;
             $offset = ($page - 1) * $limit;
             
             $total = LaporDiri::count();
