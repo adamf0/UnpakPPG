@@ -84,7 +84,7 @@ const LaporDiri = () => {
                 filter_nama: namaPeserta,
                 filter_npm: npm,
                 filter_ukg: nomorUKG,
-                filter_status: status == "draf" || status == "not registered" ? "" : status,
+                filter_status: status == "not registered" ? "" : status,
                 page: page,
             });
 

@@ -28,7 +28,11 @@ class LaporDiriApiController extends Controller
                 $data = $data->where("nomorUKG",$request->filter_ukg);
             }
             if($request->has("filter_status") && !empty($request->get("filter_status"))){
-                $data = $data->where("status",$request->post("filter_status"));
+                if($request->post("filter_status")=="draf"){
+                    $data = $data->whereNull("status")->orWhere("status",$request->post("filter_status"));
+                } else{
+                    $data = $data->where("status",$request->post("filter_status"));
+                }
             }
             $data = $data->get();
 
@@ -93,7 +97,7 @@ class LaporDiriApiController extends Controller
     }
     public function Export(Request $request){
        try {
-            return Excel::download(new LaporDiriExport($request->get("filter_status")), 'Lapor Diri Export.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+            return Excel::download(new LaporDiriExport($request->get("filter_status")=="draf"? "":$request->get("filter_status")), 'Lapor Diri Export.xlsx', \Maatwebsite\Excel\Excel::XLSX);
         } catch (\Throwable $th) {
             return response()->json([
                 "Title" => "lapordiri.commonError",
