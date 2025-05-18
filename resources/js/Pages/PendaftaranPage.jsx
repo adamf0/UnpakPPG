@@ -14,7 +14,8 @@ import contoh_pass_foto from "@assets/contoh_pass_foto.jpeg"
 const StepEnum = {
     PENGAJUAN: "Pengajuan",
     BIODATA_PDDIKTI: "Biodata PDDIKTI",
-    KETENTUAN_LAPOR_DIRI: "Ketentuan Lapor Diri"
+    KETENTUAN_LAPOR_DIRI: "Ketentuan Lapor Diri",
+    SELESAI: "Selesai"
 };
 Object.prototype.isEmpty = function() {
     return this === null || this === undefined || this === '' || 
@@ -426,6 +427,10 @@ function PendaftaranPage({ activeMenu }) {
                 setSekolahMengajar(response?.data?.sekolahMengajar ?? "");
                 setAlamatSekolah(response?.data?.alamatSekolah ?? "");
                 setTelpSekolah(response?.data?.telpSekolah ?? "");
+
+                if(response?.data?.status?.toLowerCase?.()=="done"){
+                    setFrame(StepEnum.SELESAI);
+                }
             }
         } catch (error) {
             // console.error(error.response?.data)
@@ -648,6 +653,8 @@ function PendaftaranPage({ activeMenu }) {
             return BiodataPage()
         } else if(frame=="Ketentuan Lapor Diri"){
             return KetentuanLaporPage();
+        } else if(frame=="Selesai"){
+            return SelesaiPage();
         }
     }
 
@@ -1650,6 +1657,12 @@ function PendaftaranPage({ activeMenu }) {
                     Kirim Pengajuan
                 </Button>
             </div>
+        </div>
+    }
+    function SelesaiPage(){
+        return <div className="flex flex-col gap-3">
+            <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3">Selesai Pengajuan</h2>
+            <p>selamat data pengajuan anda sudah terkirim ke admin, tahap berikutnya anda harus bergabung group telegram berikut ini <a href="https://t.me/+xXjo3Il-WRhlYjc1" target="_blank" className='hover:bg-gray-700 hover:text-white text-purple-500 rounded-md px-3 py-2 text-sm font-medium'>https://t.me/+xXjo3Il-WRhlYjc1</a> </p>
         </div>
     }
 

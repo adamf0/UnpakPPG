@@ -53,6 +53,7 @@ class PendaftaranControllerApi extends Controller
                 $new->uuid = $uuid;
                 $new->nomorUKG = $request->nomorUKG;
                 $new->nim = $mahasiswa?->nim;
+                $new->namaPeserta = $mahasiswa?->nama;
                 $new->save();
 
                 return response()->json($uuid,200);
@@ -117,6 +118,7 @@ class PendaftaranControllerApi extends Controller
                     "sekolahMengajar"   => $pendaftaran->sekolahMengajar, //string
                     "alamatSekolah"     => $pendaftaran->alamatSekolah, //string
                     "telpSekolah"       => $pendaftaran->telpSekolah, //number
+                    "status"            => $pendaftaran->status,
                 ],200);
             } else{
                 return response()->json([
@@ -129,7 +131,8 @@ class PendaftaranControllerApi extends Controller
                     "suratKeteranganSehat" => empty($pendaftaran->suratKeteranganSehat)? null: urlencode($pendaftaran->suratKeteranganSehat),
                     "suratKeteranganBerkelakuanBaik" => empty($pendaftaran->suratKeteranganBerkelakuanBaik)? null: urlencode($pendaftaran->suratKeteranganBerkelakuanBaik),
                     "suratBebasNarkoba" => empty($pendaftaran->suratBebasNarkoba)? null: urlencode($pendaftaran->suratBebasNarkoba),
-                    "npwp" => empty($pendaftaran->npwp)? null: urlencode($pendaftaran->npwp),
+                    "npwp"              => empty($pendaftaran->npwp)? null: urlencode($pendaftaran->npwp),
+                    "status"            => $pendaftaran->status,
                 ]);
             }
         } catch (\Throwable $th) {

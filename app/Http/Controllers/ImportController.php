@@ -19,6 +19,7 @@ class ImportController extends Controller
                 $mahasiswa = new mahasiswa();
                 $mahasiswa->nomorUKG = $row["no_ukg"];
                 $mahasiswa->nim = $row["npm"];
+                $mahasiswa->nama = $row["nama_lengkap"];
                 $mahasiswa->save();
             }
         }
