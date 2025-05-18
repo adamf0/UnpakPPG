@@ -97,7 +97,7 @@ class LaporDiriApiController extends Controller
     }
     public function Export(Request $request){
        try {
-            return Excel::download(new LaporDiriExport($request->get("filter_status")=="draf"? "":$request->get("filter_status")), 'Lapor Diri Export.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+            return Excel::download(new LaporDiriExport($request->get("filter_status")=="draf"? "":$request->get("filter_status")), 'Lapor_Diri_Export.xlsx', \Maatwebsite\Excel\Excel::XLSX);
         } catch (\Throwable $th) {
             return response()->json([
                 "Title" => "lapordiri.commonError",
