@@ -3,7 +3,7 @@
 namespace App\Exports;
 
 use App\Models\LaporDiri;
-use App\Models\Mahasiswa;
+use App\Models\mahasiswa;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithTitle;
@@ -24,7 +24,7 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
         $isDev = env("DEPLOY","dev")=="dev";
 
         if ($this->filter_status == 'not registered') {
-            return Mahasiswa::whereNotIn('nomorUKG', function ($query) {
+            return mahasiswa::whereNotIn('nomorUKG', function ($query) {
                 $query->select('nomorUKG')
                     ->from('pendaftaran');
             })
