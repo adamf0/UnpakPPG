@@ -147,7 +147,7 @@ class PendaftaranControllerApi extends Controller
         $validator = Validator::make($request->all(), [
             'uuidPendaftaran' => 'required',
             'nik'             => 'required|digits:16',
-            'namaPeserta'     => 'required|string|max:255',
+            // 'namaPeserta'     => 'required|string|max:255',
             'jenisKelamin'    => 'required|string|in:L,P',
             'tempatLahir'     => 'required|string|max:255',
             'tanggalLahir'    => 'required|date_format:Y-m-d',

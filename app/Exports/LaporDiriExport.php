@@ -67,16 +67,18 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
                             "",
                             "",
                             "",
+                            "",
                         ];
                     });
         } else {
             // If the filter is 'registered', fetch data based on the status
-            return LaporDiri::where('status', $this->filter_status)->get()
+            return LaporDiri::select("pendaftaran.*","mahasiswa.nama")->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where('status', $this->filter_status)->get()
                     ->map(function($mahasiswa) use($isDev){
                         return [
                             $mahasiswa->nomorUKG,
                             $mahasiswa->nim,
                             $mahasiswa->nik,
+                            $mahasiswa->nama,
                             $mahasiswa->namaPeserta,
                             $mahasiswa->jenisKelamin,
                             $mahasiswa->tempatLahir,
@@ -123,7 +125,8 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
             "Nomor UKG",
             "NIM",
             "NIK",
-            "Nama Peserta",
+            "Nama Peserta (Sesuai SIM PKB)",
+            "Nama Peserta (Jika Tidak Sesuai SIM PKB)",
             "Jenis Kelamin",
             "Tempat Lahir",
             "Tanggal Lahir",
