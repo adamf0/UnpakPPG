@@ -79,7 +79,7 @@ class LaporDiriApiController extends Controller
     }
     public function Detail($uuid){
        try {
-            $data = LaporDiri::select("pendaftaran.*","mahasiswa.nama")->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where("uuid",$uuid)->first();
+            $data = LaporDiri::select("pendaftaran.*","mahasiswa.nama","mahasiswa.bidangStudi")->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where("uuid",$uuid)->first();
 
             if(empty($data)){
                 return response()->json([

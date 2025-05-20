@@ -39,6 +39,7 @@ function PendaftaranPage({ activeMenu }) {
     const [berkasTambahan, setBerkasTambahan] = useState(null);
     
     const [nomorUKG,setNomorUKG] = useState("");
+    const [bidangStudi,setBidangStudi] = useState("");
     const [nim,setNim] = useState("");
     const [nik,setNik] = useState("");
     const [nama,setNama] = useState("");
@@ -402,6 +403,7 @@ function PendaftaranPage({ activeMenu }) {
                 setBiodata(response?.data);
 
                 setNomorUKG(response?.data?.nomorUKG ?? "");
+                setBidangStudi(response?.data?.bidangStudi ?? "");
                 setNim(response?.data?.nim ?? "");
                 setNik(response?.data?.nik ?? "");
                 setNama(response?.data?.nama ?? "");
@@ -694,13 +696,26 @@ function PendaftaranPage({ activeMenu }) {
             <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3">Biodata Data Pribadi</h2>
 
             <div className="flex flex-col rounded-lg">
-                <Input
-                    label="Nomor UKG"
-                    type="text"
-                    value={nomorUKG}
-                    onChange={(e) => {}}
-                    disabled
-                />
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="flex-1">
+                        <Input
+                            label="Nomor UKG"
+                            type="text"
+                            value={nomorUKG}
+                            onChange={(e) => {}}
+                            disabled
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <Input
+                            label="Bidang Studi"
+                            type="text"
+                            value={bidangStudi}
+                            onChange={(e) => {}}
+                            disabled
+                        />
+                    </div>
+                </div>
 
                 <div className="flex flex-col sm:flex-row items-center gap-4">
                     <Input

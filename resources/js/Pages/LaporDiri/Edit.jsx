@@ -7,16 +7,20 @@ import Textarea from "@src/components/Textarea";
 import Stepper from "@src/Components/Stepper";
 import AdminPage from "@src/AdminPage";
 import { apiProduction } from "@src/Persistance/API";
-import contoh_pass_foto from "@assets/contoh_pass_foto.jpeg"
+import contoh_pass_foto from "@assets/contoh_pass_foto.jpeg";
 
 const StepEnum = {
     BIODATA_PDDIKTI: "Biodata PDDIKTI",
-    KETENTUAN_LAPOR_DIRI: "Ketentuan Lapor Diri"
+    KETENTUAN_LAPOR_DIRI: "Ketentuan Lapor Diri",
 };
-Object.prototype.isEmpty = function() {
-    return this === null || this === undefined || this === '' || 
-           (Array.isArray(this) && this.length === 0) || 
-           (typeof this === 'object' && Object.keys(this).length === 0);
+Object.prototype.isEmpty = function () {
+    return (
+        this === null ||
+        this === undefined ||
+        this === "" ||
+        (Array.isArray(this) && this.length === 0) ||
+        (typeof this === "object" && Object.keys(this).length === 0)
+    );
 };
 
 const LaporDiriEdit = ({ uuid }) => {
@@ -33,6 +37,7 @@ const LaporDiriEdit = ({ uuid }) => {
     const [berkasTambahan, setBerkasTambahan] = useState(null);
 
     const [nomorUKG, setNomorUKG] = useState("");
+    const [bidangStudi,setBidangStudi] = useState("");
     const [nim, setNim] = useState("");
     const [nik, setNik] = useState("");
     const [nama, setNama] = useState("");
@@ -387,16 +392,17 @@ const LaporDiriEdit = ({ uuid }) => {
         setLoadingFrame(true);
         try {
             console.log(
-                `execute call /api/laporDiri/?`.replace("?",uuidPendaftaran)
+                `execute call /api/laporDiri/?`.replace("?", uuidPendaftaran)
             );
             const response = await apiProduction.get(
-                `/api/laporDiri/?`.replace("?",uuidPendaftaran)
+                `/api/laporDiri/?`.replace("?", uuidPendaftaran)
             );
 
             if (response.status === 200 || response.status === 204) {
                 setBiodata(response?.data);
 
                 setNomorUKG(response?.data?.nomorUKG ?? "");
+                setBidangStudi(response?.data?.bidangStudi ?? "");
                 setNim(response?.data?.nim ?? "");
                 setNik(response?.data?.nik ?? "");
                 setNama(response?.data?.nama ?? "");
@@ -467,8 +473,7 @@ const LaporDiriEdit = ({ uuid }) => {
                 alert(detail);
             } else if (status === 500) {
                 if (
-                    error.response?.data?.Title ==
-                    "laporDiri.invalidValidation"
+                    error.response?.data?.Title == "laporDiri.invalidValidation"
                 ) {
                 } else {
                     alert(detail);
@@ -530,8 +535,7 @@ const LaporDiriEdit = ({ uuid }) => {
                 alert(detail);
             } else if (status === 500) {
                 if (
-                    error.response?.data?.Title ==
-                    "laporDiri.invalidValidation"
+                    error.response?.data?.Title == "laporDiri.invalidValidation"
                 ) {
                     setErrListBiodata(detail);
                 } else {
@@ -614,9 +618,9 @@ const LaporDiriEdit = ({ uuid }) => {
         }
     }
 
-    useEffect(()=>{
-        RenderFrame()
-    },[frame])
+    useEffect(() => {
+        RenderFrame();
+    }, [frame]);
 
     function BiodataPage() {
         return loadingFrame ? (
@@ -628,13 +632,26 @@ const LaporDiriEdit = ({ uuid }) => {
                 </h2>
 
                 <div className="flex flex-col rounded-lg">
-                    <Input
-                        label="Nomor UKG"
-                        type="text"
-                        value={nomorUKG}
-                        onChange={(e) => {}}
-                        disabled
-                    />
+                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                        <div className="flex-1">
+                            <Input
+                                label="Nomor UKG"
+                                type="text"
+                                value={nomorUKG}
+                                onChange={(e) => {}}
+                                disabled
+                            />
+                        </div>
+                        <div className="flex-1">
+                            <Input
+                                label="Bidang Studi"
+                                type="text"
+                                value={bidangStudi}
+                                onChange={(e) => {}}
+                                disabled
+                            />
+                        </div>
+                    </div>
 
                     <div className="flex flex-col sm:flex-row items-center gap-4">
                         <Input
@@ -1809,10 +1826,14 @@ const LaporDiriEdit = ({ uuid }) => {
             <div className="bg-white p-5 rounded-lg shadow-md">
                 {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-                <Stepper steps={steps} currentStep={frame} onClick={(step)=>{
-                    console.log(step)
-                    setFrame(step)
-                }}/>
+                <Stepper
+                    steps={steps}
+                    currentStep={frame}
+                    onClick={(step) => {
+                        console.log(step);
+                        setFrame(step);
+                    }}
+                />
                 {RenderFrame()}
             </div>
         </AdminPage>
