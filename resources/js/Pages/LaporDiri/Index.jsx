@@ -152,6 +152,7 @@ const LaporDiri = () => {
 
                 if (response.status === 200 || response.status === 204) {
                     alert("berhasil hapus data");
+                    LoadTableHandler(1)
                 }
             } catch (error) {
                 // console.error(error.response?.data)

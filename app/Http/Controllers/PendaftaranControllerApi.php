@@ -81,7 +81,7 @@ class PendaftaranControllerApi extends Controller
                 ], 500);
             }
 
-            $pendaftaran = pengajuan::where('uuid',$uuid)->firstOrFail();
+            $pendaftaran = pengajuan::select("pendaftaran.*","mahasiswa.nama")->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where('uuid',$uuid)->firstOrFail();
             if($pendaftaran==null){
                 return response()->json([
                     "Title" => "pendaftaran.dataNotfound",
@@ -94,6 +94,7 @@ class PendaftaranControllerApi extends Controller
                     "nomorUKG"          => $pendaftaran->nomorUKG, //number
                     "nim"               => $pendaftaran->nim, //number
                     "nik"               => $pendaftaran->nik, //number, 16 digit
+                    "nama"              => $pendaftaran->nama, //string
                     "namaPeserta"       => $pendaftaran->namaPeserta, //string
                     "jenisKelamin"      => $pendaftaran->jenisKelamin, //string, 1 length, [L,P] range
                     "tempatLahir"       => $pendaftaran->tempatLahir, //string

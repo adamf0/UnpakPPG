@@ -35,6 +35,7 @@ const LaporDiriEdit = ({ uuid }) => {
     const [nomorUKG, setNomorUKG] = useState("");
     const [nim, setNim] = useState("");
     const [nik, setNik] = useState("");
+    const [nama, setNama] = useState("");
     const [namaPeserta, setNamaPeserta] = useState("");
     const [tempatLahir, setTempatLahir] = useState("");
     const [tanggalLahir, setTanggalLahir] = useState("");
@@ -398,6 +399,7 @@ const LaporDiriEdit = ({ uuid }) => {
                 setNomorUKG(response?.data?.nomorUKG ?? "");
                 setNim(response?.data?.nim ?? "");
                 setNik(response?.data?.nik ?? "");
+                setNama(response?.data?.nama ?? "");
                 setNamaPeserta(response?.data?.namaPeserta ?? "");
                 setTempatLahir(response?.data?.tempatLahir ?? "");
                 setTanggalLahir(response?.data?.tanggalLahir ?? "");
@@ -664,7 +666,18 @@ const LaporDiriEdit = ({ uuid }) => {
                     <div className="flex flex-col sm:flex-row items-center gap-4">
                         <div className="flex-2">
                             <Input
-                                label="Nama Peserta"
+                                label="Nama Peserta (Sesuai SIM PKB)"
+                                type="text"
+                                placeholder="masukkan nama"
+                                value={nama}
+                                onChange={(e) => {}}
+                                disabled
+                            />
+                        </div>
+
+                        <div className="flex-2">
+                            <Input
+                                label="Nama Peserta (Jika Tidak Sesuai SIM PKB)"
                                 type="text"
                                 placeholder="masukkan nama"
                                 value={namaPeserta}
@@ -682,7 +695,7 @@ const LaporDiriEdit = ({ uuid }) => {
                             />
                         </div>
 
-                        <div className="flex-2">
+                        <div className="flex-1">
                             <RadioGroup
                                 label="Jenis Kelamin"
                                 value={jenisKelamin}

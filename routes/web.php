@@ -10,9 +10,9 @@ use App\Http\Middleware\CheckSession;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/testing', function () {
-//     return Hash::make("Q/piD]/2{bvJlFd/K8[y4tEm`}{`xxoV");
-// });
+Route::get('/testing', function () {
+    return Hash::make("Q/piD]/2{bvJlFd/K8[y4tEm`}{`xxoV");
+});
 
 Route::get('/', [PencarianController::class, 'pencarianPage'])->name('pencarian');
 Route::get('/pendaftaran', [PendaftaranController::class, 'pendaftaranPage'])->name('pendaftaran');
