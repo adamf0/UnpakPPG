@@ -121,12 +121,20 @@ function PendaftaranPage({ activeMenu }) {
             label: "Bersama Orang Tua",
         },
         {
+            value: 3,
+            label: "Kost",
+        },
+        {
             value: 2,
             label: "Wali",
         },
         {
-            value: 3,
-            label: "Kost",
+            value: 99,
+            label: "Lainnya",
+        },
+        {
+            value: 10,
+            label: "Rumah sendiri",
         },
         {
             value: 4,
@@ -134,11 +142,7 @@ function PendaftaranPage({ activeMenu }) {
         },
         {
             value: 5,
-            label: "Panti Asuhan",
-        },
-        {
-            value: 99,
-            label: "Lain - Lain",
+            label: "Panti asuhan",
         },
     ]);
     const [namaIbu,setNamaIbu ] = useState("");
