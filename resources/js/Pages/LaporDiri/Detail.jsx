@@ -110,7 +110,7 @@ const LaporDiriDetail = ({ uuid }) => {
     const [jenisTinggalOptions, setJenisTinggalOptions] = useState([
         {
             value: 1,
-            label: "Bersama Orang Tua",
+            label: "Bersama orang tua",
         },
         {
             value: 3,
