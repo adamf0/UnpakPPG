@@ -369,7 +369,7 @@ function PendaftaranPage({ activeMenu }) {
         const file = e.target.files[0];
         if (file) {
             setNpwp(file);
-            setNpwpPreview(file?.name ?? "");
+            setNpwpPreview(URL.createObjectURL(file));
             setErrListBerkasTambahan(prev => {
                 const { npwp, ...rest } = prev;
                 return rest;
@@ -1644,38 +1644,41 @@ function PendaftaranPage({ activeMenu }) {
                     accept="application/pdf"
                 >
                     {(errListBerkasTambahan?.npwp??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
-                    <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
-                    <ol className="list-decimal pl-10">
-                        <li>ektensi file yang diterima <b>.PDF</b></li>  
-                        <li>ukuran file yang di upload maksimal <b>5MB</b></li> 
-                    </ol>
-                    {npwp && (
-                        <div className="bg-purple-50 border border-purple-400 rounded text-purple-800 text-sm p-2 flex justify-between">
-                            <div>
-                                <div className="flex items-center">
-                                    <a target="_blank" href={npwpPreview==null? `/npwp/?`.replace("?",npwp):"#"}>
-                                        {npwpPreview==null? npwp:npwpPreview}
-                                    </a>
-                                </div>
-                            </div>
-                            <button onClick={handlerResetNpwp}>
+                    <div className='flex flex-col md:flex-row flex-col-reverse'>
+                        <div className='flex-1'>
+                            <label className="block text-sm font-medium text-red-500 mb-2">Catatan:</label>
+                            <ol className="list-decimal pl-10">
+                                <li>ektensi file yang diterima <b>.JPG, .JPEG & .PNG</b></li>  
+                                <li>ukuran file yang di upload maksimal <b>5MB</b></li> 
+                            </ol>
+                        </div>
+                    </div>
+
+                    {npwp!==null? 
+                        <div className="relative max-w-min">
+                            <img
+                                src={npwpPreview}
+                                alt="Preview"
+                                className="aspect-square max-w-[300px] rounded-md mb-3"
+                            />
+                            <button onClick={handlerResetNpwp} className="bg-gray-500 absolute top-0 right-0">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    className="h-6 w-6"
+                                    className="h-6 w-6 text-red-500"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
                                 >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
                                 </svg>
                             </button>
-                        </div>
-                    )}
+                        </div>:<></>
+                    }
                 </Input>
 
             </div>

@@ -368,7 +368,7 @@ const LaporDiriDetail = ({ uuid }) => {
         const file = e.target.files[0];
         if (file) {
             setNpwp(file);
-            setNpwpPreview(file?.name ?? "");
+            setNpwpPreview(URL.createObjectURL(file));
             setErrListBerkasTambahan((prev) => {
                 const { npwp, ...rest } = prev;
                 return rest;
