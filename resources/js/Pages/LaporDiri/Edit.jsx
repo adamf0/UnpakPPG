@@ -465,6 +465,11 @@ const LaporDiriEdit = ({ uuid }) => {
                 );
                 setSuratBebasNarkoba(response?.data?.suratBebasNarkoba ?? "");
                 setNpwp(response?.data?.npwp ?? "");
+                setNpwpPreview(
+                    response?.data?.ktp?.isEmpty()
+                        ? ""
+                        : `/npwp/${response?.data?.npwp}`
+                );
             }
         } catch (error) {
             // console.error(error.response?.data)
@@ -1781,7 +1786,7 @@ const LaporDiriEdit = ({ uuid }) => {
                             </div>
                         </div>
 
-                        {npwp !== null ? (
+                        {npwpPreview !== null ? (
                             <div className="relative max-w-min">
                                 <img
                                     src={npwpPreview}

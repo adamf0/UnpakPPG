@@ -485,6 +485,11 @@ function PendaftaranPage({ activeMenu }) {
                 setSuratKeteranganBerkelakuanBaik(response?.data?.suratKeteranganBerkelakuanBaik ?? "")
                 setSuratBebasNarkoba(response?.data?.suratBebasNarkoba ?? "")
                 setNpwp(response?.data?.npwp ?? "")
+                setNpwpPreview(
+                    response?.data?.ktp?.isEmpty()
+                        ? ""
+                        : `/npwp/${response?.data?.npwp}`
+                );
             }
         } catch (error) {
             // console.error(error.response?.data)
