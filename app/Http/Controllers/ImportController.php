@@ -23,6 +23,7 @@ class ImportController extends Controller
                 $mahasiswa->nama = $row["nama_lengkap"];
                 $mahasiswa->bidangStudi = $row["bidang_studi_ppg"];
                 $mahasiswa->email = $row["email"];
+                $mahasiswa->nik = $row["nik"];
                 $mahasiswa->save();
             }
         }

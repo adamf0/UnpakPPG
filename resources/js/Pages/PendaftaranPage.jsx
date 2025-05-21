@@ -740,7 +740,7 @@ function PendaftaranPage({ activeMenu }) {
                             });
                         }}
                         errorMessageList={errListBiodata?.nik ?? []}
-                        required
+                        disabled
                     />
                 </div>
 

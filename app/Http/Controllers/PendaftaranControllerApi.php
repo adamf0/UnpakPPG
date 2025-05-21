@@ -53,6 +53,7 @@ class PendaftaranControllerApi extends Controller
                 $new->uuid = $uuid;
                 $new->nomorUKG = $request->nomorUKG;
                 $new->nim = $mahasiswa?->nim;
+                $new->nik = $mahasiswa?->nik;
                 $new->namaPeserta = $mahasiswa?->nama;
                 $new->save();
 
