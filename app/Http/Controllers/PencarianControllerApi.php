@@ -31,10 +31,10 @@ class PencarianControllerApi extends Controller
             if(!$cek){
                 return response()->json([
                     "Title" => "pencarian.NotFound",
-                    "Detail" => "data belum terdaftar di sistem"
+                    "Detail" => "Anda belum melakukan Lapor Diri, silahkan ke menu Pendaftaran"
                 ],400);
             } else{
-                return response()->json("data sudah terdaftar",200);
+                return response()->json("Anda sudah melakukan Lapor Diri",200);
             }
         } catch (\Throwable $th) {
             return response()->json([
