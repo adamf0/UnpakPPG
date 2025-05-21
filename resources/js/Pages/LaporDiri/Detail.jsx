@@ -1572,7 +1572,7 @@ const LaporDiriDetail = ({ uuid }) => {
                         type="file"
                         placeholder="Upload file"
                         onChange={handleNpwpChange}
-                        accept="application/pdf"
+                        accept="image/jpeg,image/png"
                         disabled
                     >
                         {(errListBerkasTambahan?.npwp ?? []).map((err) => (

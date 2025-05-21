@@ -272,7 +272,7 @@ class PendaftaranControllerApi extends Controller
             $fileRules['suratBebasNarkoba'] = ['file', 'max:5120', new SafeFile(['application/pdf'])];;
         }
         if ($request->hasFile('npwp')){
-            $fileRules['npwp'] = ['file', 'max:5120', new SafeFile(['application/pdf'])];;
+            $fileRules['npwp'] = ['file', 'max:5120', new SafeFile(['image/jpeg', 'image/png'])];;
         }
         
         if (!empty($fileRules)) {

@@ -1641,7 +1641,7 @@ function PendaftaranPage({ activeMenu }) {
                     type="file"
                     placeholder="Upload file"
                     onChange={handleNpwpChange}
-                    accept="application/pdf"
+                    accept="image/jpeg,image/png"
                 >
                     {(errListBerkasTambahan?.npwp??[]).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
                     <div className='flex flex-col md:flex-row flex-col-reverse'>
