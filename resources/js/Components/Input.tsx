@@ -68,8 +68,11 @@ const Input = ({
           </button>
         )}
       </div>
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-      {errorMessageList.map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
+      {
+        errorMessageList.length> 0?
+        errorMessageList.map(err => <p className="text-red-500 text-sm mt-1">{err}</p>) : 
+        (error && <p className="text-red-500 text-sm mt-1">{error}</p>)
+      }
       {children}
     </div>
   );
