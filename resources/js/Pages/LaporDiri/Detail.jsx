@@ -81,12 +81,12 @@ const LaporDiriDetail = ({ uuid }) => {
     const [statusSipil, setStatusSipil] = useState("");
     const [statusSipilOptions, setStatusSipilOptions] = useState([
         {
-            value: "B",
-            label: "Tidak Menikah",
-        },
-        {
             value: "K",
             label: "Menikah",
+        },
+        {
+            value: "B",
+            label: "Tidak Menikah",
         },
         {
             value: "J",
