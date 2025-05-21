@@ -908,8 +908,7 @@ function PendaftaranPage({ activeMenu }) {
                                 return rest;
                             });
                         }}
-                        errorMessageList={errListBiodata?.alamatEmail ?? []}
-                        required
+                        disabled
                     />
                 </div>
 

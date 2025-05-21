@@ -16,7 +16,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isCollapsed, selected }) => {
         <div className="flex items-center gap-3 mb-4">
           <img src={logo} alt="Logo" className="w-11 h-11" />
           <span className={`text-xl font-bold whitespace-nowrap ${isCollapsed ? "hidden" : "block"}`}>
-            UNPAK CBT
+            Lapor Diri - PPG
           </span>
         </div>
 

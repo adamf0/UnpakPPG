@@ -55,6 +55,7 @@ class PendaftaranControllerApi extends Controller
                 $new->nim = $mahasiswa?->nim;
                 $new->nik = $mahasiswa?->nik;
                 $new->namaPeserta = $mahasiswa?->nama;
+                $new->alamatEmail = $mahasiswa?->email;
                 $new->save();
 
                 return response()->json($uuid,200);
