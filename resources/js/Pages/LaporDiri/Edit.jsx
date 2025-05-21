@@ -87,7 +87,7 @@ const LaporDiriEdit = ({ uuid }) => {
     const [statusSipilOptions, setStatusSipilOptions] = useState([
         {
             value: "B",
-            label: "Bujangan",
+            label: "Tidak Menikah",
         },
         {
             value: "K",
