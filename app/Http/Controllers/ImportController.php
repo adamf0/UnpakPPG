@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class ImportController extends Controller
 {
     public function Index(){
+        set_time_limit(1800000000);
         $data = Excel::toArray(new MahasiswaImport, public_path('import.xlsx'));
         $rows = $data[0];  
 
@@ -20,6 +21,8 @@ class ImportController extends Controller
                 $mahasiswa->nomorUKG = $row["no_ukg"];
                 $mahasiswa->nim = $row["npm"];
                 $mahasiswa->nama = $row["nama_lengkap"];
+                $mahasiswa->bidangStudi = $row["bidang_studi_ppg"];
+                $mahasiswa->email = $row["email"];
                 $mahasiswa->save();
             }
         }
