@@ -165,7 +165,7 @@ class PendaftaranControllerApi extends Controller
             'kelurahan'       => 'required|string|max:255',
             'kecamatan'       => 'required|string|max:255',
             'kodePos'         => 'required|digits:5',
-            'jenisTinggal'    => 'required|in:1,2,3,4,5,99',
+            'jenisTinggal'    => 'required|in:1,3,2,99,10,4,5',
             'namaIbu'         => 'required|string|max:255',
             'namaAyah'        => 'required|string|max:255',
             'alamatAyahIbu'   => 'required|string|max:500',
