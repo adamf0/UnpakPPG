@@ -477,7 +477,7 @@ const LaporDiriEdit = ({ uuid }) => {
                 alert(detail);
             } else if (status === 500) {
                 if (
-                    error.response?.data?.Title == "laporDiri.invalidValidation"
+                    error.response?.data?.Title == "pendaftaran.invalidValidation"
                 ) {
                 } else {
                     alert(detail);
@@ -539,7 +539,7 @@ const LaporDiriEdit = ({ uuid }) => {
                 alert(detail);
             } else if (status === 500) {
                 if (
-                    error.response?.data?.Title == "laporDiri.invalidValidation"
+                    error.response?.data?.Title == "pendaftaran.invalidValidation"
                 ) {
                     setErrListBiodata(detail);
                 } else {
