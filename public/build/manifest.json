@@ -8,12 +8,12 @@
     "src": "public/images/logo-unpak.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-qM1WwSGu.css",
+    "file": "assets/app-CjkW5e-7.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-DFssb4OQ.js",
+    "file": "assets/app-CrMkQfid.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,

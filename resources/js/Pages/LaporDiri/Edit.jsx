@@ -8,6 +8,7 @@ import Stepper from "@src/Components/Stepper";
 import AdminPage from "@src/AdminPage";
 import { apiProduction } from "@src/Persistance/API";
 import contoh_pass_foto from "@assets/contoh_pass_foto.jpeg";
+import Swal from 'sweetalert2';
 
 const StepEnum = {
     BIODATA_PDDIKTI: "Biodata PDDIKTI",
@@ -595,7 +596,11 @@ const LaporDiriEdit = ({ uuid }) => {
             );
 
             if (response.status === 200 || response.status === 204) {
-                alert("berhasil simpan data");
+                Swal.fire({
+                    title: "",
+                    text: "selamat anda telah menyelesaikan lapor diri",
+                    icon: "success"
+                });
             }
         } catch (error) {
             // console.error(error.response?.data)
