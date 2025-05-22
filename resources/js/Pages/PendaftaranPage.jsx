@@ -10,6 +10,7 @@ import { useEffect, useState, useRef } from "react";
 import Stepper from '@src/Components/Stepper';
 import { apiProduction } from "@src/Persistance/API";
 import contoh_pass_foto from "@assets/contoh_pass_foto.jpeg"
+import Swal from 'sweetalert2';
 
 const StepEnum = {
     PENGAJUAN: "Pengajuan",
@@ -638,7 +639,11 @@ function PendaftaranPage({ activeMenu }) {
             });
 
             if (response.status === 200 || response.status === 204) {
-                alert("berhasil simpan data")
+                Swal.fire({
+                    title: "",
+                    text: "selamat anda telah menyelesaikan lapor diri",
+                    icon: "success"
+                });
                 setFrame(StepEnum.SELESAI)
             }
         } catch (error) {
