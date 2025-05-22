@@ -154,7 +154,7 @@ class PendaftaranControllerApi extends Controller
             'jenisKelamin'    => 'required|string|in:L,P',
             'tempatLahir'     => 'required|string|max:255',
             'tanggalLahir'    => 'required|date_format:Y-m-d',
-            'agama'           => 'required|string|in:I,K,P,B,G,L',
+            'agama'           => 'required|string|in:I,K,P,B,G,H,L',
             'wargaNegara'     => 'required|string|in:I,A',
             'statusSipil'     => 'required|string|in:B,K,J,D',
             'noHp'            => 'required|digits_between:10,13',
@@ -173,7 +173,7 @@ class PendaftaranControllerApi extends Controller
             'hpKerabat'       => 'required|digits_between:10,13',
             'sekolahMengajar' => 'required|string|max:255',
             'alamatSekolah'   => 'required|string|max:500',
-            'telpSekolah'     => 'nullable|numeric',
+            'telpSekolah'     => 'nullable',
         ]);
 
         if ($validator->fails()) {

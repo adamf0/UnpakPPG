@@ -70,6 +70,10 @@ function PendaftaranPage({ activeMenu }) {
             label: "Konghuchu",
         },
         {
+            value: "H",
+            label: "Hindu",
+        },
+        {
             value: "L",
             label: "Lain",
         },

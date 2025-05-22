@@ -68,6 +68,10 @@ const LaporDiriEdit = ({ uuid }) => {
             label: "Konghuchu",
         },
         {
+            value: "H",
+            label: "Hindu",
+        },
+        {
             value: "L",
             label: "Lain",
         },
