@@ -25,7 +25,48 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
         $isDev = env("DEPLOY","dev")=="dev";
 
         if ($this->filter_status == '!done') {
-            return DB::table("all_record")->whereNull("status")->get();
+            return DB::table("all_record")->whereNull("status")->get()->map(function($mahasiswa) use($isDev){
+                        return [
+                            "'".$mahasiswa->nomorUKG,
+                            "'".$mahasiswa->nim,
+                            "'".$mahasiswa->nik,
+                            $mahasiswa->nama,
+                            $mahasiswa->namaPeserta,
+                            $mahasiswa->jenisKelamin,
+                            $mahasiswa->tempatLahir,
+                            $mahasiswa->tanggalLahir,
+                            $mahasiswa->agama,
+                            $mahasiswa->wargaNegara,
+                            $mahasiswa->statusSipil,
+                            "'".$mahasiswa->noHp,
+                            $mahasiswa->alamatEmail,
+                            $mahasiswa->alamatTinggal,
+                            "'".$mahasiswa->rt,
+                            "'".$mahasiswa->rw,
+                            $mahasiswa->kelurahan,
+                            $mahasiswa->kecamatan,
+                            "'".$mahasiswa->kodePos,
+                            $mahasiswa->namaIbu,
+                            $mahasiswa->namaAyah,
+                            $mahasiswa->alamatAyahIbu,
+                            "'".$mahasiswa->hpAyahIbu,
+                            "'".$mahasiswa->hpKerabat,
+                            $mahasiswa->sekolahMengajar,
+                            $mahasiswa->alamatSekolah,
+                            "'".$mahasiswa->telpSekolah,
+                            
+                            empty($mahasiswa->paktaIntegritas)?                 "" : ($isDev? asset('paktaIntegritas/' . $mahasiswa->paktaIntegritas)                                   : secure_asset('paktaIntegritas/' . $mahasiswa->paktaIntegritas)),
+                            empty($mahasiswa->biodataMahasiswa)?                "" : ($isDev? asset('biodataMahasiswa/' . $mahasiswa->biodataMahasiswa)                                 : secure_asset('biodataMahasiswa/' . $mahasiswa->biodataMahasiswa)),
+                            empty($mahasiswa->ijazah)?                          "" : ($isDev? asset('ijazah/' . $mahasiswa->ijazah)                                                     : secure_asset('ijazah/' . $mahasiswa->ijazah)),
+                            empty($mahasiswa->transkripS1)?                     "" : ($isDev? asset('transkripS1/' . $mahasiswa->transkripS1)                                           : secure_asset('transkripS1/' . $mahasiswa->transkripS1)),
+                            empty($mahasiswa->ktp)?                             "" : ($isDev? asset('ktp/' . $mahasiswa->ktp)                                                           : secure_asset('ktp/' . $mahasiswa->ktp)),
+                            empty($mahasiswa->foto)?                            "" : ($isDev? asset('foto/' . $mahasiswa->foto)                                                         : secure_asset('foto/' . $mahasiswa->foto)),
+                            empty($mahasiswa->suratKeteranganSehat)?            "" : ($isDev? asset('suratKeteranganSehat/' . $mahasiswa->suratKeteranganSehat)                         : secure_asset('suratKeteranganSehat/' . $mahasiswa->suratKeteranganSehat)),
+                            empty($mahasiswa->suratKeteranganBerkelakuanBaik)?  "" : ($isDev? asset('suratKeteranganBerkelakuanBaik/' . $mahasiswa->suratKeteranganBerkelakuanBaik)     : secure_asset('suratKeteranganBerkelakuanBaik/' . $mahasiswa->suratKeteranganBerkelakuanBaik)),
+                            empty($mahasiswa->suratBebasNarkoba)?               "" : ($isDev? asset('suratBebasNarkoba/' . $mahasiswa->suratBebasNarkoba)                               : secure_asset('suratBebasNarkoba/' . $mahasiswa->suratBebasNarkoba)),
+                            empty($mahasiswa->npwp)?                            "" : ($isDev? asset('npwp/' . $mahasiswa->npwp)                                                         : secure_asset('npwp/' . $mahasiswa->npwp)),
+                        ];
+                    });
         } else {
             // If the filter is 'registered', fetch data based on the status
             return LaporDiri::select("pendaftaran.*","mahasiswa.nama")->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where('status', $this->filter_status)->get()
