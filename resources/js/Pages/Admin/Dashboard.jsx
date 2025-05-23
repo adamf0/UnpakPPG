@@ -1,7 +1,7 @@
 import { FaCheckCircle, FaTimesCircle, FaCommentDots } from "react-icons/fa";
 import AdminPage from "@src/AdminPage";
 
-const AdminDashboard = ({lengkap=0,tidakLengkap=0,tidakTerdaftar=0}) => {
+const AdminDashboard = ({lengkap=0,tidakLengkap=0}) => {
     return (
         <AdminPage selected="dashboard">
             <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -22,10 +22,10 @@ const AdminDashboard = ({lengkap=0,tidakLengkap=0,tidakTerdaftar=0}) => {
                         <FaCommentDots className="text-4xl" />
                     </div>
                     <span className="text-sm font-semibold">
-                        Total Lapor Diri Belum Terdaftar
+                        Total Lapor Diri Belum Lengkap
                     </span>
                     <p className="text-4xl font-bold text-purple-800 mt-2">
-                        {tidakTerdaftar}
+                        {tidakLengkap}
                     </p>
                 </div>
             </div>

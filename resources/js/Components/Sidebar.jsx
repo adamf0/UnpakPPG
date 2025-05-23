@@ -43,7 +43,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isCollapsed, selected }) => {
               onClick={toggleSidebar} // Tutup sidebar saat di mobile
             >
               <MdBook size={24} />
-              <span className={`${isCollapsed ? "hidden" : "block"}`}><span className="whitespace-nowrap">Lapor Diri</span></span>
+              <span className={`${isCollapsed ? "hidden" : "block"}`}><span className="whitespace-nowrap">Selesai Lapor Diri</span></span>
             </a>
           </li>
           <li>
@@ -55,7 +55,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isCollapsed, selected }) => {
               onClick={toggleSidebar} // Tutup sidebar saat di mobile
             >
               <MdBook size={24} />
-              <span className={`${isCollapsed ? "hidden" : "block"}`}><span className="whitespace-nowrap">Search</span></span>
+              <span className={`${isCollapsed ? "hidden" : "block"}`}><span className="whitespace-nowrap">Belum Selesai Lapor Diri</span></span>
             </a>
           </li>
         </ul>

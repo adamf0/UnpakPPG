@@ -18,13 +18,11 @@ const Search = () => {
     const [selectedUUID, setSelectedUUID] = useState(null);
 
     const [loadingStatus, setLoadingStatus] = useState(null);
+    const [loadingExport, setLoadingExport] = useState(null);
     const [dataSource, setDataSource] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
 
-    const [namaPeserta, setNamaPeserta] = useState("");
-    const [nomorUKG, setNomorUKG] = useState("");
-    const [npm, setNPM] = useState("");
-    const [status, setStatus] = useState("done");
+    const [filter, setFilter] = useState("");
 
     const [statusOptions, setStatusOptions] = useState([
         {
@@ -77,14 +75,12 @@ const Search = () => {
         try {
             console.log(`execute LoadTableHandler to call /api/laporDiri`);
             const response = await apiProduction.post("/api/laporDiri", {
-                filter_nama: namaPeserta,
-                filter_npm: npm,
-                filter_ukg: nomorUKG,
-                filter_status: status,
+                filter: filter,
                 page: page,
             });
 
             if (response.status === 200 || response.status === 204) {
+                console.log(response?.data)
                 setDataSource(response?.data ?? []);
             }
         } catch (error) {
@@ -159,6 +155,40 @@ const Search = () => {
         }
     }
 
+    async function ExportHandler() {
+        setLoadingExport(true);
+        try {
+            console.log(`execute ExportHandler to call /api/laporDiri/export`);
+            const response = await apiProduction.post("/api/laporDiri/export", {filter_status: "!done"},{responseType: 'blob'});
+
+            if (response.status === 200 || response.status === 204) {
+                // Check if the response is a valid file (check content type)
+                const contentDisposition = response.headers['content-disposition'];
+                const fileName = contentDisposition ? contentDisposition.split('filename=')[1] : 'laporDiriExport.xlsx';
+
+                const blob = response.data;
+
+                // Create a URL for the Blob and trigger the download
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName;  // Use the filename from the header or default
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link); // Clean up the DOM
+            }
+        } catch (error) {
+            // console.error(error.response?.data)
+            const status = error.response?.status;
+            const detail =
+                error.response?.data?.Detail ?? "ada masalah pada aplikasi";
+
+            alert(detail);
+            console.error(detail);
+        } finally {
+            setLoadingExport(false);
+        }
+    }
+
     useEffect(()=>{
       LoadTableHandler(currentPage);
     },[currentPage])
@@ -168,47 +198,18 @@ const Search = () => {
             <>
                 {/* Breadcrumb */}
                 <nav className="text-gray-600 text-sm mb-4">
-                    <span className="text-gray-500">Search</span>
+                    <span className="text-gray-500">Belum Selesai Lapor Diri</span>
                 </nav>
 
                 <div className="flex flex-col gap-3 relative bg-white shadow-md rounded-lg p-4">
                     <div className="flex flex-col md:flex-row justify-start gap-3">
                         <Input
-                            label="Nama Peserta"
+                            label="Cari"
                             type="text"
-                            placeholder="masukkan nama peserta"
-                            value={namaPeserta}
+                            placeholder="masukkan data nama peserta / nomor ukg / nim yg akan dicari"
+                            value={filter}
                             onChange={(e) => {
-                                setNamaPeserta(e.target.value);
-                            }}
-                        />
-                        <Input
-                            label="Nomor UKG"
-                            type="text"
-                            placeholder="masukkan nomor UKG"
-                            value={nomorUKG}
-                            onChange={(e) => {
-                                setNomorUKG(e.target.value);
-                            }}
-                        />
-
-                        <Input
-                            label="NIM"
-                            type="text"
-                            placeholder="masukkan nomor nim"
-                            value={npm}
-                            onChange={(e) => {
-                                setNPM(e.target.value);
-                            }}
-                        />
-
-
-                        <Select
-                            label="status"
-                            options={statusOptions}
-                            value={status}
-                            onChange={(value) => {
-                                setStatus(value);
+                                setFilter(e.target.value);
                             }}
                         />
                     </div>
@@ -220,6 +221,15 @@ const Search = () => {
                             loading={loadingStatus}
                         >
                             Search Data
+                        </Button>
+
+                        <Button
+                            onClick={ExportHandler}
+                            className="flex-1"
+                            variant="success"
+                            loading={loadingExport}
+                        >
+                            Export Excel
                         </Button>
                     </div>
                 </div>
@@ -268,20 +278,20 @@ const Search = () => {
                                   >
                                       {source.status === "done"
                                           ? "Sudah Lengkap"
-                                          : (status == "not registered"? "Belum Terdaftar":"Belum Lengkap")}
+                                          : (source.uuid == null? "Belum Terdaftar":"Belum Lengkap")}
                                   </span>
 
                                   {/* Dropdown */}
                                   <div
                                       className="absolute top-3 right-3"
                                       ref={(el) =>
-                                          (dropdownRefs.current[source.id] =
+                                          (dropdownRefs.current[source.nomorUKG] =
                                               el)
                                       }
                                   >
                                       <button
                                           onClick={() =>
-                                              toggleDropdown(source.id)
+                                              toggleDropdown(source.nomorUKG)
                                           }
                                           className="p-2 rounded-full hover:bg-gray-200"
                                       >
@@ -289,10 +299,10 @@ const Search = () => {
                                       </button>
 
                                       {/* Dropdown Menu */}
-                                      {dropdownOpen === source.id && (
+                                      {dropdownOpen === source.nomorUKG && (
                                           <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg border border-gray-200 rounded-md overflow-hidden z-50">
                                               <ul className="py-1">
-                                                {source.status === "done"? 
+                                                {source.uuid !== null? 
                                                     <>
                                                         <a
                                                             href={`/laporDiri/detail/?`.replace(

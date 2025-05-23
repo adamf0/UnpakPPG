@@ -23,10 +23,7 @@ const LaporDiri = () => {
     const [dataSource, setDataSource] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
 
-    const [namaPeserta, setNamaPeserta] = useState("");
-    const [nomorUKG, setNomorUKG] = useState("");
-    const [npm, setNPM] = useState("");
-    const [status, setStatus] = useState("done");
+    const [filter, setFilter] = useState("");
 
     // Fungsi untuk menutup dropdown jika klik terjadi di luar
     useEffect(() => {
@@ -63,10 +60,8 @@ const LaporDiri = () => {
         try {
             console.log(`execute LoadTableHandler to call /api/laporDiri`);
             const response = await apiProduction.post("/api/laporDiri", {
-                filter_nama: namaPeserta,
-                filter_npm: npm,
-                filter_ukg: nomorUKG,
-                filter_status: status == "not registered" ? "" : status,
+                filter: filter,
+                filter_status: "done",
                 page: page,
             });
 
@@ -89,7 +84,7 @@ const LaporDiri = () => {
         setLoadingExport(true);
         try {
             console.log(`execute ExportHandler to call /api/laporDiri/export`);
-            const response = await apiProduction.post("/api/laporDiri/export", {filter_status: status=="draf"? null:status},{responseType: 'blob'});
+            const response = await apiProduction.post("/api/laporDiri/export", {filter_status: "done"},{responseType: 'blob'});
 
             if (response.status === 200 || response.status === 204) {
                 // Check if the response is a valid file (check content type)
@@ -159,40 +154,19 @@ const LaporDiri = () => {
             <>
                 {/* Breadcrumb */}
                 <nav className="text-gray-600 text-sm mb-4">
-                    <span className="text-gray-500">Lapor Diri</span>
+                    <span className="text-gray-500">Selesai Lapor Diri</span>
                 </nav>
 
                 <div className="flex flex-col gap-3 relative bg-white shadow-md rounded-lg p-4">
-                    <div className="flex flex-col md:flex-row justify-start gap-3">
-                        <Input
-                            label="Nama Peserta"
+                    <Input
+                            label="Cari"
                             type="text"
-                            placeholder="masukkan nama peserta"
-                            value={namaPeserta}
+                            placeholder="masukkan data nama peserta / nomor ukg / nim yg akan dicari"
+                            value={filter}
                             onChange={(e) => {
-                                setNamaPeserta(e.target.value);
+                                setFilter(e.target.value);
                             }}
                         />
-                        <Input
-                            label="Nomor UKG"
-                            type="text"
-                            placeholder="masukkan nomor UKG"
-                            value={nomorUKG}
-                            onChange={(e) => {
-                                setNomorUKG(e.target.value);
-                            }}
-                        />
-
-                        <Input
-                            label="NIM"
-                            type="text"
-                            placeholder="masukkan nomor nim"
-                            value={npm}
-                            onChange={(e) => {
-                                setNPM(e.target.value);
-                            }}
-                        />
-                    </div>
 
                     <div className="flex gap-2">
                         <Button

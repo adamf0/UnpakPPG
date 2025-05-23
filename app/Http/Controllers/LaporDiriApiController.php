@@ -6,6 +6,7 @@ use App\Exports\LaporDiriExport;
 use App\Models\LaporDiri;
 use App\Models\mahasiswa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class LaporDiriApiController extends Controller
@@ -16,73 +17,36 @@ class LaporDiriApiController extends Controller
             $limit = 10;
             $offset = ($page - 1) * $limit;
             
-            if($request->post("filter_status")=="not registered"){
-                $registeredUKG = LaporDiri::pluck("nomorUKG");
-                $allMahasiswa = mahasiswa::whereNotIn("nomorUKG", $registeredUKG)->get();
-                $total = $allMahasiswa->count();
-
-                $data = $allMahasiswa->skip($offset)->take($limit)->map(function ($m) {
-                    return [
-                        "agama" => "",
-                        "alamatAyahIbu" => "",
-                        "alamatEmail" => $m->email,
-                        "alamatSekolah" => "",
-                        "alamatTinggal" => "",
-                        "biodataMahasiswa" => "",
-                        "created_at" => "",
-                        "foto" => "",
-                        "hpAyahIbu" => "",
-                        "hpKerabat" => "",
-                        "id" => $m->id,
-                        "ijazah" => "",
-                        "jenisKelamin" => "",
-                        "jenisTinggal" => "",
-                        "kecamatan" => "",
-                        "kelurahan" => "",
-                        "kodePos" => "",
-                        "ktp" => "",
-                        "namaAyah" => "",
-                        "namaIbu" => "",
-                        "namaPeserta" => $m->nama,
-                        "nik" => $m->nik,
-                        "nim" => $m->nim,
-                        "noHp" => "",
-                        "nomorUKG" => $m->nomorUKG,
-                        "npwp" => "",
-                        "paktaIntegritas" => "",
-                        "rt" => "",
-                        "rw" => "",
-                        "sekolahMengajar" => "",
-                        "status" => "",
-                        "statusSipil" => "",
-                        "suratBebasNarkoba" => "",
-                        "suratKeteranganBerkelakuanBaik" => "",
-                        "suratKeteranganSehat" => "",
-                        "tanggalLahir" => "",
-                        "telpSekolah" => "",
-                        "tempatLahir" => "",
-                        "transkripS1" => "",
-                        "updated_at" => "",
-                        "uuid" => $m->uuid,
-                        "wargaNegara" => "",
-                    ];
-                })->values();
+            if($request->post("filter_status")!="done"){
+                $total = DB::table("all_record")->whereNull("status")->count();
+                $data = DB::table("all_record")->skip($offset)->take($limit);
+                $data = $data->whereNull("status");
+                
+                if($request->has("filter") && !empty($request->get("filter"))){
+                    $data = $data->where(fn ($query) =>
+                                $query->where("namaPeserta", "like", "%{$request->filter}%")
+                                    ->orWhere("nim", "like", "%{$request->filter}%")
+                                    ->orWhere("nomorUKG", "like", "%{$request->filter}%"));
+                }
+                $data = $data->get();
 
                 $totalPages = ceil($total / $limit);
             } else{
-                $total = LaporDiri::count();
+                $total = DB::table("all_record");
+                if($request->has("filter_status") && !empty($request->get("filter_status"))){
+                    $total = $total->where("status",$request->post("filter_status"));
+                }
+                $total = $total->count();
+                
                 $data = LaporDiri::skip($offset)->take($limit);
-                if($request->has("filter_nama") && !empty($request->get("filter_nama"))){
-                    $data = $data->where("namaPeserta","like","%".$request->filter_nama."%");
-                }
-                if($request->has("filter_npm") && !empty($request->get("filter_npm"))){
-                    $data = $data->where("nim",$request->filter_npm);
-                }
-                if($request->has("filter_ukg") && !empty($request->get("filter_ukg"))){
-                    $data = $data->where("nomorUKG",$request->filter_ukg);
-                }
                 if($request->has("filter_status") && !empty($request->get("filter_status"))){
                     $data = $data->where("status",$request->post("filter_status"));
+                }
+                if($request->has("filter") && !empty($request->get("filter"))){
+                    $data = $data->where(fn ($query) =>
+                                $query->where("namaPeserta", "like", "%{$request->filter}%")
+                                    ->orWhere("nim", "like", "%{$request->filter}%")
+                                    ->orWhere("nomorUKG", "like", "%{$request->filter}%"));
                 }
                 $data = $data->get();
 
@@ -102,7 +66,8 @@ class LaporDiriApiController extends Controller
             return response()->json([
                 "Title" => "lapordiri.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
-                "Error" => $th->getMessage()
+                "Error" => $th->getMessage(),
+                "ErrorT" => $th->getTrace(),
             ],400);
         }
     }
@@ -150,7 +115,7 @@ class LaporDiriApiController extends Controller
     }
     public function Export(Request $request){
        try {
-            return Excel::download(new LaporDiriExport($request->get("filter_status")=="draf"? "":$request->get("filter_status")), 'Lapor_Diri_Export.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+            return Excel::download(new LaporDiriExport($request->get("filter_status")), 'Lapor_Diri_Export.xlsx', \Maatwebsite\Excel\Excel::XLSX);
         } catch (\Throwable $th) {
             return response()->json([
                 "Title" => "lapordiri.commonError",

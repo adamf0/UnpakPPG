@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Models\LaporDiri;
 use App\Models\mahasiswa;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithTitle;
@@ -23,53 +24,8 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
     {
         $isDev = env("DEPLOY","dev")=="dev";
 
-        if ($this->filter_status == 'not registered') {
-            return mahasiswa::whereNotIn('nomorUKG', function ($query) {
-                $query->select('nomorUKG')
-                    ->from('pendaftaran');
-            })
-            ->get()
-            ->map(function($mahasiswa) {
-                        return [
-                            $mahasiswa->nomorUKG,
-                            $mahasiswa->nim,
-                            "",
-                            $mahasiswa->nama,
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                        ];
-                    });
+        if ($this->filter_status == '!done') {
+            return DB::table("all_record")->whereNull("status")->get();
         } else {
             // If the filter is 'registered', fetch data based on the status
             return LaporDiri::select("pendaftaran.*","mahasiswa.nama")->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where('status', $this->filter_status)->get()
