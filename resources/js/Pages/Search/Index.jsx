@@ -1,17 +1,16 @@
 import AdminPage from "@src/AdminPage";
 import { useEffect, useRef, useState } from "react";
 import Input from "@src/Components/Input";
-import Select from "@src/Components/Select";
 import Button from "@src/Components/Button";
+import Select from "@src/Components/Select";
 import Pagination from "@src/Components/Pagination";
 import Modal from "@src/Components/Modal";
-import { FaPlus } from "react-icons/fa";
 import { AiOutlineUser } from "react-icons/ai";
 import { TbNumber123 } from "react-icons/tb";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { apiProduction } from "@src/Persistance/API";
 
-const LaporDiri = () => {
+const Search = () => {
     const [dropdownOpen, setDropdownOpen] = useState(null);
     const [showConfirm, setShowConfirm] = useState(false);
     const dropdownRefs = useRef({});
@@ -19,7 +18,6 @@ const LaporDiri = () => {
     const [selectedUUID, setSelectedUUID] = useState(null);
 
     const [loadingStatus, setLoadingStatus] = useState(null);
-    const [loadingExport, setLoadingExport] = useState(null);
     const [dataSource, setDataSource] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -27,6 +25,22 @@ const LaporDiri = () => {
     const [nomorUKG, setNomorUKG] = useState("");
     const [npm, setNPM] = useState("");
     const [status, setStatus] = useState("done");
+
+    const [statusOptions, setStatusOptions] = useState([
+        {
+            value: "",
+            label: "",
+        },
+        {
+            value: "done",
+            label: "Selesai Input",
+        },
+        {
+            value: "not registered",
+            label: "Belum Terdaftar",
+        },
+    ]);
+
 
     // Fungsi untuk menutup dropdown jika klik terjadi di luar
     useEffect(() => {
@@ -66,7 +80,7 @@ const LaporDiri = () => {
                 filter_nama: namaPeserta,
                 filter_npm: npm,
                 filter_ukg: nomorUKG,
-                filter_status: status == "not registered" ? "" : status,
+                filter_status: status,
                 page: page,
             });
 
@@ -85,50 +99,17 @@ const LaporDiri = () => {
             setLoadingStatus(false);
         }
     }
-    async function ExportHandler() {
-        setLoadingExport(true);
-        try {
-            console.log(`execute ExportHandler to call /api/laporDiri/export`);
-            const response = await apiProduction.post("/api/laporDiri/export", {filter_status: status=="draf"? null:status},{responseType: 'blob'});
-
-            if (response.status === 200 || response.status === 204) {
-                // Check if the response is a valid file (check content type)
-                const contentDisposition = response.headers['content-disposition'];
-                const fileName = contentDisposition ? contentDisposition.split('filename=')[1] : 'laporDiriExport.xlsx';
-
-                const blob = response.data;
-
-                // Create a URL for the Blob and trigger the download
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = fileName;  // Use the filename from the header or default
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link); // Clean up the DOM
-            }
-        } catch (error) {
-            // console.error(error.response?.data)
-            const status = error.response?.status;
-            const detail =
-                error.response?.data?.Detail ?? "ada masalah pada aplikasi";
-
-            alert(detail);
-            console.error(detail);
-        } finally {
-            setLoadingExport(false);
-        }
-    }
     async function DeleteHandler() {
         if (selectedUUID !== null) {
             try {
                 console.log(
-                    `execute DeleteHandler to call /api/laporDiri/?`.replace(
+                    `execute DeleteHandler to call /api/Search/?`.replace(
                         "?",
                         selectedUUID
                     )
                 );
                 const response = await apiProduction.delete(
-                    "/api/laporDiri/?".replace("?", selectedUUID),
+                    "/api/Search/?".replace("?", selectedUUID),
                     {}
                 );
 
@@ -150,16 +131,44 @@ const LaporDiri = () => {
         }
     }
 
+    async function handleCreate(nomorUKG){
+        setLoadingStatus(true)
+        try {
+            console.log(`execute handleCreate to call /api/create`)
+            const response = await apiProduction.post("/api/create", {
+                nomorUKG: nomorUKG??""
+            });
+
+            if (response.status === 200 || response.status === 204) {
+
+            }
+        } catch (error) {
+            // console.error(error.response?.data)
+
+            const status = error.response?.status;
+            const detail = error.response?.data?.Detail ?? "ada masalah pada aplikasi";
+
+            if (status === 400) {
+                alert(detail)
+            } else{
+                console.error(detail)
+            }
+        } finally {
+            setLoadingStatus(false)
+            LoadTableHandler(currentPage);
+        }
+    }
+
     useEffect(()=>{
       LoadTableHandler(currentPage);
     },[currentPage])
 
     return (
-        <AdminPage selected="laporDiri">
+        <AdminPage selected="search">
             <>
                 {/* Breadcrumb */}
                 <nav className="text-gray-600 text-sm mb-4">
-                    <span className="text-gray-500">Lapor Diri</span>
+                    <span className="text-gray-500">Search</span>
                 </nav>
 
                 <div className="flex flex-col gap-3 relative bg-white shadow-md rounded-lg p-4">
@@ -192,24 +201,25 @@ const LaporDiri = () => {
                                 setNPM(e.target.value);
                             }}
                         />
+
+
+                        <Select
+                            label="status"
+                            options={statusOptions}
+                            value={status}
+                            onChange={(value) => {
+                                setStatus(value);
+                            }}
+                        />
                     </div>
 
                     <div className="flex gap-2">
                         <Button
-                            onClick={() => LoadTableHandler()}
+                            onClick={() => LoadTableHandler(1)}
                             className="flex-11"
                             loading={loadingStatus}
                         >
-                            Filter Data
-                        </Button>
-
-                        <Button
-                            onClick={ExportHandler}
-                            className="flex-1"
-                            variant="success"
-                            loading={loadingExport}
-                        >
-                            Export Excel
+                            Search Data
                         </Button>
                     </div>
                 </div>
@@ -258,7 +268,7 @@ const LaporDiri = () => {
                                   >
                                       {source.status === "done"
                                           ? "Sudah Lengkap"
-                                          : "Belum Lengkap"}
+                                          : (status == "not registered"? "Belum Terdaftar":"Belum Lengkap")}
                                   </span>
 
                                   {/* Dropdown */}
@@ -282,50 +292,62 @@ const LaporDiri = () => {
                                       {dropdownOpen === source.id && (
                                           <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg border border-gray-200 rounded-md overflow-hidden z-50">
                                               <ul className="py-1">
-                                                  <a
-                                                      href={`/laporDiri/detail/?`.replace(
-                                                          "?",
-                                                          source?.uuid
-                                                      )}
-                                                  >
-                                                      <li
-                                                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                                          onClick={(event) =>
-                                                              event.stopPropagation()
-                                                          }
-                                                      >
-                                                          Detail
-                                                      </li>
-                                                  </a>
+                                                {source.status === "done"? 
+                                                    <>
+                                                        <a
+                                                            href={`/laporDiri/detail/?`.replace(
+                                                                "?",
+                                                                source?.uuid
+                                                            )}
+                                                        >
+                                                            <li
+                                                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                                                onClick={(event) =>
+                                                                    event.stopPropagation()
+                                                                }
+                                                            >
+                                                                Detail
+                                                            </li>
+                                                        </a>
 
-                                                  <a
-                                                      href={`/laporDiri/edit/?`.replace(
-                                                          "?",
-                                                          source?.uuid
-                                                      )}
-                                                  >
-                                                      <li
-                                                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                                          onClick={(event) =>
-                                                              event.stopPropagation()
-                                                          }
-                                                      >
-                                                          Edit
-                                                      </li>
-                                                  </a>
+                                                        <a
+                                                            href={`/laporDiri/edit/?`.replace(
+                                                                "?",
+                                                                source?.uuid
+                                                            )}
+                                                        >
+                                                            <li
+                                                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                                                onClick={(event) =>
+                                                                    event.stopPropagation()
+                                                                }
+                                                            >
+                                                                Edit
+                                                            </li>
+                                                        </a>
 
-                                                  <li
-                                                      className="px-4 py-2 hover:bg-red-100 text-red-600 cursor-pointer"
-                                                      onClick={(event) =>
-                                                          handleConfirmDelete(
-                                                              source?.uuid,
-                                                              source?.nomorUKG,
-                                                              event
-                                                          )
-                                                      }
-                                                  >
-                                                      Hapus
-                                                  </li>
+                                                        <li
+                                                            className="px-4 py-2 hover:bg-red-100 text-red-600 cursor-pointer"
+                                                            onClick={(event) =>
+                                                                handleConfirmDelete(
+                                                                    source?.uuid,
+                                                                    source?.nomorUKG,
+                                                                    event
+                                                                )
+                                                            }
+                                                        >
+                                                            Hapus
+                                                        </li>
+                                                    </> : 
+                                                    <li
+                                                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                                        onClick={(event) =>
+                                                            handleCreate(source?.nomorUKG)
+                                                        }
+                                                    >
+                                                        Buat Lapor Diri
+                                                    </li>
+                                                }
                                               </ul>
                                           </div>
                                       )}
@@ -366,4 +388,4 @@ const LaporDiri = () => {
     );
 };
 
-export default LaporDiri;
+export default Search;

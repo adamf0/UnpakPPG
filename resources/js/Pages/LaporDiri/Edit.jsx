@@ -877,7 +877,6 @@ const LaporDiriEdit = ({ uuid }) => {
                                 });
                             }}
                             errorMessageList={errListBiodata?.alamatEmail ?? []}
-                            required
                         />
                     </div>
 

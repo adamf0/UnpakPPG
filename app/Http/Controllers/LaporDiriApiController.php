@@ -16,27 +16,78 @@ class LaporDiriApiController extends Controller
             $limit = 10;
             $offset = ($page - 1) * $limit;
             
-            $total = LaporDiri::count();
-            $data = LaporDiri::skip($offset)->take($limit);
-            if($request->has("filter_nama") && !empty($request->get("filter_nama"))){
-                $data = $data->where("namaPeserta",$request->filter_nama);
-            }
-            if($request->has("filter_npm") && !empty($request->get("filter_npm"))){
-                $data = $data->where("nim",$request->filter_npm);
-            }
-            if($request->has("filter_ukg") && !empty($request->get("filter_ukg"))){
-                $data = $data->where("nomorUKG",$request->filter_ukg);
-            }
-            if($request->has("filter_status") && !empty($request->get("filter_status"))){
-                if($request->post("filter_status")=="draf"){
-                    $data = $data->whereNull("status")->orWhere("status",$request->post("filter_status"));
-                } else{
+            if($request->post("filter_status")=="not registered"){
+                $registeredUKG = LaporDiri::pluck("nomorUKG");
+                $allMahasiswa = mahasiswa::whereNotIn("nomorUKG", $registeredUKG)->get();
+                $total = $allMahasiswa->count();
+
+                $data = $allMahasiswa->skip($offset)->take($limit)->map(function ($m) {
+                    return [
+                        "agama" => "",
+                        "alamatAyahIbu" => "",
+                        "alamatEmail" => $m->email,
+                        "alamatSekolah" => "",
+                        "alamatTinggal" => "",
+                        "biodataMahasiswa" => "",
+                        "created_at" => "",
+                        "foto" => "",
+                        "hpAyahIbu" => "",
+                        "hpKerabat" => "",
+                        "id" => $m->id,
+                        "ijazah" => "",
+                        "jenisKelamin" => "",
+                        "jenisTinggal" => "",
+                        "kecamatan" => "",
+                        "kelurahan" => "",
+                        "kodePos" => "",
+                        "ktp" => "",
+                        "namaAyah" => "",
+                        "namaIbu" => "",
+                        "namaPeserta" => $m->nama,
+                        "nik" => $m->nik,
+                        "nim" => $m->nim,
+                        "noHp" => "",
+                        "nomorUKG" => $m->nomorUKG,
+                        "npwp" => "",
+                        "paktaIntegritas" => "",
+                        "rt" => "",
+                        "rw" => "",
+                        "sekolahMengajar" => "",
+                        "status" => "",
+                        "statusSipil" => "",
+                        "suratBebasNarkoba" => "",
+                        "suratKeteranganBerkelakuanBaik" => "",
+                        "suratKeteranganSehat" => "",
+                        "tanggalLahir" => "",
+                        "telpSekolah" => "",
+                        "tempatLahir" => "",
+                        "transkripS1" => "",
+                        "updated_at" => "",
+                        "uuid" => $m->uuid,
+                        "wargaNegara" => "",
+                    ];
+                })->values();
+
+                $totalPages = ceil($total / $limit);
+            } else{
+                $total = LaporDiri::count();
+                $data = LaporDiri::skip($offset)->take($limit);
+                if($request->has("filter_nama") && !empty($request->get("filter_nama"))){
+                    $data = $data->where("namaPeserta","like","%".$request->filter_nama."%");
+                }
+                if($request->has("filter_npm") && !empty($request->get("filter_npm"))){
+                    $data = $data->where("nim",$request->filter_npm);
+                }
+                if($request->has("filter_ukg") && !empty($request->get("filter_ukg"))){
+                    $data = $data->where("nomorUKG",$request->filter_ukg);
+                }
+                if($request->has("filter_status") && !empty($request->get("filter_status"))){
                     $data = $data->where("status",$request->post("filter_status"));
                 }
-            }
-            $data = $data->get();
+                $data = $data->get();
 
-            $totalPages = ceil($total / $limit);
+                $totalPages = ceil($total / $limit);
+            }
 
             return response()->json([
                 'data' => $data,
