@@ -37,7 +37,7 @@ class LaporDiriApiController extends Controller
                     $total = $total->where("status",$request->post("filter_status"));
                 }
                 $total = $total->count();
-                
+
                 $data = LaporDiri::skip($offset)->take($limit);
                 if($request->has("filter_status") && !empty($request->get("filter_status"))){
                     $data = $data->where("status",$request->post("filter_status"));
@@ -66,8 +66,8 @@ class LaporDiriApiController extends Controller
             return response()->json([
                 "Title" => "lapordiri.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
-                "Error" => $th->getMessage(),
-                "ErrorT" => $th->getTrace(),
+                // "Error" => $th->getMessage(),
+                // "ErrorT" => $th->getTrace(),
             ],400);
         }
     }
@@ -89,7 +89,7 @@ class LaporDiriApiController extends Controller
             return response()->json([
                 "Title" => "lapordiri.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
-                "Error" => $th->getMessage()
+                // "Error" => $th->getMessage()
             ],400);
         }
     }
@@ -109,7 +109,7 @@ class LaporDiriApiController extends Controller
             return response()->json([
                 "Title" => "lapordiri.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
-                "Error" => $th->getMessage()
+                // "Error" => $th->getMessage()
             ],400);
         }
     }
@@ -120,7 +120,7 @@ class LaporDiriApiController extends Controller
             return response()->json([
                 "Title" => "lapordiri.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
-                "Error" => $th->getMessage()
+                // "Error" => $th->getMessage()
             ],400);
         }
     }

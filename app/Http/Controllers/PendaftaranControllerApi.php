@@ -64,7 +64,7 @@ class PendaftaranControllerApi extends Controller
             return response()->json([
                 "Title" => "pendaftaran.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
-                "Error" => $th->getMessage()
+                // "Error" => $th->getMessage()
             ],400);
         }
     }
@@ -407,7 +407,7 @@ class PendaftaranControllerApi extends Controller
             return response()->json([
                 "Title" => "berkasTambahan.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
-                "Error" => $th->getMessage()
+                // "Error" => $th->getMessage()
             ],400);
         }
 

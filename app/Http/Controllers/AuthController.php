@@ -43,7 +43,7 @@ class AuthController extends Controller
             return response()->json([
                 "Title" => "auth.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
-                "Error" => $th->getMessage()
+                // "Error" => $th->getMessage()
             ],400);
         }
 
