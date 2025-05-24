@@ -99,13 +99,13 @@ const Search = () => {
         if (selectedUUID !== null) {
             try {
                 console.log(
-                    `execute DeleteHandler to call /api/Search/?`.replace(
+                    `execute DeleteHandler to call /api/laporDiri/?`.replace(
                         "?",
                         selectedUUID
                     )
                 );
                 const response = await apiProduction.delete(
-                    "/api/Search/?".replace("?", selectedUUID),
+                    "/api/laporDiri/?".replace("?", selectedUUID),
                     {}
                 );
 
