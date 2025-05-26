@@ -19,7 +19,11 @@ class LaporDiriApiController extends Controller
             
             if($request->post("filter_status")!="done"){
                 $total = DB::table("all_record")->whereNull("status")->count();
-                $data = DB::table("all_record")->skip($offset)->take($limit);
+                $data = DB::table("all_record")
+                            ->select("all_record.*",DB::raw("(case when all_record.namaPeserta is null then mahasiswa.nama else all_record.namaPeserta end) as namaPeserta"))
+                            ->leftJoin("mahasiswa","all_record.nomorUKG","=","mahasiswa.nomorUKG")
+                            ->skip($offset)
+                            ->take($limit);
                 $data = $data->whereNull("status");
                 
                 if($request->has("filter") && !empty($request->get("filter"))){
