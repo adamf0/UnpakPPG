@@ -69,8 +69,8 @@ class LaporDiriApiController extends Controller
             return response()->json([
                 "Title" => "lapordiri.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
-                "Error" => $th->getMessage(),
-                "ErrorT" => $th->getTrace(),
+                // "Error" => $th->getMessage(),
+                // "ErrorT" => $th->getTrace(),
             ],400);
         }
     }
