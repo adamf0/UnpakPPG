@@ -43,13 +43,13 @@ class LaporDiriApiController extends Controller
                                     ->skip($offset)
                                     ->take($limit);
                 if($request->has("filter_status") && !empty($request->get("filter_status"))){
-                    $data = $data->where("status",$request->post("filter_status"));
+                    $data = $data->where("pendaftaran.status",$request->post("filter_status"));
                 }
                 if($request->has("filter") && !empty($request->get("filter"))){
                     $data = $data->where(fn ($query) =>
-                                $query->where("namaPeserta", "like", "%{$request->filter}%")
-                                    ->orWhere("nim", "like", "%{$request->filter}%")
-                                    ->orWhere("nomorUKG", "like", "%{$request->filter}%"));
+                                $query->where("pendaftaran.namaPeserta", "like", "%{$request->filter}%")
+                                    ->orWhere("pendaftaran.nim", "like", "%{$request->filter}%")
+                                    ->orWhere("pendaftaran.nomorUKG", "like", "%{$request->filter}%"));
                 }
                 $data = $data->get();
 
