@@ -25,7 +25,12 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
         $isDev = env("DEPLOY","dev")=="dev";
 
         if ($this->filter_status == '!done') {
-            return DB::table("all_record")->whereNull("status")->get()->map(function($mahasiswa) use($isDev){
+            return DB::table("all_record")
+                    ->select("all_record.*","mahasiswa.nama")
+                    ->join("mahasiswa", "all_record.nomorUKG", "mahasiswa.nomorUKG")
+                    ->whereNull("status")
+                    ->get()
+                    ->map(function($mahasiswa) use($isDev){
                         return [
                             "'".$mahasiswa->nomorUKG,
                             "'".$mahasiswa->nim,
@@ -69,7 +74,10 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
                     });
         } else {
             // If the filter is 'registered', fetch data based on the status
-            return LaporDiri::select("pendaftaran.*","mahasiswa.nama")->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where('status', $this->filter_status)->get()
+            return LaporDiri::select("pendaftaran.*","mahasiswa.nama")
+                    ->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")
+                    ->where('status', $this->filter_status)
+                    ->get()
                     ->map(function($mahasiswa) use($isDev){
                         return [
                             "'".$mahasiswa->nomorUKG,
