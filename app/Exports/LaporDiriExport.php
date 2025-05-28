@@ -75,8 +75,8 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
                     });
         } else {
             // If the filter is 'registered', fetch data based on the status
-            return LaporDiri::select("pendaftaran.*","mahasiswa.nama")
-                    ->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG", "mahasiswa.bidangStudi")
+            return LaporDiri::select("pendaftaran.*","mahasiswa.nama", "mahasiswa.bidangStudi")
+                    ->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")
                     ->where('status', $this->filter_status)
                     ->get()
                     ->map(function($mahasiswa) use($isDev){
