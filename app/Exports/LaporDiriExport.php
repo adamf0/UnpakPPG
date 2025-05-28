@@ -26,12 +26,13 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
 
         if ($this->filter_status == '!done') {
             return DB::table("all_record")
-                    ->select("all_record.*","mahasiswa.nama")
+                    ->select("all_record.*","mahasiswa.nama","mahasiswa.bidangStudi")
                     ->join("mahasiswa", "all_record.nomorUKG", "mahasiswa.nomorUKG")
                     ->whereNull("status")
                     ->get()
                     ->map(function($mahasiswa) use($isDev){
                         return [
+                            $mahasiswa->bidangStudi,
                             "'".$mahasiswa->nomorUKG,
                             "'".$mahasiswa->nim,
                             "'".$mahasiswa->nik,
@@ -75,11 +76,12 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
         } else {
             // If the filter is 'registered', fetch data based on the status
             return LaporDiri::select("pendaftaran.*","mahasiswa.nama")
-                    ->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")
+                    ->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG", "mahasiswa.bidangStudi")
                     ->where('status', $this->filter_status)
                     ->get()
                     ->map(function($mahasiswa) use($isDev){
                         return [
+                            $mahasiswa->bidangStudi,
                             "'".$mahasiswa->nomorUKG,
                             "'".$mahasiswa->nim,
                             "'".$mahasiswa->nik,
@@ -127,6 +129,7 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
     public function headings(): array
     {
         return [
+            "Bidang Studi PPG",
             "Nomor UKG",
             "NIM",
             "NIK",
