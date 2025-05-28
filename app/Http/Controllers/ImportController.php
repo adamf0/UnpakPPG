@@ -24,6 +24,7 @@ class ImportController extends Controller
                 $mahasiswa->bidangStudi = $row["bidang_studi_ppg"];
                 $mahasiswa->email = $row["email"];
                 $mahasiswa->nik = $row["nik"];
+                $mahasiswa->noHP = $row["no_hp"];
                 $mahasiswa->save();
             }
         }
