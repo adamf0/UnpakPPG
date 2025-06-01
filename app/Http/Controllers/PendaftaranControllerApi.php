@@ -147,6 +147,11 @@ class PendaftaranControllerApi extends Controller
         }        
     }
     public function SaveBiodata(Request $request){
+        return response()->json([
+                "Title" => "pendaftaran.stopEntry",
+                "Detail" => "lapor diri sudah ditutup"
+            ],400);
+
         $validator = Validator::make($request->all(), [
             'uuidPendaftaran' => 'required',
             'nik'             => 'required|digits:16',
@@ -223,6 +228,11 @@ class PendaftaranControllerApi extends Controller
 
     }
     public function SaveBerkasTambahan(Request $request){
+         return response()->json([
+                "Title" => "pendaftaran.stopEntry",
+                "Detail" => "lapor diri sudah ditutup"
+            ],400);
+
         $validator = Validator::make($request->all(), [
             'uuidPendaftaran' => ['required'],
             'paktaIntegritas' => ['required'],
