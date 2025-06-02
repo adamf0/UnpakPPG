@@ -118,6 +118,7 @@ class LaporDiriApiController extends Controller
     }
     public function Export(Request $request){
        set_time_limit(1800000000);
+       ini_set('memory_limit',1800000000);
        try {
             return Excel::download(new LaporDiriExport($request->get("filter_status")), 'Lapor_Diri_Export.xlsx', \Maatwebsite\Excel\Excel::XLSX);
         } catch (\Throwable $th) {
