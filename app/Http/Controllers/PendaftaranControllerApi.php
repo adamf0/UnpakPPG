@@ -14,10 +14,12 @@ use Ramsey\Uuid\Uuid;
 class PendaftaranControllerApi extends Controller
 {
     public function CreateForm(Request $request){
-        // return response()->json([
-        //         "Title" => "pendaftaran.stopEntry",
-        //         "Detail" => "lapor diri sudah ditutup"
-        //     ],400);
+        if(env("stopEntry",0)){
+            return response()->json([
+                "Title" => "pendaftaran.stopEntry",
+                "Detail" => "lapor diri sudah ditutup"
+            ],400);
+        }
             
         $validator = Validator::make($request->all(), [
             'nomorUKG' => ['required'],
@@ -152,10 +154,12 @@ class PendaftaranControllerApi extends Controller
         }        
     }
     public function SaveBiodata(Request $request){
-        // return response()->json([
-        //         "Title" => "pendaftaran.stopEntry",
-        //         "Detail" => "lapor diri sudah ditutup"
-        //     ],400);
+        if(env("stopEntry",0)){
+            return response()->json([
+                "Title" => "pendaftaran.stopEntry",
+                "Detail" => "lapor diri sudah ditutup"
+            ],400);
+        }
 
         $validator = Validator::make($request->all(), [
             'uuidPendaftaran' => 'required',
@@ -233,10 +237,12 @@ class PendaftaranControllerApi extends Controller
 
     }
     public function SaveBerkasTambahan(Request $request){
-        //  return response()->json([
-        //         "Title" => "pendaftaran.stopEntry",
-        //         "Detail" => "lapor diri sudah ditutup"
-        //     ],400);
+        if(env("stopEntry",0)){
+            return response()->json([
+                "Title" => "pendaftaran.stopEntry",
+                "Detail" => "lapor diri sudah ditutup"
+            ],400);
+        }
 
         $validator = Validator::make($request->all(), [
             'uuidPendaftaran' => ['required'],
