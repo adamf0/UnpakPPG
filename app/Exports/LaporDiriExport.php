@@ -26,7 +26,7 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
 
         if ($this->filter_status == '!done') {
             return DB::table("all_record")
-                    ->select("all_record.*","mahasiswa.nama","mahasiswa.bidangStudi",DB::raw("mahasiswa.noHP as nomorHp"))
+                    ->select("all_record.*","mahasiswa.nama","mahasiswa.bidangStudi","mahasiswa.jenjangSekolah", "mahasiswa.provinsi",DB::raw("mahasiswa.noHP as nomorHp"))
                     ->join("mahasiswa", "all_record.nomorUKG", "mahasiswa.nomorUKG")
                     ->whereNull("status")
                     ->get()
@@ -60,8 +60,8 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
                             $mahasiswa->sekolahMengajar,
                             $mahasiswa->alamatSekolah,
                             "'".$mahasiswa->telpSekolah,
-                            "",
-                            "",
+                            $mahasiswa->jenjangSekolah,
+                            $mahasiswa->provinsi,
                             
                             empty($mahasiswa->paktaIntegritas)?                 "" : ($isDev? asset('paktaIntegritas/' . $mahasiswa->paktaIntegritas)                                   : secure_asset('paktaIntegritas/' . $mahasiswa->paktaIntegritas)),
                             empty($mahasiswa->biodataMahasiswa)?                "" : ($isDev? asset('biodataMahasiswa/' . $mahasiswa->biodataMahasiswa)                                 : secure_asset('biodataMahasiswa/' . $mahasiswa->biodataMahasiswa)),
