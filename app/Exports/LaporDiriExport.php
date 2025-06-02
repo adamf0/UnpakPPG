@@ -161,6 +161,9 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
             "Asal Sekolah Tempat Mengajar Sekarang",
             "Alamat Lengkap (Sekolah/Tempat Mengajar)",
             "Telepon (No Kontak Sekolah)",
+            "Jenjang Sekolah",
+            "Provinsi",
+            
             "Pakta Integritas",
             "Biodata Mahasiswa",
             "Scan Ijazah S1/DIV yang dilegalisir",
@@ -171,8 +174,6 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
             "Surat Keterangan Berkelakuan Baik dari Kepolisian",
             "Surat Bebas Narkotika, Psikotropika, dan Zat adiktif lainnya/NAPZA ",
             "NPWP",
-            "Jenjang Sekolah",
-            "Provinsi"
         ];
     }
 
