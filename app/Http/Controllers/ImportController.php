@@ -13,21 +13,29 @@ class ImportController extends Controller
         $data = Excel::toArray(new MahasiswaImport, public_path('import.xlsx'));
         $rows = $data[0];  
 
+        $counter = 0;
         foreach ($rows as $row) {
-            $check = mahasiswa::where('nim', $row["npm"])->where('nomorUKG',$row["no_ukg"])->count();
+            $mahasiswa = mahasiswa::where('nomorUKG',$row["no_ukg"]);
 
-            if($check==0 && !empty($row["npm"]) && !empty($row["no_ukg"])){
-                $mahasiswa = new mahasiswa();
-                $mahasiswa->nomorUKG = $row["no_ukg"];
-                $mahasiswa->nim = $row["npm"];
-                $mahasiswa->nama = $row["nama_lengkap"];
-                $mahasiswa->bidangStudi = $row["bidang_studi_ppg"];
-                $mahasiswa->email = $row["email"];
-                $mahasiswa->nik = $row["nik"];
-                $mahasiswa->noHP = $row["no_hp"];
+            if($mahasiswa->count()==1){
+                $mahasiswa = $mahasiswa->first();
+                $mahasiswa->jenjangSekolah = $row["jenjang_sekolah"];
+                $mahasiswa->provinsi = $row["provinsi"];
                 $mahasiswa->save();
+                $counter++;
             }
+            // if($check==0 && !empty($row["npm"]) && !empty($row["no_ukg"])){
+            //     $mahasiswa = new mahasiswa();
+            //     $mahasiswa->nomorUKG = $row["no_ukg"];
+            //     $mahasiswa->nim = $row["npm"];
+            //     $mahasiswa->nama = $row["nama_lengkap"];
+            //     $mahasiswa->bidangStudi = $row["bidang_studi_ppg"];
+            //     $mahasiswa->email = $row["email"];
+            //     $mahasiswa->nik = $row["nik"];
+            //     $mahasiswa->noHP = $row["no_hp"];
+            //     $mahasiswa->save();
+            // }
         }
-        return "success import";
+        return "success import $counter data";
     }
 }
