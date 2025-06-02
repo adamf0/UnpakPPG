@@ -14,7 +14,7 @@ use Ramsey\Uuid\Uuid;
 class PendaftaranControllerApi extends Controller
 {
     public function CreateForm(Request $request){
-        if(env("stopEntry",0)){
+        if(env("StopEntry")){
             return response()->json([
                 "Title" => "pendaftaran.stopEntry",
                 "Detail" => "lapor diri sudah ditutup"
@@ -154,7 +154,7 @@ class PendaftaranControllerApi extends Controller
         }        
     }
     public function SaveBiodata(Request $request){
-        if(env("stopEntry",0)){
+        if(env("StopEntry")){
             return response()->json([
                 "Title" => "pendaftaran.stopEntry",
                 "Detail" => "lapor diri sudah ditutup"
@@ -237,7 +237,7 @@ class PendaftaranControllerApi extends Controller
 
     }
     public function SaveBerkasTambahan(Request $request){
-        if(env("stopEntry",0)){
+        if(env("StopEntry")){
             return response()->json([
                 "Title" => "pendaftaran.stopEntry",
                 "Detail" => "lapor diri sudah ditutup"
