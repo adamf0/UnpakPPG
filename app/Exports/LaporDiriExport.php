@@ -111,8 +111,8 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
                             $mahasiswa->sekolahMengajar,
                             $mahasiswa->alamatSekolah,
                             "'".$mahasiswa->telpSekolah,
-                            "'".$mahasiswa->jenjangSekolah,
-                            "'".$mahasiswa->provinsi,
+                            $mahasiswa->jenjangSekolah,
+                            $mahasiswa->provinsi,
                             
                             empty($mahasiswa->paktaIntegritas)?                 "" : ($isDev? asset('paktaIntegritas/' . $mahasiswa->paktaIntegritas)                                   : secure_asset('paktaIntegritas/' . $mahasiswa->paktaIntegritas)),
                             empty($mahasiswa->biodataMahasiswa)?                "" : ($isDev? asset('biodataMahasiswa/' . $mahasiswa->biodataMahasiswa)                                 : secure_asset('biodataMahasiswa/' . $mahasiswa->biodataMahasiswa)),
