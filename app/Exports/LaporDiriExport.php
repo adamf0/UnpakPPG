@@ -34,8 +34,8 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
                         return [
                             $mahasiswa->bidangStudi,
                             "'".$mahasiswa->nomorUKG,
-                            "'".$mahasiswa->nim,
-                            "'".$mahasiswa->nik,
+                            $mahasiswa->nim,
+                            $mahasiswa->nik,
                             $mahasiswa->nama,
                             $mahasiswa->namaPeserta,
                             $mahasiswa->jenisKelamin,
@@ -86,8 +86,8 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
                         return [
                             $mahasiswa->bidangStudi,
                             "'".$mahasiswa->nomorUKG,
-                            "'".$mahasiswa->nim,
-                            "'".$mahasiswa->nik,
+                            $mahasiswa->nim,
+                            $mahasiswa->nik,
                             $mahasiswa->nama,
                             $mahasiswa->namaPeserta,
                             $mahasiswa->jenisKelamin,
