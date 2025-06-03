@@ -6,10 +6,12 @@ use App\Models\LaporDiri;
 use App\Models\mahasiswa;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithTitle;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
+class LaporDiriExport implements FromCollection, WithHeadings, WithTitle, WithColumnFormatting
 {
     protected $filter_status;
 
@@ -19,6 +21,18 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
         $this->filter_status = $filter_status;
     }
 
+    public function columnFormats(): array
+    {
+        return [
+            'C' => NumberFormat::FORMAT_TEXT, // NIM
+            'D' => NumberFormat::FORMAT_TEXT, // NIK
+            'P' => NumberFormat::FORMAT_TEXT, // RT
+            'Q' => NumberFormat::FORMAT_TEXT, // RW
+            'Y' => NumberFormat::FORMAT_TEXT, // No HP Ayah Ibu
+            'Z' => NumberFormat::FORMAT_TEXT, // HP Kerabat
+            'AC' => NumberFormat::FORMAT_TEXT, // Telepon Sekolah
+        ];
+    }
     // Define the collection to be exported
     public function collection()
     {
