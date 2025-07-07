@@ -714,7 +714,7 @@ function PendaftaranPage({ activeMenu }) {
             <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3">Biodata Data Pribadi</h2>
 
             <div className="flex flex-col rounded-lg">
-                <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex flex-col sm:flex-row w-full gap-4">
                     <div className="flex-1">
                         <Input
                             label="Nomor UKG"
@@ -762,7 +762,7 @@ function PendaftaranPage({ activeMenu }) {
                     />
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex flex-col sm:flex-row w-full gap-4">
                     <div className="flex-2">
                         <Input
                             label="Nama Peserta (Sesuai SIM PKB)"
@@ -792,30 +792,45 @@ function PendaftaranPage({ activeMenu }) {
                     </div>
 
                     <div className="flex-1">
-                        <RadioGroup
-                            label="Jenis Kelamin"
-                            value={jenisKelamin}
-                            onChange={(val) => {
-                                console.log(val)
-                                setJenisKelamin(val)
-                                setErrListBiodata(prev => {
-                                    const { jenisKelamin, ...rest } = prev;
-                                    return rest;
-                                });
-                            }}
-                            options={[
-                                { label: "Laki-laki", value: "L", id: "male" },
-                                { label: "Perempuan", value: "P", id: "female" }
-                            ]}
-                            errorMessage=""
-                            errorMessageList={errListBiodata?.jenisKelamin ?? []}
-                            required
-                        />
+                        <div className={`w-full`}>
+                              <label className="block text-sm font-medium text-gray-900 mb-2">Jenis Kelamin</label>
+                              <div className="row">
+                                {[
+                                    { label: "Laki-laki", value: "L", id: "male" },
+                                    { label: "Perempuan", value: "P", id: "female" }
+                                ].map((option, index) => {
+                                  return (
+                                    <div className="col-12">
+                                    <input
+                                        key={option.id}
+                                        type="radio"
+                                        htmlFor={option.id}
+                                        id={option.id}
+                                        name="radio-group"
+                                        value={option.value}
+                                        checked={jenisKelamin === option.value}
+                                        onChange={(val) => {
+                                            console.log(option.value)
+                                            setJenisKelamin(option.value)
+                                            setErrListBiodata(prev => {
+                                                const { jenisKelamin, ...rest } = prev;
+                                                return rest;
+                                            });
+                                        }}
+                                    />
+                                    {option.label}
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                              {/* {error && <p className="text-red-500 text-sm mt-1">{error}</p>} */}
+                              {(errListBiodata?.jenisKelamin ?? []).map(err => <p className="text-red-500 text-sm mt-1">{err}</p>)}
+                        </div>
                     </div>
 
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex flex-col sm:flex-row w-full gap-4">
                     <Input
                         label="Tempat Lahir"
                         type="text"
@@ -930,7 +945,7 @@ function PendaftaranPage({ activeMenu }) {
                     />
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex flex-col sm:flex-row w-full gap-4">
                     <div className="flex-2">
                         <Input
                             label="Alamat Tinggal"
@@ -990,7 +1005,7 @@ function PendaftaranPage({ activeMenu }) {
                     </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex flex-col sm:flex-row w-full gap-4">
                     <Input
                         label="Kelurahan"
                         type="text"
@@ -1063,7 +1078,7 @@ function PendaftaranPage({ activeMenu }) {
                     required
                 />
 
-                <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex flex-col sm:flex-row w-full gap-4">
                     <div className="flex-2">
                         <Input
                             label="Nama Ibu"
@@ -1113,7 +1128,7 @@ function PendaftaranPage({ activeMenu }) {
                     required
                 />
 
-                <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex flex-col sm:flex-row w-full gap-4">
                     <div className="flex-2">
                         <Input
                             label="No. Hp Ayah dan Ibu"
