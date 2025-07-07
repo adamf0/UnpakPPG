@@ -518,7 +518,7 @@ const LaporDiriDetail = ({ uuid }) => {
                 </h2>
 
                 <div className="flex flex-col rounded-lg">
-                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="flex flex-col sm:flex-row w-full gap-4">
                         <div className="flex-1">
                             <Input
                                 label="Nomor UKG"
@@ -539,7 +539,7 @@ const LaporDiriDetail = ({ uuid }) => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="flex flex-col sm:flex-row w-full gap-4">
                         <Input
                             label="NIM"
                             type="text"
@@ -567,7 +567,7 @@ const LaporDiriDetail = ({ uuid }) => {
                         />
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="flex flex-col sm:flex-row w-full gap-4">
                         <div className="flex-2">
                             <Input
                                 label="Nama Peserta (Sesuai SIM PKB)"
@@ -634,7 +634,7 @@ const LaporDiriDetail = ({ uuid }) => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="flex flex-col sm:flex-row w-full gap-4">
                         <Input
                             label="Tempat Lahir"
                             type="text"
@@ -688,7 +688,7 @@ const LaporDiriDetail = ({ uuid }) => {
                         disabled
                     />
 
-                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="flex flex-col sm:flex-row w-full gap-4">
                         <Select
                             label="Warga Negara"
                             options={wargaNegaraOptions}
@@ -722,7 +722,7 @@ const LaporDiriDetail = ({ uuid }) => {
                         />
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="flex flex-col sm:flex-row w-full gap-4">
                         <Input
                             label="No. HP (WhatsAPP)"
                             type="tel"
@@ -758,7 +758,7 @@ const LaporDiriDetail = ({ uuid }) => {
                         />
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="flex flex-col sm:flex-row w-full gap-4">
                         <div className="flex-2">
                             <Input
                                 label="Alamat Tinggal"
@@ -829,7 +829,7 @@ const LaporDiriDetail = ({ uuid }) => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="flex flex-col sm:flex-row w-full gap-4">
                         <Input
                             label="Kelurahan"
                             type="text"
@@ -908,7 +908,7 @@ const LaporDiriDetail = ({ uuid }) => {
                         disabled
                     />
 
-                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="flex flex-col sm:flex-row w-full gap-4">
                         <div className="flex-2">
                             <Input
                                 label="Nama Ibu"
@@ -963,7 +963,7 @@ const LaporDiriDetail = ({ uuid }) => {
                         disabled
                     />
 
-                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="flex flex-col sm:flex-row w-full gap-4">
                         <div className="flex-2">
                             <Input
                                 label="No. Hp Ayah dan Ibu"
