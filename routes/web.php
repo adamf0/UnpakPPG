@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PencarianController::class, 'pencarianPage'])->name('pencarian');
 Route::get('/pendaftaran', [PendaftaranController::class, 'pendaftaranPage'])->name('pendaftaran');
-Route::get('/import', [ImportController::class, 'Index']);
+Route::get('/import', [ImportController::class, 'Index'])->name('import');
 
 Route::get('/login', [AuthController::class, 'authPage'])->name("authPage");
 Route::post('/dologin', [AuthController::class, 'doLogin']);

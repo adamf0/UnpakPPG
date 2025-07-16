@@ -10,10 +10,11 @@ use Inertia\Inertia;
 class DashboardController extends Controller
 {
     public function dashboardPage(){
-        $totalRegistrasi = DB::table("all_record")->count();
+        $version = env("Version",null);
+        $totalRegistrasi = DB::table("all_record")->where('version',$version)->count();
         
-        $lengkap = DB::table("all_record")->where("status","done")->count();
-        $tidakLengkap = DB::table("all_record")->whereNull("status")->count();
+        $lengkap = DB::table("all_record")->where("status","done")->where('version',$version)->count();
+        $tidakLengkap = DB::table("all_record")->whereNull("status")->where('version',$version)->count();
 
         return Inertia::render("Admin/Dashboard",["lengkap"=>$lengkap,"tidakLengkap"=>$tidakLengkap]);
     }

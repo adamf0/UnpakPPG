@@ -23,12 +23,14 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
     public function collection()
     {
         $isDev = env("DEPLOY","dev")=="dev";
+        $version = env("Version",null);
 
         if ($this->filter_status == '!done') {
             return DB::table("all_record")
                     ->select("all_record.*","mahasiswa.nama","mahasiswa.bidangStudi","mahasiswa.jenjangSekolah", "mahasiswa.provinsi",DB::raw("mahasiswa.noHP as nomorHp"))
                     ->join("mahasiswa", "all_record.nomorUKG", "mahasiswa.nomorUKG")
                     ->whereNull("status")
+                    ->where('all_record.version',$version)
                     ->get()
                     ->map(function($mahasiswa) use($isDev){
                         return [
@@ -81,6 +83,7 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
             return LaporDiri::select("pendaftaran.*","mahasiswa.nama", "mahasiswa.bidangStudi", "mahasiswa.jenjangSekolah", "mahasiswa.provinsi", DB::raw("mahasiswa.noHP as nomorHp"))
                     ->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")
                     ->where('status', $this->filter_status)
+                    ->where('pendaftaran.version',$version)
                     ->get()
                     ->map(function($mahasiswa) use($isDev){
                         return [

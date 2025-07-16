@@ -1,5 +1,6 @@
 import { MdDashboard, MdAssignmentInd, MdBook } from "react-icons/md";
 import logo from "@assets/images/logo-unpak.png"
+import { BiImport } from "react-icons/bi";
 
 const Sidebar = ({ isOpen, toggleSidebar, isCollapsed, selected }) => {
   // const location = useLocation();
@@ -56,6 +57,18 @@ const Sidebar = ({ isOpen, toggleSidebar, isCollapsed, selected }) => {
             >
               <MdBook size={24} />
               <span className={`${isCollapsed ? "hidden" : "block"}`}><span className="whitespace-nowrap">Belum Selesai Lapor Diri</span></span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="/import"
+              className={`flex items-center gap-3 hover:bg-gray-200 hover:text-purple-600 p-3 rounded-lg transition ${
+                selected === "import" ? "bg-purple-600 text-white" : ""
+              }`}
+              onClick={toggleSidebar} // Tutup sidebar saat di mobile
+            >
+              <BiImport size={24} />
+              <span className={`${isCollapsed ? "hidden" : "block"}`}><span className="whitespace-nowrap">Import Data PPG</span></span>
             </a>
           </li>
         </ul>

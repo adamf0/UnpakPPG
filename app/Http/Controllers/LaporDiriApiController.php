@@ -12,14 +12,16 @@ use Maatwebsite\Excel\Facades\Excel;
 class LaporDiriApiController extends Controller
 {
     public function Index(Request $request){
+       $version = env("Version",null);
+
        try {
             $page = empty($request->page) || $request->page < 1? 1:$request->page;
             $limit = 10;
             $offset = ($page - 1) * $limit;
             
             if($request->post("filter_status")!="done"){
-                $total = DB::table("all_record")->whereNull("status")->count();
-                $data = DB::table("all_record")->skip($offset)->take($limit);
+                $total = DB::table("all_record")->whereNull("status")->where('version',$version)->count();
+                $data = DB::table("all_record")->where('version',$version)->skip($offset)->take($limit);
                 $data = $data->whereNull("status");
                 
                 if($request->has("filter") && !empty($request->get("filter"))){
@@ -32,7 +34,7 @@ class LaporDiriApiController extends Controller
 
                 $totalPages = ceil($total / $limit);
             } else{
-                $total = DB::table("all_record");
+                $total = DB::table("all_record")->where('version',$version);
                 if($request->has("filter_status") && !empty($request->get("filter_status"))){
                     $total = $total->where("status",$request->post("filter_status"));
                 }
@@ -40,8 +42,10 @@ class LaporDiriApiController extends Controller
 
                 $data = LaporDiri::select("pendaftaran.*",DB::raw("(case when pendaftaran.namaPeserta is null then mahasiswa.nama else pendaftaran.namaPeserta end) as namaPeserta"))
                                     ->leftJoin("mahasiswa","pendaftaran.nomorUKG","=","mahasiswa.nomorUKG")
+                                    ->where('pendaftaran.version',$version)
                                     ->skip($offset)
                                     ->take($limit);
+
                 if($request->has("filter_status") && !empty($request->get("filter_status"))){
                     $data = $data->where("pendaftaran.status",$request->post("filter_status"));
                 }
@@ -75,8 +79,10 @@ class LaporDiriApiController extends Controller
         }
     }
     public function Delete($uuid){
+        $version = env("Version",null);
+
        try {
-            $data = LaporDiri::where("uuid",$uuid)->first();
+            $data = LaporDiri::where("uuid",$uuid)->where('version',$version)->first();
 
             if(empty($data)){
                 return response()->json([
@@ -97,8 +103,10 @@ class LaporDiriApiController extends Controller
         }
     }
     public function Detail($uuid){
+        $version = env("Version",null);
+
        try {
-            $data = LaporDiri::select("pendaftaran.*","mahasiswa.nama","mahasiswa.bidangStudi")->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where("uuid",$uuid)->first();
+            $data = LaporDiri::select("pendaftaran.*","mahasiswa.nama","mahasiswa.bidangStudi")->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where("uuid",$uuid)->where('pendaftaran.version',$version)->first();
 
             if(empty($data)){
                 return response()->json([
@@ -112,7 +120,7 @@ class LaporDiriApiController extends Controller
             return response()->json([
                 "Title" => "lapordiri.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
-                // "Error" => $th->getMessage()
+                "Error" => $th->getMessage()
             ],400);
         }
     }

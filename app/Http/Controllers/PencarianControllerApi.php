@@ -26,8 +26,9 @@ class PencarianControllerApi extends Controller
             ], 500);
         }
 
+        $version = env("Version",null);
         try {
-            $cek = pengajuan::where('nomorUKG',$request->nomorUKG)->exists();
+            $cek = pengajuan::where('nomorUKG',$request->nomorUKG)->where('version',$version)->exists();
             if(!$cek){
                 return response()->json([
                     "Title" => "pencarian.NotFound",

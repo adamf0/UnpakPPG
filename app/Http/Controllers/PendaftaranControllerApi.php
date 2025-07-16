@@ -32,8 +32,9 @@ class PendaftaranControllerApi extends Controller
             ], 500);
         }
 
+        $version = env("Version",null);
         try {
-            $mahasiswa = mahasiswa::where('nomorUKG',$request->nomorUKG)->first();
+            $mahasiswa = mahasiswa::where('nomorUKG',$request->nomorUKG)->where('version',$version)->first();
             if($mahasiswa==null){
                 return response()->json([
                     "Title" => "pendaftaran.dataNotFound",
@@ -41,7 +42,7 @@ class PendaftaranControllerApi extends Controller
                 ],400);
             }
             
-            $pengajuan = pengajuan::where('nomorUKG',$request->nomorUKG)->get();
+            $pengajuan = pengajuan::where('nomorUKG',$request->nomorUKG)->where('version',$version)->get();
             if($pengajuan->count()>1){
                 return response()->json([
                     "Title" => "pendaftaran.tooMuchDataFound",
@@ -63,6 +64,7 @@ class PendaftaranControllerApi extends Controller
                 $new->nik = $mahasiswa?->nik;
                 $new->namaPeserta = $mahasiswa?->nama;
                 $new->alamatEmail = $mahasiswa?->email;
+                $new->version = $version;
                 $new->save();
 
                 return response()->json($uuid,200);
@@ -71,7 +73,7 @@ class PendaftaranControllerApi extends Controller
             return response()->json([
                 "Title" => "pendaftaran.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
-                // "Error" => $th->getMessage()
+                "Error" => $th->getMessage()
             ],400);
         }
     }
@@ -90,7 +92,8 @@ class PendaftaranControllerApi extends Controller
                 ], 500);
             }
 
-            $pendaftaran = pengajuan::select("pendaftaran.*","mahasiswa.nama","mahasiswa.bidangStudi")->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where('uuid',$uuid)->firstOrFail();
+            $version = env("Version",null);
+            $pendaftaran = pengajuan::select("pendaftaran.*","mahasiswa.nama","mahasiswa.bidangStudi")->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where('uuid',$uuid)->where('pendaftaran.version',$version)->firstOrFail();
             if($pendaftaran==null){
                 return response()->json([
                     "Title" => "pendaftaran.dataNotfound",
@@ -149,7 +152,8 @@ class PendaftaranControllerApi extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 "Title" => "pendaftaran.commonError",
-                "Detail" => "ada yg salah pada aplikasi"
+                "Detail" => "ada yg salah pada aplikasi",
+                "Error" => $th->getMessage()
             ],400);
         }        
     }
@@ -197,8 +201,9 @@ class PendaftaranControllerApi extends Controller
             ], 500);
         }
         
+        $version = env("Version",null);
         try {
-            $pendaftaran                     = pengajuan::where('uuid',$request->uuidPendaftaran)->firstOrFail();
+            $pendaftaran                     = pengajuan::where('uuid',$request->uuidPendaftaran)->where('version',$version)->firstOrFail();
             $pendaftaran->nik                = $request->nik;
             $pendaftaran->namaPeserta        = $request->namaPeserta;
             $pendaftaran->jenisKelamin       = $request->jenisKelamin;
@@ -307,8 +312,9 @@ class PendaftaranControllerApi extends Controller
             }
         }
         
+        $version = env("Version",null);
         try {
-            $berkasTambahan                    = pengajuan::where('uuid',$request->uuidPendaftaran)->firstOrFail();
+            $berkasTambahan                    = pengajuan::where('uuid',$request->uuidPendaftaran)->where('version',$version)->firstOrFail();
             if($request->has("paktaIntegritas") && $request->hasFile("paktaIntegritas")){
                 $uuid = Uuid::uuid4()->toString();
                 $filePaktaIntegritas = $uuid.".".strtolower($request->file("paktaIntegritas")->getClientOriginalExtension());

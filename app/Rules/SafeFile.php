@@ -25,6 +25,9 @@ class SafeFile implements ValidationRule
         'image/jpeg' => ['jpg', 'jpeg'],
         'image/png' => ['png'],
         'application/pdf' => ['pdf'],
+        'application/vnd.ms-excel' => ['xls'],
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => ['xlsx'],
+        'text/csv' => ['csv'],
     ];
 
     public function __construct(array $allowedMimes = [])
