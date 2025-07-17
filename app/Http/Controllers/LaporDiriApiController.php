@@ -127,25 +127,6 @@ class LaporDiriApiController extends Controller
     public function Export(Request $request){
        set_time_limit(1800000000);
        ini_set('memory_limit',1800000000);
-
-       $isDev = env("DEPLOY","dev")=="dev";
-        $version = env("Version",null);
-
-        if ($request->get("filter_status") == '!done') {
-            $x = DB::table("all_record")
-                    ->select("all_record.*","mahasiswa.nama","mahasiswa.bidangStudi","mahasiswa.jenjangSekolah", "mahasiswa.provinsi",DB::raw("mahasiswa.noHP as nomorHp"))
-                    ->join("mahasiswa", "all_record.nomorUKG", "mahasiswa.nomorUKG")
-                    ->whereNull("status")
-                    ->where('all_record.version',$version);
-        } else {
-            // If the filter is 'registered', fetch data based on the status
-            $x = LaporDiri::select("pendaftaran.*","mahasiswa.nama", "mahasiswa.bidangStudi", "mahasiswa.jenjangSekolah", "mahasiswa.provinsi", DB::raw("mahasiswa.noHP as nomorHp"))
-                    ->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")
-                    ->where('status', $request->get("filter_status"))
-                    ->where('pendaftaran.version',$version);
-        }
-        dd($x->toRawSql());
-
        try {
             return Excel::download(new LaporDiriExport($request->get("filter_status")), 'Lapor_Diri_Export.xlsx', \Maatwebsite\Excel\Excel::XLSX);
         } catch (\Throwable $th) {
