@@ -1725,7 +1725,10 @@ function PendaftaranPage({ activeMenu }) {
     function SelesaiPage(){
         return <div className="flex flex-col gap-3">
             <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3">Selesai Pengajuan</h2>
-            <p>selamat data pengajuan anda sudah terkirim ke admin, tahap berikutnya anda harus bergabung group telegram berikut ini <a href="https://t.me/+xXjo3Il-WRhlYjc1" target="_blank" className='hover:bg-gray-700 hover:text-white text-purple-500 rounded-md px-3 py-2 text-sm font-medium'>https://t.me/+xXjo3Il-WRhlYjc1</a> </p>
+            <p>
+                Selamat! Data data pengajuan anda sudah terkirim ke admin, tahap berikutnya anda harus bergabung group di telegram dengan link berikut untuk mendapatkan informasi terkait orientasi 
+                <a href="https://t.me/+xXjo3Il-WRhlYjc1" target="_blank" className='hover:bg-gray-700 hover:text-white text-purple-500 rounded-md px-3 py-2 text-sm font-medium'>https://t.me/+xXjo3Il-WRhlYjc1</a>
+            </p>
         </div>
     }
 
