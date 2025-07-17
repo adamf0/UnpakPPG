@@ -1190,7 +1190,7 @@ const LaporDiriEdit = ({ uuid }) => {
                 <div className="flex flex-col rounded-lg">
                     <Input
                         inputRef={paktaIntegritasRef}
-                        label="1. Pakta Integritas"
+                        label="1. Pakta Integritas (Di ketika bagian yang perlu di isi, tanda tangan menggunakan materai 10rb lalu di save PDF)"
                         type="file"
                         placeholder="Upload file"
                         onChange={handlePaktaIntegritasChange}
@@ -1258,7 +1258,7 @@ const LaporDiriEdit = ({ uuid }) => {
 
                     <Input
                         inputRef={biodataMahasiswaRef}
-                        label="2. Biodata Mahasiswa"
+                        label="2. Biodata Mahasiswa (Sesuai format PD DIKTI)_(Di ketika lalu di save PDF)"
                         type="file"
                         placeholder="Upload file"
                         onChange={handleBiodataMahasiswaChange}
