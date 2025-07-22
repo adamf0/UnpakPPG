@@ -1793,7 +1793,7 @@ const LaporDiriEdit = ({ uuid }) => {
                             </div>
                         </div>
 
-                        {npwpPreview !== null ? (
+                        {npwp !== null ? (
                             <div className="relative max-w-min">
                                 <img
                                     src={npwpPreview}
