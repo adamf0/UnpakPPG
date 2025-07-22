@@ -7,7 +7,6 @@ import Textarea from "@src/components/Textarea";
 import Stepper from "@src/Components/Stepper";
 import AdminPage from "@src/AdminPage";
 import { apiProduction } from "@src/Persistance/API";
-import contoh_pass_foto from "@assets/contoh_pass_foto.jpeg";
 import Swal from 'sweetalert2';
 
 const StepEnum = {
@@ -1542,7 +1541,7 @@ const LaporDiriEdit = ({ uuid }) => {
                                     Contoh Format Foto:
                                 </label>
                                 <img
-                                    src={contoh_pass_foto}
+                                    src="https://lapordiri-ppg.unpak.ac.id/contoh_pass_foto.jpeg"
                                     className="max-h-[200px]"
                                     alt="contoh_pass_foto"
                                 />

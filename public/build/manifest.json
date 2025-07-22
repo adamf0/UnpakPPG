@@ -1,8 +1,4 @@
 {
-  "public/contoh_pass_foto.jpeg": {
-    "file": "assets/contoh_pass_foto-D7d_qNVy.jpeg",
-    "src": "public/contoh_pass_foto.jpeg"
-  },
   "public/images/logo-unpak.png": {
     "file": "assets/logo-unpak-DPPB4G8y.png",
     "src": "public/images/logo-unpak.png"
@@ -13,13 +9,12 @@
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-7JIJh7v-.js",
+    "file": "assets/app-DME8b4dK.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
     "assets": [
-      "assets/logo-unpak-DPPB4G8y.png",
-      "assets/contoh_pass_foto-D7d_qNVy.jpeg"
+      "assets/logo-unpak-DPPB4G8y.png"
     ]
   }
 }

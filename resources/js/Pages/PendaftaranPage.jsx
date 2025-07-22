@@ -9,7 +9,6 @@ import Textarea from "@src/components/Textarea";
 import { useEffect, useState, useRef } from "react";
 import Stepper from '@src/Components/Stepper';
 import { apiProduction } from "@src/Persistance/API";
-import contoh_pass_foto from "@assets/contoh_pass_foto.jpeg"
 import Swal from 'sweetalert2';
 
 const StepEnum = {
@@ -1491,7 +1490,7 @@ function PendaftaranPage({ activeMenu }) {
                         </div>
                         <div className='flex-1'>
                             <label className="block text-sm font-medium text-red-500 mb-2">Contoh Format Foto:</label>
-                            <img src={contoh_pass_foto} className='max-h-[200px]' alt="contoh_pass_foto"/>
+                            <img src="https://lapordiri-ppg.unpak.ac.id/contoh_pass_foto.jpeg" className='max-h-[200px]' alt="contoh_pass_foto"/>
                         </div>
                     </div>
 

@@ -1367,7 +1367,7 @@ const LaporDiriDetail = ({ uuid }) => {
                                     Contoh Format Foto:
                                 </label>
                                 <img
-                                    src="contoh_pass_foto.jpeg"
+                                    src="https://lapordiri-ppg.unpak.ac.id/contoh_pass_foto.jpeg"
                                     className="max-h-[200px]"
                                     alt="contoh_pass_foto"
                                 />
