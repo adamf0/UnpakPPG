@@ -1097,7 +1097,7 @@ const LaporDiriDetail = ({ uuid }) => {
                                 Unduh template upload (Di prind tulis tangan
                                 lalu di Scan){" "}
                                 <a
-                                    href="https://drive.google.com/file/d/1--Jqg0JlbAf72K7epXWCNc65yEN04Fry/view?usp=sharing"
+                                    href="https://lapordiri-ppg.unpak.ac.id/FAKTA%20INTEGRITAS%20.pdf"
                                     class="hover:bg-gray-700 hover:text-white text-purple-600 rounded-md px-3 py-2 text-sm font-medium"
                                 >
                                     Klik Disini
@@ -1148,7 +1148,7 @@ const LaporDiriDetail = ({ uuid }) => {
                             <li>
                                 Unduh template upload (Di ketik lalu di Scan){" "}
                                 <a
-                                    href="https://drive.google.com/file/d/1HByTAte5Wq-Ml-zvsQ49IufEtNXkyfnl/view?usp=sharing"
+                                    href="https://lapordiri-ppg.unpak.ac.id/Biodata%20Mahasiswa%20PD%20DIKTI.pdf"
                                     class="hover:bg-gray-700 hover:text-white text-purple-600 rounded-md px-3 py-2 text-sm font-medium"
                                 >
                                     Klik Disini
