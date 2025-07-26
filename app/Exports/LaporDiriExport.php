@@ -26,6 +26,14 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
         $version = env("Version",null);
 
         if ($this->filter_status == '!done') {
+            dd(
+                DB::table("all_record")
+                    ->select("all_record.*","mahasiswa.nama","mahasiswa.bidangStudi","mahasiswa.jenjangSekolah", "mahasiswa.provinsi",DB::raw("mahasiswa.noHP as nomorHp"))
+                    ->join("mahasiswa", "all_record.nomorUKG", "mahasiswa.nomorUKG")
+                    ->whereNull("status")
+                    ->where('all_record.version',$version)
+                    ->toRawSql()
+            );
             return DB::table("all_record")
                     ->select("all_record.*","mahasiswa.nama","mahasiswa.bidangStudi","mahasiswa.jenjangSekolah", "mahasiswa.provinsi",DB::raw("mahasiswa.noHP as nomorHp"))
                     ->join("mahasiswa", "all_record.nomorUKG", "mahasiswa.nomorUKG")
