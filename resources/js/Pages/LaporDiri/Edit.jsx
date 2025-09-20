@@ -864,7 +864,7 @@ const LaporDiriEdit = ({ uuid }) => {
                         />
 
                         <Input
-                            label="Alamat Email"
+                            label="Email terbaru Belajar.id"
                             type="email"
                             value={alamatEmail}
                             placeholder="example@gmail.com"

@@ -929,7 +929,7 @@ function PendaftaranPage({ activeMenu }) {
                     />
 
                     <Input
-                        label="Alamat Email"
+                        label="Alamat Email terbaru Belajar.id"
                         type="email"
                         value={alamatEmail}
                         placeholder="example@gmail.com"
@@ -940,7 +940,6 @@ function PendaftaranPage({ activeMenu }) {
                                 return rest;
                             });
                         }}
-                        disabled
                     />
                 </div>
 
