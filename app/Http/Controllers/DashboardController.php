@@ -10,7 +10,7 @@ use Inertia\Inertia;
 class DashboardController extends Controller
 {
     public function dashboardPage(){
-        $version = env("Version",null);
+        $version = config('app.version');
         $totalRegistrasi = DB::table("all_record")->where('version',$version)->count();
         
         $lengkap = DB::table("all_record")->where("status","done")->where('version',$version)->count();

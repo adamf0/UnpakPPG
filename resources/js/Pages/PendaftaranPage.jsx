@@ -1,9 +1,7 @@
-import React from 'react';
 import MainPage from '@src/mainPage';
 import Input from "@src/components/Input";
 import Select from "@src/components/Select";
 import Button from "@src/components/Button";
-import RadioGroup from "@src/components/RadioGroup";
 import Modal from "@src/components/Modal";
 import Textarea from "@src/components/Textarea";
 import { useEffect, useState, useRef } from "react";
@@ -116,7 +114,7 @@ function PendaftaranPage({ activeMenu }) {
     const [kelurahan,setKelurahan] = useState("");
     const [kecamatan,setKecamatan] = useState("");
     const [kodePos,setKodePos] = useState("");
-
+    const [perguruanTinggiAsal,setPerguruanTinggiAsal] = useState("");
 
     const [jenisTinggal,setJenisTinggal ] = useState("");
     const [jenisTinggalOptions,setJenisTinggalOptions] = useState([
@@ -439,6 +437,7 @@ function PendaftaranPage({ activeMenu }) {
                 setSekolahMengajar(response?.data?.sekolahMengajar ?? "");
                 setAlamatSekolah(response?.data?.alamatSekolah ?? "");
                 setTelpSekolah(response?.data?.telpSekolah ?? "");
+                setPerguruanTinggiAsal(response?.data?.perguruanTinggiAsal ?? "");
 
                 if(response?.data?.status?.toLowerCase?.()=="done"){
                     setFrame(StepEnum.SELESAI);
@@ -582,6 +581,8 @@ function PendaftaranPage({ activeMenu }) {
                 sekolahMengajar: sekolahMengajar ?? "",
                 alamatSekolah: alamatSekolah ?? "",
                 telpSekolah: telpSekolah.replaceAll("-","") ?? "",
+                perguruanTinggiAsal: perguruanTinggiAsal ?? "",
+                bidangStudi: bidangStudi ?? "",
             });
 
             if (response.status === 200 || response.status === 204) {
@@ -682,7 +683,7 @@ function PendaftaranPage({ activeMenu }) {
 
     function InitialPage(){
         return <>
-            <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3">Masukkan Nomor UKG</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3">Nomor UKG/PTK ID</h2>
 
             <div className="flex flex-row rounded-lg">
                 <Input
@@ -728,11 +729,34 @@ function PendaftaranPage({ activeMenu }) {
                             label="Bidang Studi"
                             type="text"
                             value={bidangStudi}
-                            onChange={(e) => {}}
-                            disabled
+                            onChange={(e) => {
+                                setBidangStudi(e.target.value)
+                                setErrListBiodata(prev => {
+                                    const { bidangStudi, ...rest } = prev;
+                                    return rest;
+                                });
+                            }}
+                            errorMessageList={errListBiodata?.bidangStudi ?? []}
+                            required
                         />
                     </div>
                 </div>
+
+                <Input
+                        label="Perguruan Tinggi Asal"
+                        type="text"
+                        value={perguruanTinggiAsal}
+                        placeholder=""
+                        onChange={(e) => {
+                            setPerguruanTinggiAsal(e.target.value)
+                            setErrListBiodata(prev => {
+                                const { perguruanTinggiAsal, ...rest } = prev;
+                                return rest;
+                            });
+                        }}
+                        errorMessageList={errListBiodata?.perguruanTinggiAsal ?? []}
+                        required
+                />
 
                 <div className="flex flex-col sm:flex-row items-center gap-4">
                     <Input

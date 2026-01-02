@@ -23,17 +23,18 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
     public function collection()
     {
         $isDev = env("DEPLOY","dev")=="dev";
-        $version = env("Version",null);
+        $version = config('app.version');
 
         if ($this->filter_status == '!done') {
             return DB::table("all_record")
-                    ->select("all_record.*","mahasiswa.nama","mahasiswa.bidangStudi","mahasiswa.jenjangSekolah", "mahasiswa.provinsi",DB::raw("mahasiswa.noHP as nomorHp"))
+                    ->select("all_record.*","mahasiswa.nama",DB::raw("(case when all_record.bidangStudi is null then mahasiswa.bidangStudi else all_record.bidangStudi end) as bidangStudi"),"mahasiswa.jenjangSekolah", "mahasiswa.provinsi",DB::raw("mahasiswa.noHP as nomorHp"))
                     ->join("mahasiswa", "all_record.nomorUKG", "mahasiswa.nomorUKG")
                     ->whereNull("status")
                     ->where('mahasiswa.version',$version)
                     ->get()
                     ->map(function($mahasiswa) use($isDev){
                         return [
+                            $mahasiswa->perguruanTinggiAsal ?? "",
                             $mahasiswa->bidangStudi,
                             "'".$mahasiswa->nomorUKG,
                             "'".$mahasiswa->nim,
@@ -80,13 +81,14 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
                     });
         } else {
             // If the filter is 'registered', fetch data based on the status
-            return LaporDiri::select("pendaftaran.*","mahasiswa.nama", "mahasiswa.bidangStudi", "mahasiswa.jenjangSekolah", "mahasiswa.provinsi", DB::raw("mahasiswa.noHP as nomorHp"))
+            return LaporDiri::select("pendaftaran.*","mahasiswa.nama", DB::raw("(case when pendaftaran.bidangStudi is null then mahasiswa.bidangStudi else pendaftaran.bidangStudi end) as bidangStudi"), "mahasiswa.jenjangSekolah", "mahasiswa.provinsi", DB::raw("mahasiswa.noHP as nomorHp"))
                     ->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")
                     ->where('status', $this->filter_status)
                     ->where('pendaftaran.version',$version)
                     ->get()
                     ->map(function($mahasiswa) use($isDev){
                         return [
+                            $mahasiswa->perguruanTinggiAsal ?? "",
                             $mahasiswa->bidangStudi,
                             "'".$mahasiswa->nomorUKG,
                             "'".$mahasiswa->nim,
@@ -138,6 +140,7 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
     public function headings(): array
     {
         return [
+            "Perguruan Tinggi Asal",
             "Bidang Studi PPG",
             "Nomor UKG",
             "NIM",

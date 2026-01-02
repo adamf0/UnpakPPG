@@ -26,7 +26,7 @@ class PencarianControllerApi extends Controller
             ], 500);
         }
 
-        $version = env("Version",null);
+        $version = config('app.version');
         try {
             $cek = pengajuan::where('nomorUKG',$request->nomorUKG)->where('version',$version)->exists();
             if(!$cek){

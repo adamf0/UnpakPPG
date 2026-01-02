@@ -33,7 +33,7 @@ class ImportApiController extends Controller
             $rows = $data[0];
 
             $counter = 0;
-            $version = env("Version",null);
+            $version = config('app.version');
             foreach ($rows as $row) {
                 $mahasiswa = mahasiswa::where('nomorUKG',$row["nomorukg"])->where('version',$version);
                 $check = $mahasiswa->count();

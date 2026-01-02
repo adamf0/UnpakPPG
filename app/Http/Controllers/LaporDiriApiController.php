@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class LaporDiriApiController extends Controller
 {
     public function Index(Request $request){
-       $version = env("Version",null);
+       $version = config('app.version');
 
        try {
             $page = empty($request->page) || $request->page < 1? 1:$request->page;
@@ -79,7 +79,7 @@ class LaporDiriApiController extends Controller
         }
     }
     public function Delete($uuid){
-        $version = env("Version",null);
+       $version = config('app.version');
 
        try {
             $data = LaporDiri::where("uuid",$uuid)->where('version',$version)->first();
@@ -102,11 +102,12 @@ class LaporDiriApiController extends Controller
             ],400);
         }
     }
+
     public function Detail($uuid){
-        $version = env("Version",null);
+       $version = config('app.version');
 
        try {
-            $data = LaporDiri::select("pendaftaran.*","mahasiswa.nama","mahasiswa.bidangStudi")->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where("uuid",$uuid)->where('pendaftaran.version',$version)->first();
+            $data = LaporDiri::select("pendaftaran.*","mahasiswa.nama",DB::raw("(case when pendaftaran.bidangStudi is null then mahasiswa.bidangStudi else pendaftaran.bidangStudi end) as bidangStudi"))->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where("uuid",$uuid)->where('pendaftaran.version',$version)->first();
 
             if(empty($data)){
                 return response()->json([

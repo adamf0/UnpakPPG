@@ -114,6 +114,7 @@ const LaporDiriEdit = ({ uuid }) => {
     const [kelurahan, setKelurahan] = useState("");
     const [kecamatan, setKecamatan] = useState("");
     const [kodePos, setKodePos] = useState("");
+    const [perguruanTinggiAsal,setPerguruanTinggiAsal] = useState("");
 
     const [jenisTinggal, setJenisTinggal] = useState("");
     const [jenisTinggalOptions, setJenisTinggalOptions] = useState([
@@ -438,6 +439,7 @@ const LaporDiriEdit = ({ uuid }) => {
                 setSekolahMengajar(response?.data?.sekolahMengajar ?? "");
                 setAlamatSekolah(response?.data?.alamatSekolah ?? "");
                 setTelpSekolah(response?.data?.telpSekolah ?? "");
+                setPerguruanTinggiAsal(response?.data?.perguruanTinggiAsal ?? "");
 
                 setBerkasTambahan(response?.data);
                 setPaktaIntegritas(response?.data?.paktaIntegritas ?? "");
@@ -532,6 +534,8 @@ const LaporDiriEdit = ({ uuid }) => {
                 sekolahMengajar: sekolahMengajar ?? "",
                 alamatSekolah: alamatSekolah ?? "",
                 telpSekolah: telpSekolah.replaceAll("-", "") ?? "",
+                perguruanTinggiAsal: perguruanTinggiAsal ?? "",
+                bidangStudi: bidangStudi ?? "",
             });
 
             if (response.status === 200 || response.status === 204) {
@@ -664,11 +668,34 @@ const LaporDiriEdit = ({ uuid }) => {
                                 label="Bidang Studi"
                                 type="text"
                                 value={bidangStudi}
-                                onChange={(e) => {}}
-                                disabled
+                                onChange={(e) => {
+                                    setBidangStudi(e.target.value);
+                                    setErrListBiodata((prev) => {
+                                        const { bidangStudi, ...rest } = prev;
+                                        return rest;
+                                    });
+                                }}
+                                errorMessageList={errListBiodata?.bidangStudi ?? []}
+                                required
                             />
                         </div>
                     </div>
+
+                    <Input
+                        label="Perguruan Tinggi Asal"
+                        type="text"
+                        value={perguruanTinggiAsal}
+                        placeholder=""
+                        onChange={(e) => {
+                            setPerguruanTinggiAsal(e.target.value)
+                            setErrListBiodata(prev => {
+                                const { perguruanTinggiAsal, ...rest } = prev;
+                                return rest;
+                            });
+                        }}
+                        errorMessageList={errListBiodata?.perguruanTinggiAsal ?? []}
+                        required
+                    />
 
                     <div className="flex flex-col sm:flex-row items-center gap-4">
                         <Input

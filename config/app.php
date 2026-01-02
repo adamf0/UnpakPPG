@@ -14,6 +14,8 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'version' => env('Version', null),
+    'stop_entry' => env('StopEntry', false),
 
     /*
     |--------------------------------------------------------------------------

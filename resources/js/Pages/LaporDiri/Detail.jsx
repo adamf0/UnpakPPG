@@ -109,6 +109,7 @@ const LaporDiriDetail = ({ uuid }) => {
     const [kelurahan, setKelurahan] = useState("");
     const [kecamatan, setKecamatan] = useState("");
     const [kodePos, setKodePos] = useState("");
+    const [perguruanTinggiAsal,setPerguruanTinggiAsal] = useState("");
 
     const [jenisTinggal, setJenisTinggal] = useState("");
     const [jenisTinggalOptions, setJenisTinggalOptions] = useState([
@@ -433,6 +434,7 @@ const LaporDiriDetail = ({ uuid }) => {
                 setSekolahMengajar(response?.data?.sekolahMengajar ?? "");
                 setAlamatSekolah(response?.data?.alamatSekolah ?? "");
                 setTelpSekolah(response?.data?.telpSekolah ?? "");
+                setPerguruanTinggiAsal(response?.data?.perguruanTinggiAsal ?? "");
 
                 setBerkasTambahan(response?.data);
                 setPaktaIntegritas(response?.data?.paktaIntegritas ?? "");
@@ -538,6 +540,14 @@ const LaporDiriDetail = ({ uuid }) => {
                             />
                         </div>
                     </div>
+
+                    <Input
+                        label="Perguruan Tinggi Asal"
+                        type="text"
+                        value={perguruanTinggiAsal}
+                        onChange={(e) => {}}
+                        disabled
+                    />
 
                     <div className="flex flex-col sm:flex-row w-full gap-4">
                         <Input

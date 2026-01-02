@@ -7,6 +7,7 @@ use App\Models\mahasiswa;
 use App\Models\pengajuan;
 use App\Rules\SafeFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Ramsey\Uuid\Uuid;
@@ -14,7 +15,10 @@ use Ramsey\Uuid\Uuid;
 class PendaftaranControllerApi extends Controller
 {
     public function CreateForm(Request $request){
-        if(env("StopEntry")){
+        $version = config('app.version');
+        $stopEntry = config('app.stop_entry');
+
+        if($stopEntry){
             return response()->json([
                 "Title" => "pendaftaran.stopEntry",
                 "Detail" => "lapor diri sudah ditutup"
@@ -32,7 +36,6 @@ class PendaftaranControllerApi extends Controller
             ], 500);
         }
 
-        $version = env("Version",null);
         try {
             $mahasiswa = mahasiswa::where('nomorUKG',$request->nomorUKG)->where('version',$version)->first();
             if($mahasiswa==null){
@@ -70,6 +73,7 @@ class PendaftaranControllerApi extends Controller
                 return response()->json($uuid,200);
             }
         } catch (\Throwable $th) {
+            throw $th;
             return response()->json([
                 "Title" => "pendaftaran.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
@@ -92,8 +96,8 @@ class PendaftaranControllerApi extends Controller
                 ], 500);
             }
 
-            $version = env("Version",null);
-            $pendaftaran = pengajuan::select("pendaftaran.*","mahasiswa.nama","mahasiswa.bidangStudi")->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where('uuid',$uuid)->where('pendaftaran.version',$version)->firstOrFail();
+            $version = config('app.version');
+            $pendaftaran = pengajuan::select("pendaftaran.*","mahasiswa.nama",DB::raw("(case when pendaftaran.bidangStudi is null then mahasiswa.bidangStudi else pendaftaran.bidangStudi end) as bidangStudi"))->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where('uuid',$uuid)->where('pendaftaran.version',$version)->firstOrFail();
             if($pendaftaran==null){
                 return response()->json([
                     "Title" => "pendaftaran.dataNotfound",
@@ -108,6 +112,7 @@ class PendaftaranControllerApi extends Controller
                     "nik"               => $pendaftaran->nik, //number, 16 digit
                     "nama"              => $pendaftaran->nama, //string
                     "bidangStudi"       => $pendaftaran->bidangStudi, //string
+                    "perguruanTinggiAsal"   => $pendaftaran->perguruanTinggiAsal, //string
                     "namaPeserta"       => $pendaftaran->namaPeserta, //string
                     "jenisKelamin"      => $pendaftaran->jenisKelamin, //string, 1 length, [L,P] range
                     "tempatLahir"       => $pendaftaran->tempatLahir, //string
@@ -150,6 +155,7 @@ class PendaftaranControllerApi extends Controller
                 ]);
             }
         } catch (\Throwable $th) {
+            throw $th;
             return response()->json([
                 "Title" => "pendaftaran.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
@@ -158,7 +164,10 @@ class PendaftaranControllerApi extends Controller
         }        
     }
     public function SaveBiodata(Request $request){
-        if(env("StopEntry")){
+        $version = config('app.version');
+        $stopEntry = config('app.stop_entry');
+
+        if($stopEntry){
             return response()->json([
                 "Title" => "pendaftaran.stopEntry",
                 "Detail" => "lapor diri sudah ditutup"
@@ -169,6 +178,8 @@ class PendaftaranControllerApi extends Controller
             'uuidPendaftaran' => 'required',
             'nik'             => 'required|digits:16',
             // 'namaPeserta'     => 'required|string|max:255',
+            'perguruanTinggiAsal'=> 'required|string',
+            'bidangStudi'     => 'required|string',
             'jenisKelamin'    => 'required|string|in:L,P',
             'tempatLahir'     => 'required|string|max:255',
             'tanggalLahir'    => 'required|date_format:Y-m-d',
@@ -201,11 +212,12 @@ class PendaftaranControllerApi extends Controller
             ], 500);
         }
         
-        $version = env("Version",null);
         try {
             $pendaftaran                     = pengajuan::where('uuid',$request->uuidPendaftaran)->where('version',$version)->firstOrFail();
             $pendaftaran->nik                = $request->nik;
             $pendaftaran->namaPeserta        = $request->namaPeserta;
+            $pendaftaran->perguruanTinggiAsal= $request->perguruanTinggiAsal;
+            $pendaftaran->bidangStudi        = $request->bidangStudi;
             $pendaftaran->jenisKelamin       = $request->jenisKelamin;
             $pendaftaran->tempatLahir        = $request->tempatLahir;
             $pendaftaran->tanggalLahir       = $request->tanggalLahir;
@@ -233,6 +245,7 @@ class PendaftaranControllerApi extends Controller
 
             return response()->noContent();
         } catch (\Throwable $th) {
+            throw $th;
             return response()->json([
                 "Title" => "pendaftaran.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
@@ -242,7 +255,10 @@ class PendaftaranControllerApi extends Controller
 
     }
     public function SaveBerkasTambahan(Request $request){
-        if(env("StopEntry")){
+        $version = config('app.version');
+        $stopEntry = config('app.stop_entry');
+
+        if($stopEntry){
             return response()->json([
                 "Title" => "pendaftaran.stopEntry",
                 "Detail" => "lapor diri sudah ditutup"
@@ -312,7 +328,6 @@ class PendaftaranControllerApi extends Controller
             }
         }
         
-        $version = env("Version",null);
         try {
             $berkasTambahan                    = pengajuan::where('uuid',$request->uuidPendaftaran)->where('version',$version)->firstOrFail();
             if($request->has("paktaIntegritas") && $request->hasFile("paktaIntegritas")){
