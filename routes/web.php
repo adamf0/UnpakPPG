@@ -19,6 +19,12 @@ Route::get('/', [PencarianController::class, 'pencarianPage'])->name('pencarian'
 Route::get('/pendaftaran', [PendaftaranController::class, 'pendaftaranPage'])->name('pendaftaran');
 Route::get('/import', [ImportController::class, 'Index'])->name('import');
 
+Route::get('/tes', function(){
+    $version = config('app.version');
+    $stopEntry = config('app.stop_entry');
+    dd(Hash::make("251423"), $version, $stopEntry);
+})->name('import');
+
 Route::get('/login', [AuthController::class, 'authPage'])->name("authPage");
 Route::post('/dologin', [AuthController::class, 'doLogin']);
 Route::get('/dologout', [AuthController::class, 'doLogout']);
