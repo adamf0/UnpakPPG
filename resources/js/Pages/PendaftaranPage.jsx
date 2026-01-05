@@ -38,6 +38,7 @@ function PendaftaranPage({ activeMenu }) {
     
     const [nomorUKG,setNomorUKG] = useState("");
     const [bidangStudi,setBidangStudi] = useState("");
+    const [bidangStudi2,setBidangStudi2] = useState("");
     const [nim,setNim] = useState("");
     const [nik,setNik] = useState("");
     const [nama,setNama] = useState("");
@@ -410,6 +411,7 @@ function PendaftaranPage({ activeMenu }) {
 
                 setNomorUKG(response?.data?.nomorUKG ?? "");
                 setBidangStudi(response?.data?.bidangStudi ?? "");
+                setBidangStudi2(response?.data?.bidangStudi2 ?? "");
                 setNim(response?.data?.nim ?? "");
                 setNik(response?.data?.nik ?? "");
                 setNama(response?.data?.nama ?? "");
@@ -583,6 +585,7 @@ function PendaftaranPage({ activeMenu }) {
                 telpSekolah: telpSekolah.replaceAll("-","") ?? "",
                 perguruanTinggiAsal: perguruanTinggiAsal ?? "",
                 bidangStudi: bidangStudi ?? "",
+                bidangStudi2: bidangStudi2 ?? "",
             });
 
             if (response.status === 200 || response.status === 204) {
@@ -721,42 +724,56 @@ function PendaftaranPage({ activeMenu }) {
                             type="text"
                             value={nomorUKG}
                             onChange={(e) => {}}
+                            errorMessageList={errListBiodata?.bidangStudi ?? []}
                             disabled
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <Input
+                            label="Bidang Studi PPG"
+                            type="text"
+                            value={bidangStudi}
+                            disabled
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row w-full gap-4">
+                    <div className="flex-1">
+                        <Input
+                            label="Perguruan Tinggi Asal"
+                            type="text"
+                            value={perguruanTinggiAsal}
+                            placeholder=""
+                            onChange={(e) => {
+                                setPerguruanTinggiAsal(e.target.value)
+                                setErrListBiodata(prev => {
+                                    const { perguruanTinggiAsal, ...rest } = prev;
+                                    return rest;
+                                });
+                            }}
+                            errorMessageList={errListBiodata?.perguruanTinggiAsal ?? []}
+                            required
                         />
                     </div>
                     <div className="flex-1">
                         <Input
                             label="Bidang Studi"
                             type="text"
-                            value={bidangStudi}
+                            value={bidangStudi2}
                             onChange={(e) => {
-                                setBidangStudi(e.target.value)
+                                setBidangStudi2(e.target.value)
                                 setErrListBiodata(prev => {
-                                    const { bidangStudi, ...rest } = prev;
+                                    const { bidangStudi2, ...rest } = prev;
                                     return rest;
                                 });
                             }}
-                            errorMessageList={errListBiodata?.bidangStudi ?? []}
+                            errorMessageList={errListBiodata?.bidangStudi2 ?? []}
                             required
                         />
                     </div>
                 </div>
-
-                <Input
-                        label="Perguruan Tinggi Asal"
-                        type="text"
-                        value={perguruanTinggiAsal}
-                        placeholder=""
-                        onChange={(e) => {
-                            setPerguruanTinggiAsal(e.target.value)
-                            setErrListBiodata(prev => {
-                                const { perguruanTinggiAsal, ...rest } = prev;
-                                return rest;
-                            });
-                        }}
-                        errorMessageList={errListBiodata?.perguruanTinggiAsal ?? []}
-                        required
-                />
 
                 <div className="flex flex-col sm:flex-row items-center gap-4">
                     <Input
@@ -1201,7 +1218,6 @@ function PendaftaranPage({ activeMenu }) {
                         });
                     }}
                     errorMessageList={errListBiodata?.sekolahMengajar ?? []}
-                    required
                 />
 
                 <Textarea
@@ -1216,7 +1232,6 @@ function PendaftaranPage({ activeMenu }) {
                         });
                     }}
                     errorMessageList={errListBiodata?.alamatSekolah ?? []}
-                    required
                 />
 
                 <Input
@@ -1233,7 +1248,6 @@ function PendaftaranPage({ activeMenu }) {
                             });
                     }}
                     errorMessageList={errListBiodata?.telpSekolah ?? []}
-                    required
                 />
             </div>
 

@@ -112,6 +112,7 @@ class PendaftaranControllerApi extends Controller
                     "nik"               => $pendaftaran->nik, //number, 16 digit
                     "nama"              => $pendaftaran->nama, //string
                     "bidangStudi"       => $pendaftaran->bidangStudi, //string
+                    "bidangStudi2"      => $pendaftaran->bidangStudi2, //string
                     "perguruanTinggiAsal"   => $pendaftaran->perguruanTinggiAsal, //string
                     "namaPeserta"       => $pendaftaran->namaPeserta, //string
                     "jenisKelamin"      => $pendaftaran->jenisKelamin, //string, 1 length, [L,P] range
@@ -179,7 +180,8 @@ class PendaftaranControllerApi extends Controller
             'nik'             => 'required|digits:16',
             // 'namaPeserta'     => 'required|string|max:255',
             'perguruanTinggiAsal'=> 'required|string',
-            'bidangStudi'     => 'required|string',
+            'bidangStudi'     => 'required',
+            'bidangStudi2'     => 'required',
             'jenisKelamin'    => 'required|string|in:L,P',
             'tempatLahir'     => 'required|string|max:255',
             'tanggalLahir'    => 'required|date_format:Y-m-d',
@@ -200,10 +202,10 @@ class PendaftaranControllerApi extends Controller
             'alamatAyahIbu'   => 'required|string|max:500',
             'hpAyahIbu'       => 'required|digits_between:10,13',
             'hpKerabat'       => 'required|digits_between:10,13',
-            'sekolahMengajar' => 'required|string|max:255',
-            'alamatSekolah'   => 'required|string|max:500',
-            'telpSekolah'     => 'required',
-        ]);
+            // 'sekolahMengajar' => 'required|string|max:255',
+            // 'alamatSekolah'   => 'required|string|max:500',
+            // 'telpSekolah'     => 'required',
+        ],["bidangStudi.required" => "the bidang studi ppg field is required","bidangStudi2.required" => "the bidang studi field is required"]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -211,13 +213,14 @@ class PendaftaranControllerApi extends Controller
                 "Detail" => $validator->errors(),
             ], 500);
         }
-        
+
         try {
             $pendaftaran                     = pengajuan::where('uuid',$request->uuidPendaftaran)->where('version',$version)->firstOrFail();
             $pendaftaran->nik                = $request->nik;
             $pendaftaran->namaPeserta        = $request->namaPeserta;
             $pendaftaran->perguruanTinggiAsal= $request->perguruanTinggiAsal;
             $pendaftaran->bidangStudi        = $request->bidangStudi;
+            $pendaftaran->bidangStudi2       = $request->bidangStudi2;
             $pendaftaran->jenisKelamin       = $request->jenisKelamin;
             $pendaftaran->tempatLahir        = $request->tempatLahir;
             $pendaftaran->tanggalLahir       = $request->tanggalLahir;
@@ -245,7 +248,6 @@ class PendaftaranControllerApi extends Controller
 
             return response()->noContent();
         } catch (\Throwable $th) {
-            throw $th;
             return response()->json([
                 "Title" => "pendaftaran.commonError",
                 "Detail" => "ada yg salah pada aplikasi",

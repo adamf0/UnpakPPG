@@ -34,8 +34,9 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
                     ->get()
                     ->map(function($mahasiswa) use($isDev){
                         return [
-                            $mahasiswa->perguruanTinggiAsal ?? "",
                             $mahasiswa->bidangStudi,
+                            $mahasiswa->perguruanTinggiAsal ?? "",
+                            $mahasiswa->bidangStudi2,
                             "'".$mahasiswa->nomorUKG,
                             "'".$mahasiswa->nim,
                             "'".$mahasiswa->nik,
@@ -88,8 +89,9 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
                     ->get()
                     ->map(function($mahasiswa) use($isDev){
                         return [
-                            $mahasiswa->perguruanTinggiAsal ?? "",
                             $mahasiswa->bidangStudi,
+                            $mahasiswa->perguruanTinggiAsal ?? "",
+                            $mahasiswa->bidangStudi2,
                             "'".$mahasiswa->nomorUKG,
                             "'".$mahasiswa->nim,
                             "'".$mahasiswa->nik,
@@ -140,8 +142,9 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
     public function headings(): array
     {
         return [
-            "Perguruan Tinggi Asal",
             "Bidang Studi PPG",
+            "Perguruan Tinggi Asal",
+            "Bidang Studi",
             "Nomor UKG",
             "NIM",
             "NIK",

@@ -33,6 +33,7 @@ const LaporDiriDetail = ({ uuid }) => {
 
     const [nomorUKG, setNomorUKG] = useState("");
     const [bidangStudi,setBidangStudi] = useState("");
+    const [bidangStudi2,setBidangStudi2] = useState("");
     const [nim, setNim] = useState("");
     const [nik, setNik] = useState("");
     const [nama, setNama] = useState("");
@@ -407,6 +408,7 @@ const LaporDiriDetail = ({ uuid }) => {
 
                 setNomorUKG(response?.data?.nomorUKG ?? "");
                 setBidangStudi(response?.data?.bidangStudi ?? "");
+                setBidangStudi2(response?.data?.bidangStudi2 ?? "");
                 setNim(response?.data?.nim ?? "");
                 setNik(response?.data?.nik ?? "");
                 setNama(response?.data?.nama ?? "");
@@ -532,7 +534,7 @@ const LaporDiriDetail = ({ uuid }) => {
                         </div>
                         <div className="flex-1">
                             <Input
-                                label="Bidang Studi"
+                                label="Bidang Studi PPG"
                                 type="text"
                                 value={bidangStudi}
                                 onChange={(e) => {}}
@@ -541,13 +543,28 @@ const LaporDiriDetail = ({ uuid }) => {
                         </div>
                     </div>
 
-                    <Input
-                        label="Perguruan Tinggi Asal"
-                        type="text"
-                        value={perguruanTinggiAsal}
-                        onChange={(e) => {}}
-                        disabled
-                    />
+                    <div className="flex flex-col sm:flex-row w-full gap-4">
+                        <div className="flex-1">
+                            <Input
+                                label="Perguruan Tinggi Asal"
+                                type="text"
+                                value={perguruanTinggiAsal}
+                                onChange={(e) => {}}
+                                disabled
+                                required
+                            />
+                        </div>
+                        <div className="flex-1">
+                            <Input
+                                label="Bidang Studi"
+                                type="text"
+                                value={bidangStudi2}
+                                onChange={(e) => {}}
+                                disabled
+                                required
+                            />
+                        </div>
+                    </div>
 
                     <div className="flex flex-col sm:flex-row w-full gap-4">
                         <Input

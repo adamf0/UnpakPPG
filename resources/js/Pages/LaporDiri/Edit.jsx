@@ -38,6 +38,7 @@ const LaporDiriEdit = ({ uuid }) => {
 
     const [nomorUKG, setNomorUKG] = useState("");
     const [bidangStudi,setBidangStudi] = useState("");
+    const [bidangStudi2,setBidangStudi2] = useState("");
     const [nim, setNim] = useState("");
     const [nik, setNik] = useState("");
     const [nama, setNama] = useState("");
@@ -412,6 +413,7 @@ const LaporDiriEdit = ({ uuid }) => {
 
                 setNomorUKG(response?.data?.nomorUKG ?? "");
                 setBidangStudi(response?.data?.bidangStudi ?? "");
+                setBidangStudi2(response?.data?.bidangStudi2 ?? "");
                 setNim(response?.data?.nim ?? "");
                 setNik(response?.data?.nik ?? "");
                 setNama(response?.data?.nama ?? "");
@@ -536,6 +538,7 @@ const LaporDiriEdit = ({ uuid }) => {
                 telpSekolah: telpSekolah.replaceAll("-", "") ?? "",
                 perguruanTinggiAsal: perguruanTinggiAsal ?? "",
                 bidangStudi: bidangStudi ?? "",
+                bidangStudi2: bidangStudi2 ?? "",
             });
 
             if (response.status === 200 || response.status === 204) {
@@ -665,37 +668,50 @@ const LaporDiriEdit = ({ uuid }) => {
                         </div>
                         <div className="flex-1">
                             <Input
-                                label="Bidang Studi"
+                                label="Bidang Studi PPG"
                                 type="text"
                                 value={bidangStudi}
-                                onChange={(e) => {
-                                    setBidangStudi(e.target.value);
-                                    setErrListBiodata((prev) => {
-                                        const { bidangStudi, ...rest } = prev;
-                                        return rest;
-                                    });
-                                }}
                                 errorMessageList={errListBiodata?.bidangStudi ?? []}
                                 required
                             />
                         </div>
                     </div>
 
-                    <Input
-                        label="Perguruan Tinggi Asal"
-                        type="text"
-                        value={perguruanTinggiAsal}
-                        placeholder=""
-                        onChange={(e) => {
-                            setPerguruanTinggiAsal(e.target.value)
-                            setErrListBiodata(prev => {
-                                const { perguruanTinggiAsal, ...rest } = prev;
-                                return rest;
-                            });
-                        }}
-                        errorMessageList={errListBiodata?.perguruanTinggiAsal ?? []}
-                        required
-                    />
+                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                        <div className="flex-1">
+                            <Input
+                                label="Perguruan Tinggi Asal"
+                                type="text"
+                                value={perguruanTinggiAsal}
+                                placeholder=""
+                                onChange={(e) => {
+                                    setPerguruanTinggiAsal(e.target.value)
+                                    setErrListBiodata(prev => {
+                                        const { perguruanTinggiAsal, ...rest } = prev;
+                                        return rest;
+                                    });
+                                }}
+                                errorMessageList={errListBiodata?.perguruanTinggiAsal ?? []}
+                                required
+                            />
+                        </div>
+                        <div className="flex-1">
+                            <Input
+                                label="Bidang Studi"
+                                type="text"
+                                value={bidangStudi2}
+                                onChange={(e) => {
+                                    setBidangStudi2(e.target.value);
+                                    setErrListBiodata((prev) => {
+                                        const { bidangStudi2, ...rest } = prev;
+                                        return rest;
+                                    });
+                                }}
+                                errorMessageList={errListBiodata?.bidangStudi2 ?? []}
+                                required
+                            />
+                        </div>
+                    </div>
 
                     <div className="flex flex-col sm:flex-row items-center gap-4">
                         <Input
