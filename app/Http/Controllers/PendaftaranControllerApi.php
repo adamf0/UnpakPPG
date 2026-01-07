@@ -282,7 +282,7 @@ class PendaftaranControllerApi extends Controller
         ]);
         
         if ($validator->fails()) {
-            Log::error("[SaveBerkasTambahan][validation1]:", $validator->errors());
+            Log::error("[SaveBerkasTambahan][validation1]:", $validator->errors()->toJson());
             Log::error("[SaveBerkasTambahan][uuidPendaftaran]:", $request->uuidPendaftaran ?? "-");
             return response()->json([
                 "Title" => "berkasTambahan.invalidValidation",
@@ -326,7 +326,7 @@ class PendaftaranControllerApi extends Controller
             $validator = Validator::make($request->all(), $fileRules);
         
             if ($validator->fails()) {
-                Log::error("[SaveBerkasTambahan][validation2]:", $validator->errors());
+                Log::error("[SaveBerkasTambahan][validation2]:", $validator->errors()->toJson());
                 Log::error("[SaveBerkasTambahan][uuidPendaftaran]:", $request->uuidPendaftaran ?? "-");
 
                 return response()->json([
