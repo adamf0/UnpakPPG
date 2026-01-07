@@ -664,7 +664,7 @@ function PendaftaranPage({ activeMenu }) {
                     alert(detail)
                 }
             } else{
-                console.error(detail)
+               alert(detail)
             }
         } finally {
             setLoading(false)

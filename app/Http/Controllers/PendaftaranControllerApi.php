@@ -8,6 +8,7 @@ use App\Models\pengajuan;
 use App\Rules\SafeFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Ramsey\Uuid\Uuid;
@@ -281,6 +282,8 @@ class PendaftaranControllerApi extends Controller
         ]);
         
         if ($validator->fails()) {
+            Log::error("[SaveBerkasTambahan][validation1]:", $validator->errors());
+            Log::error("[SaveBerkasTambahan][uuidPendaftaran]:", $request->uuidPendaftaran ?? "-");
             return response()->json([
                 "Title" => "berkasTambahan.invalidValidation",
                 "Detail" => $validator->errors(),
@@ -323,6 +326,9 @@ class PendaftaranControllerApi extends Controller
             $validator = Validator::make($request->all(), $fileRules);
         
             if ($validator->fails()) {
+                Log::error("[SaveBerkasTambahan][validation2]:", $validator->errors());
+                Log::error("[SaveBerkasTambahan][uuidPendaftaran]:", $request->uuidPendaftaran ?? "-");
+
                 return response()->json([
                     "Title" => "berkasTambahan.invalidValidation",
                     "Detail" => $validator->errors(),
@@ -448,6 +454,9 @@ class PendaftaranControllerApi extends Controller
 
             return response()->noContent();
         } catch (\Throwable $th) {
+            Log::error("[SaveBerkasTambahan][catch]:", $th->getMessage());
+            Log::error("[SaveBerkasTambahan][uuidPendaftaran]:", $request?->uuidPendaftaran ?? "-");
+
             return response()->json([
                 "Title" => "berkasTambahan.commonError",
                 "Detail" => "ada yg salah pada aplikasi",
