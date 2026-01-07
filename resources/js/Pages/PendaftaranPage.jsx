@@ -641,6 +641,9 @@ function PendaftaranPage({ activeMenu }) {
                 }
             });
 
+            const status = response.response?.status;
+            const detail = response.response?.data?.Detail ?? "ada masalah pada aplikasi";
+
             if (response.status === 200 || response.status === 204) {
                 Swal.fire({
                     title: "",
@@ -648,6 +651,16 @@ function PendaftaranPage({ activeMenu }) {
                     icon: "success"
                 });
                 setFrame(StepEnum.SELESAI)
+            } else if (status === 400) {
+                alert(detail)
+            } else if(status === 500){
+                if(error.response?.data?.Title=="berkasTambahan.invalidValidation"){
+                    setErrListBerkasTambahan(detail)
+                } else{
+                    alert(detail)
+                }
+            } else{
+               alert(detail)
             }
         } catch (error) {
             // console.error(error.response?.data)
