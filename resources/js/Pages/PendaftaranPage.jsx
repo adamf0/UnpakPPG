@@ -641,9 +641,6 @@ function PendaftaranPage({ activeMenu }) {
                 }
             });
 
-            const status = response.response?.status;
-            const detail = response.response?.data?.Detail ?? "ada masalah pada aplikasi";
-
             if (response.status === 200 || response.status === 204) {
                 Swal.fire({
                     title: "",
@@ -651,20 +648,24 @@ function PendaftaranPage({ activeMenu }) {
                     icon: "success"
                 });
                 setFrame(StepEnum.SELESAI)
-            } else if (status === 400) {
-                alert(detail)
-            } else if(status === 500){
-                const detailerr = error.response?.data?.Detail ?? {};
-                const errorKeys = Object.keys(detailerr);
-
-                if(error.response?.data?.Title=="berkasTambahan.invalidValidation"){
-                    setErrListBerkasTambahan(detail)
-                    alert(`cek kembali formnya! ${errorKeys.join(",")} masih belum benar datanya`)
-                } else{
-                    alert(detail)
-                }
             } else{
-               alert(detail)
+                const status = error.response?.status;
+                const detail = error.response?.data?.Detail ?? "ada masalah pada aplikasi";
+                console.error(status, error.response?.data?.Title)
+
+                if (status === 400) {
+                    alert(detail)
+                } else if(status === 500){
+                    const detailerr = error.response?.data?.Detail ?? {};
+                    const errorKeys = Object.keys(detailerr);
+
+                    if(error.response?.data?.Title=="berkasTambahan.invalidValidation"){
+                        setErrListBerkasTambahan(detail)
+                        alert(`cek kembali formnya! ${errorKeys.join(",")} masih belum benar datanya`)
+                    } else{
+                        alert(detail)
+                    }
+                }
             }
         } catch (error) {
             const status = error.response?.status;
