@@ -654,8 +654,12 @@ function PendaftaranPage({ activeMenu }) {
             } else if (status === 400) {
                 alert(detail)
             } else if(status === 500){
+                const detailerr = error.response?.data?.Detail ?? {};
+                const errorKeys = Object.keys(detailerr);
+
                 if(error.response?.data?.Title=="berkasTambahan.invalidValidation"){
                     setErrListBerkasTambahan(detail)
+                    alert(`cek kembali formnya! ${errorKeys.join(",")} masih belum benar datanya`)
                 } else{
                     alert(detail)
                 }
@@ -663,16 +667,19 @@ function PendaftaranPage({ activeMenu }) {
                alert(detail)
             }
         } catch (error) {
-            // console.error(error.response?.data)
-
             const status = error.response?.status;
             const detail = error.response?.data?.Detail ?? "ada masalah pada aplikasi";
+            console.error(status, error.response?.data?.Title)
 
             if (status === 400) {
                 alert(detail)
             } else if(status === 500){
+                const detailerr = error.response?.data?.Detail ?? {};
+                const errorKeys = Object.keys(detailerr);
+
                 if(error.response?.data?.Title=="berkasTambahan.invalidValidation"){
                     setErrListBerkasTambahan(detail)
+                    alert(`cek kembali formnya! ${errorKeys.join(",")} masih belum benar datanya`)
                 } else{
                     alert(detail)
                 }
