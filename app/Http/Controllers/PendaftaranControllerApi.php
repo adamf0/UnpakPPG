@@ -282,8 +282,13 @@ class PendaftaranControllerApi extends Controller
         ]);
         
         if ($validator->fails()) {
-            Log::error("[SaveBerkasTambahan][validation1]:", $validator->errors()->toJson());
-            Log::error("[SaveBerkasTambahan][uuidPendaftaran]:", $request->uuidPendaftaran ?? "-");
+            Log::error(
+                "[SaveBerkasTambahan][validation1]",
+                [
+                    'errors' => $validator->errors()->toArray(),
+                    'uuidPendaftaran' => $request->uuidPendaftaran ?? '-',
+                ]
+            );
             return response()->json([
                 "Title" => "berkasTambahan.invalidValidation",
                 "Detail" => $validator->errors(),
@@ -326,8 +331,13 @@ class PendaftaranControllerApi extends Controller
             $validator = Validator::make($request->all(), $fileRules);
         
             if ($validator->fails()) {
-                Log::error("[SaveBerkasTambahan][validation2]:", $validator->errors()->toJson());
-                Log::error("[SaveBerkasTambahan][uuidPendaftaran]:", $request->uuidPendaftaran ?? "-");
+                Log::error(
+                    "[SaveBerkasTambahan][validation2]",
+                    [
+                        'errors' => $validator->errors()->toArray(),
+                        'uuidPendaftaran' => $request->uuidPendaftaran ?? '-',
+                    ]
+                );
 
                 return response()->json([
                     "Title" => "berkasTambahan.invalidValidation",
@@ -454,8 +464,13 @@ class PendaftaranControllerApi extends Controller
 
             return response()->noContent();
         } catch (\Throwable $th) {
-            Log::error("[SaveBerkasTambahan][catch]:", $th->getMessage());
-            Log::error("[SaveBerkasTambahan][uuidPendaftaran]:", $request?->uuidPendaftaran ?? "-");
+            Log::error('[SaveBerkasTambahan][catch]', [
+                'message' => $th->getMessage(),
+                'file'    => $th->getFile(),
+                'line'    => $th->getLine(),
+                'trace'   => $th->getTraceAsString(),
+                'uuidPendaftaran' => $request->uuidPendaftaran ?? '-',
+            ]);
 
             return response()->json([
                 "Title" => "berkasTambahan.commonError",
