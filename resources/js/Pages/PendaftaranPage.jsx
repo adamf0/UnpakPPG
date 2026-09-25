@@ -679,7 +679,7 @@ function PendaftaranPage({ activeMenu }) {
                 const errorKeys = Object.keys(detailerr);
 
                 if(error.response?.data?.Title=="berkasTambahan.invalidValidation"){
-                    setErrListBerkasTambahan(detail)
+                    setErrListBerkasTambahan(detailerr)
                     alert(`cek kembali formnya! ${errorKeys.join(",")} masih belum benar datanya`)
                 } else{
                     alert(detail)
@@ -729,6 +729,7 @@ function PendaftaranPage({ activeMenu }) {
             </div>
             {errNomorUKG.map(err => <p className="text-red-500 text-sm">{err}</p>)}
 
+            <img src="https://lapordiri-ppg.unpak.ac.id/banner_ppg.jpeg" alt="banner" className='mt-8'/>
         </>
     }
     function BiodataPage(){
