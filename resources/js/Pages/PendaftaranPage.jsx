@@ -729,7 +729,7 @@ function PendaftaranPage({ activeMenu }) {
             </div>
             {errNomorUKG.map(err => <p className="text-red-500 text-sm">{err}</p>)}
 
-            <img src="https://lapordiri-ppg.unpak.ac.id/banner_ppg.png" alt="banner" className='mt-8'/>
+            <img src="https://lapordiri-ppg.unpak.ac.id/banner_ppg.jpeg" alt="banner" className='mt-8'/>
         </>
     }
     function BiodataPage(){
@@ -1785,7 +1785,7 @@ function PendaftaranPage({ activeMenu }) {
             <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3">Selesai Pengajuan</h2>
             <p>
                 Selamat! Data data pengajuan anda sudah terkirim ke admin, tahap berikutnya anda harus bergabung group di whatsapp dengan link berikut untuk mendapatkan informasi terkait orientasi 
-                <a href="https://chat.whatsapp.com/LrMwY6qsnxvGuJYiSjwBfu" target="_blank" className='hover:bg-gray-700 hover:text-white text-purple-500 rounded-md px-3 py-2 text-sm font-medium'>https://chat.whatsapp.com/LrMwY6qsnxvGuJYiSjwBfu</a>
+                <a href="https://chat.whatsapp.com/Hn7tvr8EmdR1XJv3Tz55Ny" target="_blank" className='hover:bg-gray-700 hover:text-white text-purple-500 rounded-md px-3 py-2 text-sm font-medium'>https://chat.whatsapp.com/LrMwY6qsnxvGuJYiSjwBfu</a>
             </p>
         </div>
     }

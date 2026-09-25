@@ -82,7 +82,7 @@ function PencarianPage({activeMenu}) {
                     </div>
                     {errNomorUKG.map(err => <p className="text-red-500 text-sm">{err}</p>)}
 
-                    <img src="https://lapordiri-ppg.unpak.ac.id/banner_ppg.png" alt="banner" className='mt-8'/>
+                    <img src="https://lapordiri-ppg.unpak.ac.id/banner_ppg.jpeg" alt="banner" className='mt-8'/>
                 </div>
             </div>
         </MainPage>
