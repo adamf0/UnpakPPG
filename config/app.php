@@ -16,6 +16,7 @@ return [
     'name' => env('APP_NAME', 'Laravel'),
     'version' => env('Version', null),
     'stop_entry' => env('StopEntry', false),
+    'show_data' => env('show_data', env('ShowData', 1)),
 
     /*
     |--------------------------------------------------------------------------

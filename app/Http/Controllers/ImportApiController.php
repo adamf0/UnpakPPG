@@ -34,6 +34,7 @@ class ImportApiController extends Controller
 
             $counter = 0;
             $version = config('app.version');
+            $showData = config('app.show_data');
             foreach ($rows as $row) {
                 $mahasiswa = mahasiswa::where('nomorUKG',$row["nomorukg"])->where('version',$version);
                 $check = $mahasiswa->count();
@@ -56,6 +57,7 @@ class ImportApiController extends Controller
                     $mahasiswa->nik = $row["nik"];
                     $mahasiswa->noHP = $row["nohp"];
                     $mahasiswa->version = $version;
+                    $mahasiswa->show_data = $showData;
                     $mahasiswa->save();
                     $counter++;
                 }

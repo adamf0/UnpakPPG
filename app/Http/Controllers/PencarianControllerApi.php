@@ -27,8 +27,16 @@ class PencarianControllerApi extends Controller
         }
 
         $version = config('app.version');
+        $showData = config('app.show_data');
         try {
-            $cek = pengajuan::where('nomorUKG',$request->nomorUKG)->where('version',$version)->exists();
+            $cek = pengajuan::join("mahasiswa", function ($join) {
+                    $join->on("pendaftaran.nomorUKG", "=", "mahasiswa.nomorUKG")
+                         ->on("pendaftaran.version", "=", "mahasiswa.version");
+                })
+                ->where('pendaftaran.nomorUKG',$request->nomorUKG)
+                ->where('pendaftaran.version',$version)
+                ->where('mahasiswa.show_data',$showData)
+                ->exists();
             if(!$cek){
                 return response()->json([
                     "Title" => "pencarian.NotFound",

@@ -13,6 +13,7 @@ class LaporDiriApiController extends Controller
 {
     public function Index(Request $request){
        $version = config('app.version');
+       $showData = config('app.show_data');
 
        try {
             $page = empty($request->page) || $request->page < 1? 1:$request->page;
@@ -20,29 +21,57 @@ class LaporDiriApiController extends Controller
             $offset = ($page - 1) * $limit;
             
             if($request->post("filter_status")!="done"){
-                $total = DB::table("all_record")->whereNull("status")->where('version',$version)->count();
-                $data = DB::table("all_record")->where('version',$version)->skip($offset)->take($limit);
-                $data = $data->whereNull("status");
+                $total = DB::table("all_record")
+                    ->join("mahasiswa", function ($join) {
+                        $join->on("all_record.nomorUKG", "=", "mahasiswa.nomorUKG")
+                             ->on("all_record.version", "=", "mahasiswa.version");
+                    })
+                    ->whereNull("all_record.status")
+                    ->where('all_record.version',$version)
+                    ->where('mahasiswa.show_data',$showData)
+                    ->count();
+
+                $data = DB::table("all_record")
+                    ->select("all_record.*")
+                    ->join("mahasiswa", function ($join) {
+                        $join->on("all_record.nomorUKG", "=", "mahasiswa.nomorUKG")
+                             ->on("all_record.version", "=", "mahasiswa.version");
+                    })
+                    ->where('all_record.version',$version)
+                    ->where('mahasiswa.show_data',$showData)
+                    ->skip($offset)
+                    ->take($limit);
+                $data = $data->whereNull("all_record.status");
                 
                 if($request->has("filter") && !empty($request->get("filter"))){
                     $data = $data->where(fn ($query) =>
-                                $query->where("namaPeserta", "like", "%{$request->filter}%")
-                                    ->orWhere("nim", "like", "%{$request->filter}%")
-                                    ->orWhere("nomorUKG", "like", "%{$request->filter}%"));
+                                $query->where("all_record.namaPeserta", "like", "%{$request->filter}%")
+                                    ->orWhere("all_record.nim", "like", "%{$request->filter}%")
+                                    ->orWhere("all_record.nomorUKG", "like", "%{$request->filter}%"));
                 }
                 $data = $data->get();
 
                 $totalPages = ceil($total / $limit);
             } else{
-                $total = DB::table("all_record")->where('version',$version);
+                $total = DB::table("all_record")
+                    ->join("mahasiswa", function ($join) {
+                        $join->on("all_record.nomorUKG", "=", "mahasiswa.nomorUKG")
+                             ->on("all_record.version", "=", "mahasiswa.version");
+                    })
+                    ->where('all_record.version',$version)
+                    ->where('mahasiswa.show_data',$showData);
                 if($request->has("filter_status") && !empty($request->get("filter_status"))){
-                    $total = $total->where("status",$request->post("filter_status"));
+                    $total = $total->where("all_record.status",$request->post("filter_status"));
                 }
                 $total = $total->count();
 
                 $data = LaporDiri::select("pendaftaran.*",DB::raw("(case when pendaftaran.namaPeserta is null then mahasiswa.nama else pendaftaran.namaPeserta end) as namaPeserta"))
-                                    ->leftJoin("mahasiswa","pendaftaran.nomorUKG","=","mahasiswa.nomorUKG")
+                                    ->join("mahasiswa", function ($join) {
+                                        $join->on("pendaftaran.nomorUKG", "=", "mahasiswa.nomorUKG")
+                                             ->on("pendaftaran.version", "=", "mahasiswa.version");
+                                    })
                                     ->where('pendaftaran.version',$version)
+                                    ->where('mahasiswa.show_data',$showData)
                                     ->skip($offset)
                                     ->take($limit);
 
@@ -105,9 +134,18 @@ class LaporDiriApiController extends Controller
 
     public function Detail($uuid){
        $version = config('app.version');
+       $showData = config('app.show_data');
 
        try {
-            $data = LaporDiri::select("pendaftaran.*","mahasiswa.nama",DB::raw("(case when pendaftaran.bidangStudi is null then mahasiswa.bidangStudi else pendaftaran.bidangStudi end) as bidangStudi"))->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where("uuid",$uuid)->where('pendaftaran.version',$version)->first();
+            $data = LaporDiri::select("pendaftaran.*","mahasiswa.nama",DB::raw("(case when pendaftaran.bidangStudi is null then mahasiswa.bidangStudi else pendaftaran.bidangStudi end) as bidangStudi"))
+                ->join("mahasiswa", function ($join) {
+                    $join->on("pendaftaran.nomorUKG", "=", "mahasiswa.nomorUKG")
+                         ->on("pendaftaran.version", "=", "mahasiswa.version");
+                })
+                ->where("pendaftaran.uuid",$uuid)
+                ->where('pendaftaran.version',$version)
+                ->where('mahasiswa.show_data',$showData)
+                ->first();
 
             if(empty($data)){
                 return response()->json([

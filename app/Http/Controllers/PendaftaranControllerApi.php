@@ -17,6 +17,7 @@ class PendaftaranControllerApi extends Controller
 {
     public function CreateForm(Request $request){
         $version = config('app.version');
+        $showData = config('app.show_data');
         $stopEntry = config('app.stop_entry');
 
         if($stopEntry){
@@ -38,7 +39,7 @@ class PendaftaranControllerApi extends Controller
         }
 
         try {
-            $mahasiswa = mahasiswa::where('nomorUKG',$request->nomorUKG)->where('version',$version)->first();
+            $mahasiswa = mahasiswa::where('nomorUKG',$request->nomorUKG)->where('version',$version)->where('show_data',$showData)->first();
             if($mahasiswa==null){
                 return response()->json([
                     "Title" => "pendaftaran.dataNotFound",
@@ -98,7 +99,16 @@ class PendaftaranControllerApi extends Controller
             }
 
             $version = config('app.version');
-            $pendaftaran = pengajuan::select("pendaftaran.*","mahasiswa.nama",DB::raw("(case when pendaftaran.bidangStudi is null then mahasiswa.bidangStudi else pendaftaran.bidangStudi end) as bidangStudi"))->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")->where('uuid',$uuid)->where('pendaftaran.version',$version)->firstOrFail();
+            $showData = config('app.show_data');
+            $pendaftaran = pengajuan::select("pendaftaran.*","mahasiswa.nama",DB::raw("(case when pendaftaran.bidangStudi is null then mahasiswa.bidangStudi else pendaftaran.bidangStudi end) as bidangStudi"))
+                ->join("mahasiswa", function ($join) {
+                    $join->on("pendaftaran.nomorUKG", "=", "mahasiswa.nomorUKG")
+                         ->on("pendaftaran.version", "=", "mahasiswa.version");
+                })
+                ->where('pendaftaran.uuid',$uuid)
+                ->where('pendaftaran.version',$version)
+                ->where('mahasiswa.show_data',$showData)
+                ->firstOrFail();
             if($pendaftaran==null){
                 return response()->json([
                     "Title" => "pendaftaran.dataNotfound",

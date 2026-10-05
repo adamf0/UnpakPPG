@@ -24,13 +24,18 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
     {
         $isDev = env("DEPLOY","dev")=="dev";
         $version = config('app.version');
+        $showData = config('app.show_data');
 
         if ($this->filter_status == '!done') {
             return DB::table("all_record")
                     ->select("all_record.*","mahasiswa.nama",DB::raw("(case when all_record.bidangStudi is null then mahasiswa.bidangStudi else all_record.bidangStudi end) as bidangStudi"),"mahasiswa.jenjangSekolah", "mahasiswa.provinsi",DB::raw("mahasiswa.noHP as nomorHp"))
-                    ->join("mahasiswa", "all_record.nomorUKG", "mahasiswa.nomorUKG")
-                    ->whereNull("status")
+                    ->join("mahasiswa", function ($join) {
+                        $join->on("all_record.nomorUKG", "=", "mahasiswa.nomorUKG")
+                             ->on("all_record.version", "=", "mahasiswa.version");
+                    })
+                    ->whereNull("all_record.status")
                     ->where('mahasiswa.version',$version)
+                    ->where('mahasiswa.show_data',$showData)
                     ->get()
                     ->map(function($mahasiswa) use($isDev){
                         return [
@@ -83,9 +88,13 @@ class LaporDiriExport implements FromCollection, WithHeadings, WithTitle
         } else {
             // If the filter is 'registered', fetch data based on the status
             return LaporDiri::select("pendaftaran.*","mahasiswa.nama", DB::raw("(case when pendaftaran.bidangStudi is null then mahasiswa.bidangStudi else pendaftaran.bidangStudi end) as bidangStudi"), "mahasiswa.jenjangSekolah", "mahasiswa.provinsi", DB::raw("mahasiswa.noHP as nomorHp"))
-                    ->join("mahasiswa", "pendaftaran.nomorUKG", "mahasiswa.nomorUKG")
-                    ->where('status', $this->filter_status)
+                    ->join("mahasiswa", function ($join) {
+                        $join->on("pendaftaran.nomorUKG", "=", "mahasiswa.nomorUKG")
+                             ->on("pendaftaran.version", "=", "mahasiswa.version");
+                    })
+                    ->where('pendaftaran.status', $this->filter_status)
                     ->where('pendaftaran.version',$version)
+                    ->where('mahasiswa.show_data',$showData)
                     ->get()
                     ->map(function($mahasiswa) use($isDev){
                         return [
