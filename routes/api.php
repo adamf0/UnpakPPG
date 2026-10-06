@@ -4,12 +4,14 @@ use App\Http\Controllers\ImportApiController;
 use App\Http\Controllers\LaporDiriApiController;
 use App\Http\Controllers\PencarianControllerApi;
 use App\Http\Controllers\PendaftaranControllerApi;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 Route::post('/import', [ImportApiController::class, 'Index'])->name('doImport');
+Route::post('/setting', [SettingController::class, 'Save'])->name('saveSetting');
 
 Route::post('/check-data', [PencarianControllerApi::class, 'GetDataPendaftaran'])->name('getPencarian');
 Route::get('/info-pendaftaran/{uuid}/{type}', [PendaftaranControllerApi::class, 'GetData'])->name('getPendaftaran');
