@@ -21,7 +21,7 @@ Object.prototype.isEmpty = function() {
            (typeof this === 'object' && Object.keys(this).length === 0);
 };
   
-function PendaftaranPage({ activeMenu }) {
+function PendaftaranPage({ activeMenu, linkWa }) {
     const [showConfirm, setShowConfirm] = useState(false);
 
     const steps = Object.values(StepEnum);
@@ -1785,7 +1785,7 @@ function PendaftaranPage({ activeMenu }) {
             <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3">Selesai Pengajuan</h2>
             <p>
                 Selamat! Data data pengajuan anda sudah terkirim ke admin, tahap berikutnya anda harus bergabung group di whatsapp dengan link berikut untuk mendapatkan informasi terkait orientasi 
-                <a href="https://chat.whatsapp.com/Hn7tvr8EmdR1XJv3Tz55Ny" target="_blank" className='hover:bg-gray-700 hover:text-white text-purple-500 rounded-md px-3 py-2 text-sm font-medium'>https://chat.whatsapp.com/LrMwY6qsnxvGuJYiSjwBfu</a>
+                <a href={linkWa} target="_blank" className='hover:bg-gray-700 hover:text-white text-purple-500 rounded-md px-3 py-2 text-sm font-medium'>{linkWa}</a>
             </p>
         </div>
     }
