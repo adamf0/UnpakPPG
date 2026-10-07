@@ -8,5 +8,5 @@ class pengaturan extends Model
 {
     protected $table = 'pengaturan';
     public $timestamps = false;
-    protected $fillable = ['link_wa'];
+    protected $fillable = ['link_wa', 'link_wa2'];
 }

@@ -12,9 +12,11 @@ class SettingController extends Controller
     public function Index(){
         $pengaturan = pengaturan::first();
         $linkWa = $pengaturan?->link_wa ?? "";
+        $linkWa2 = $pengaturan?->link_wa2 ?? "";
 
         return Inertia::render("Setting/Index", [
             "linkWa" => $linkWa,
+            "linkWa2" => $linkWa2,
         ]);
     }
 
@@ -22,6 +24,7 @@ class SettingController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'link_wa' => ['required', 'string'],
+                'link_wa2' => ['nullable', 'string'],
             ]);
 
             if ($validator->fails()) {
@@ -36,6 +39,7 @@ class SettingController extends Controller
                 $pengaturan = new pengaturan();
             }
             $pengaturan->link_wa = $request->link_wa;
+            $pengaturan->link_wa2 = $request->link_wa2;
             $pengaturan->save();
 
             return response()->json($pengaturan, 200);

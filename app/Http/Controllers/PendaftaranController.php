@@ -17,10 +17,12 @@ class PendaftaranController extends Controller
     public function pendaftaranPage(){
         $pengaturan = pengaturan::first();
         $linkWa = $pengaturan?->link_wa ?? "";
+        $linkWa2 = $pengaturan?->link_wa2 ?? "";
 
         return Inertia::render("PendaftaranPage",[
             'activeMenu' => 'Pendaftaran',
             'linkWa' => $linkWa,
+            'linkWa2' => $linkWa2,
         ]);
     }
 }

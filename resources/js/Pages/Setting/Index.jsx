@@ -5,9 +5,10 @@ import Button from "@src/Components/Button";
 import { apiProduction } from "@src/Persistance/API";
 import Swal from "sweetalert2";
 
-const SettingPage = ({ linkWa: initialLinkWa = "" }) => {
+const SettingPage = ({ linkWa: initialLinkWa = "", linkWa2: initialLinkWa2 = "" }) => {
     const [loadingStatus, setLoadingStatus] = useState(false);
     const [linkWa, setLinkWa] = useState(initialLinkWa ?? "");
+    const [linkWa2, setLinkWa2] = useState(initialLinkWa2 ?? "");
     const [errList, setErrList] = useState({});
 
     async function SaveHandler() {
@@ -15,6 +16,7 @@ const SettingPage = ({ linkWa: initialLinkWa = "" }) => {
         try {
             const response = await apiProduction.post("/api/setting", {
                 link_wa: linkWa,
+                link_wa2: linkWa2,
             });
 
             if (response.status === 200 || response.status === 204) {
@@ -55,7 +57,7 @@ const SettingPage = ({ linkWa: initialLinkWa = "" }) => {
 
                 <div className="flex flex-col gap-3 relative bg-white shadow-md rounded-lg p-4">
                     <Input
-                        label="Link WhatsApp"
+                        label="Link WhatsApp 1"
                         type="text"
                         placeholder="Masukkan link group WhatsApp (contoh: https://chat.whatsapp.com/...)"
                         value={linkWa}
@@ -70,6 +72,27 @@ const SettingPage = ({ linkWa: initialLinkWa = "" }) => {
                         required
                     >
                         {(errList?.link_wa ?? []).map((err, idx) => (
+                            <p key={idx} className="text-red-500 text-sm mt-1">
+                                {err}
+                            </p>
+                        ))}
+                    </Input>
+
+                    <Input
+                        label="Link WhatsApp 2"
+                        type="text"
+                        placeholder="Masukkan link group WhatsApp 2 (opsional, contoh: https://chat.whatsapp.com/...)"
+                        value={linkWa2}
+                        onChange={(e) => {
+                            setLinkWa2(e.target.value);
+                            setErrList((prev) => {
+                                const { link_wa2, ...rest } = prev;
+                                return rest;
+                            });
+                        }}
+                        className="mb-3"
+                    >
+                        {(errList?.link_wa2 ?? []).map((err, idx) => (
                             <p key={idx} className="text-red-500 text-sm mt-1">
                                 {err}
                             </p>
