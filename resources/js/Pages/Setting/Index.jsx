@@ -57,7 +57,7 @@ const SettingPage = ({ linkWa: initialLinkWa = "", linkWa2: initialLinkWa2 = "" 
 
                 <div className="flex flex-col gap-3 relative bg-white shadow-md rounded-lg p-4">
                     <Input
-                        label="Link WhatsApp 1"
+                        label="Link WhatsApp Prajabatan"
                         type="text"
                         placeholder="Masukkan link group WhatsApp (contoh: https://chat.whatsapp.com/...)"
                         value={linkWa}
@@ -79,7 +79,7 @@ const SettingPage = ({ linkWa: initialLinkWa = "", linkWa2: initialLinkWa2 = "" 
                     </Input>
 
                     <Input
-                        label="Link WhatsApp 2"
+                        label="Link WhatsApp Dalam Jabatan"
                         type="text"
                         placeholder="Masukkan link group WhatsApp 2 (opsional, contoh: https://chat.whatsapp.com/...)"
                         value={linkWa2}
