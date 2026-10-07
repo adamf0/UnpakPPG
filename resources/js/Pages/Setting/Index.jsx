@@ -59,7 +59,7 @@ const SettingPage = ({ linkWa: initialLinkWa = "", linkWa2: initialLinkWa2 = "" 
                     <Input
                         label="Link WhatsApp Prajabatan"
                         type="text"
-                        placeholder="Masukkan link group WhatsApp (contoh: https://chat.whatsapp.com/...)"
+                        placeholder="Masukkan link group WhatsApp Prajabatan (contoh: https://chat.whatsapp.com/...)"
                         value={linkWa}
                         onChange={(e) => {
                             setLinkWa(e.target.value);
@@ -81,7 +81,7 @@ const SettingPage = ({ linkWa: initialLinkWa = "", linkWa2: initialLinkWa2 = "" 
                     <Input
                         label="Link WhatsApp Dalam Jabatan"
                         type="text"
-                        placeholder="Masukkan link group WhatsApp 2 (opsional, contoh: https://chat.whatsapp.com/...)"
+                        placeholder="Masukkan link group WhatsApp Dalam Jabatan (opsional, contoh: https://chat.whatsapp.com/...)"
                         value={linkWa2}
                         onChange={(e) => {
                             setLinkWa2(e.target.value);
