@@ -1784,12 +1784,12 @@ function PendaftaranPage({ activeMenu, linkWa, linkWa2 }) {
         return <div className="flex flex-col gap-3">
             <h2 className="text-2xl font-semibold text-gray-800 mt-6 mb-3">Selesai Pengajuan</h2>
             <p>
-                Selamat! Data data pengajuan anda sudah terkirim ke admin, tahap berikutnya anda harus bergabung group prajabatan di whatsapp dengan link berikut untuk mendapatkan informasi terkait orientasi 
-                <a href={linkWa} target="_blank" className='hover:bg-gray-700 hover:text-white text-purple-500 rounded-md px-3 py-2 text-sm font-medium'>{linkWa}</a>
+                Selamat Data Pengajuan Anda Sudah Terkirim ke Admin, tahap berikutnya silahkan Bergabung melalui Grup PPG CALON GURU/PRAJABATAN 
+                <a href={linkWa} target="_blank" className='hover:bg-gray-700 hover:text-white text-purple-500 rounded-md px-3 py-2 text-sm font-medium'>{linkWa}</a> 
                 {linkWa2 ? (
                     <>
                         <br />
-                        <span className="text-gray-600 text-sm mt-2 block">Atau link WhatsApp jabatan:</span>
+                        <span className="text-gray-600 text-sm mt-2 block">PPG GURU TERTENTU/DALAM JABATAN</span>
                         <a href={linkWa2} target="_blank" className='hover:bg-gray-700 hover:text-white text-purple-500 rounded-md px-3 py-2 text-sm font-medium'>{linkWa2}</a>
                     </>
                 ) : null}
